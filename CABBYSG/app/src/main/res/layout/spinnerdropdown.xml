@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+<!--
+    <ImageView
+        android:layout_width="0dp"
+        android:weight="1"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:src="@drawable/app_logo"
+        android:id="@+id/TripHistory"
+         />
+
+    <TextView
+        android:weight="1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="SAMPLE TEXT"
+        android:id="@+id/TripHistoryText"
+        />
+
+-->
+</LinearLayout>
