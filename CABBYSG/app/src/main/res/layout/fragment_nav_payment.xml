@@ -80,6 +80,35 @@
             android:textColor="#2C2C2C"
             android:textSize="16sp" />
 
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginBottom="204dp"
+            android:layout_marginEnd="138dp"
+            android:text="CASH"
+            android:textColor="#2C2C2C"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="66dp"
+            android:layout_height="63dp"
+            android:layout_above="@+id/divider"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="39dp"
+            android:src="@drawable/cash" />
+
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="53dp"
+            android:layout_height="47dp"
+            android:layout_above="@+id/divider4"
+            android:layout_alignStart="@+id/imageView"
+            android:src="@drawable/mastercard" />
+
     </RelativeLayout>
 
 </FrameLayout>
