@@ -57,6 +57,7 @@ public class MenuBar extends AppCompatActivity
         } else {
             super.onBackPressed();
         }
+
     }
 
 
@@ -122,28 +123,4 @@ public class MenuBar extends AppCompatActivity
         return true;
     }
 
-   public class addPaymentMethod extends Activity {
-        protected void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-
-            setContentView(R.layout.add_creditcard);
-
-            final Button button = findViewById(R.id.addpaymentmethod);
-            button.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    startActivity(new Intent(MenuBar.this,add_creditcard.class));
-                }
-            });
-        }
-    }
- /*
-    private void addPaymentMethod(){
-        Button addPaymentMethod = findViewById(R.id.addpaymentmethod);
-        addPaymentMethod.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View view){
-                startActivity(new Intent(MenuBar.this,add_creditcard.class));
-            }
-        });
-    }
-*/
 }

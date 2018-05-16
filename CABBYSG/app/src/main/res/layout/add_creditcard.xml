@@ -18,17 +18,16 @@
         android:textStyle="bold" />
 
     <ImageView
-        android:id="@+id/imageView2"
-        android:layout_width="338dp"
-        android:layout_height="wrap_content"
+        android:id="@+id/creditcardshape"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="133dp"
-        android:src="@drawable/creditcardshape"
-        android:contentDescription="@string/todo" />
+        android:layout_centerInParent="true"
+        android:src="@drawable/creditcardshape" />
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/visalogo"
         android:layout_width="44dp"
         android:layout_height="45dp"
         android:layout_alignParentEnd="true"
@@ -39,12 +38,12 @@
         android:contentDescription="@string/todo" />
 
     <android.support.design.widget.TextInputEditText
-        android:id="@+id/cc"
-        android:layout_width="289dp"
+        android:id="@+id/ccnumber"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="198dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="20dip"
         android:digits="1234567890"
         android:hint="@string/credit_card_number"
         android:inputType="number|textNoSuggestions"
@@ -61,7 +60,7 @@
         app:counterMaxLength="16" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/cvc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
@@ -72,7 +71,7 @@
         android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/vaildthru"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -84,7 +83,7 @@
         android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/cardnumber"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignStart="@+id/textView2"
