@@ -1,4 +1,4 @@
-package com.joshuakwek.cabbysg;
+package com.example.android.cabbysg;
 
 
 import android.content.Intent;
@@ -10,11 +10,11 @@ import android.view.View;
 public class startpage extends AppCompatActivity {
 
     public void riderLogin(View view){
-        startActivity(new Intent(startpage.this,riderLogin.class));
+        startActivity(new Intent(this,riderLogin.class));
     }
 
     public void driverLogin(View view){
-        startActivity(new Intent(startpage.this,driverLogin.class));
+        startActivity(new Intent(this,driverLogin.class));
     }
 
     @Override

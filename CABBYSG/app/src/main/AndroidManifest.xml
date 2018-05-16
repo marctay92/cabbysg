@@ -9,10 +9,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity
-            android:name=".MenuBar"
-            android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
+        <activity android:name=".startpage">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -20,11 +17,21 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".riderLogin" />
+        <activity android:name=".driverLogin" />
+        <activity android:name=".register" />
+
+        <activity
+            android:name=".MenuBar"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
 
-        <activity android:name=".add_creditcard"></activity>
+        <activity android:name=".add_creditcard" />
     </application>
 
 </manifest>
