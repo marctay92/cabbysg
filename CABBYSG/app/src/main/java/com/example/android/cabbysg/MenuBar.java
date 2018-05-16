@@ -1,5 +1,7 @@
 package com.example.android.cabbysg;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -13,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 
 public class MenuBar extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -118,4 +121,29 @@ public class MenuBar extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+   public class addPaymentMethod extends Activity {
+        protected void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+
+            setContentView(R.layout.add_creditcard);
+
+            final Button button = findViewById(R.id.addpaymentmethod);
+            button.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    startActivity(new Intent(MenuBar.this,add_creditcard.class));
+                }
+            });
+        }
+    }
+ /*
+    private void addPaymentMethod(){
+        Button addPaymentMethod = findViewById(R.id.addpaymentmethod);
+        addPaymentMethod.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View view){
+                startActivity(new Intent(MenuBar.this,add_creditcard.class));
+            }
+        });
+    }
+*/
 }

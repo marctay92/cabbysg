@@ -9,4 +9,11 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="vaild_thru">VAILD THRU</string>
+    <string name="cvc">CVC</string>
+    <string name="credit_card_number">Credit Card Number</string>
+    <string name="card_number">CARD NUMBER</string>
+    <string name="add_payment">ADD PAYMENT</string>
+    <string name="todo">TODO</string>
+    <string name="add_paymentmethod">ADD PAYMENT METHOD</string>
 </resources>

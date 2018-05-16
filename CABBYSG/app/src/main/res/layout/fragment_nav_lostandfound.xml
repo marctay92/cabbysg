@@ -82,6 +82,7 @@
             android:background="#2C2C2C"
             android:gravity="center"
             android:hint="Phone Number"
+            android:inputType="phone"
             android:textColorHint="#FFEE7C"
             android:textSize="14sp" />
 
