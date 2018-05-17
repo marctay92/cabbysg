@@ -39,7 +39,7 @@ public class MenuBar extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         setTitle("Home");
@@ -51,7 +51,7 @@ public class MenuBar extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -121,7 +121,7 @@ public class MenuBar extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
+/*
    public class addPaymentMethod extends Activity {
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
@@ -134,7 +134,7 @@ public class MenuBar extends AppCompatActivity
                     startActivity(new Intent(MenuBar.this,add_creditcard.class));
                 }
             });
-        }
+        }*/
     }
  /*
     private void addPaymentMethod(){
@@ -146,4 +146,4 @@ public class MenuBar extends AppCompatActivity
         });
     }
 */
-}
+/*}*/

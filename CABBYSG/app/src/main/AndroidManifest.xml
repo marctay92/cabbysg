@@ -24,7 +24,7 @@
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
 
-        <activity android:name=".add_creditcard"></activity>
+        <activity android:name=".faq"></activity>
     </application>
 
 </manifest>
