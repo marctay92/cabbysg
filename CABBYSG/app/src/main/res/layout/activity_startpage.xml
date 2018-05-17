@@ -12,11 +12,10 @@
         android:id="@+id/rider"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
-        android:layout_marginBottom="100dp"
+        android:layout_alignTop="@+id/driver"
         android:layout_marginHorizontal="60dp"
-        android:layout_marginStart="12dp"
+        android:layout_marginStart="29dp"
         android:onClick="riderLogin"
         android:paddingHorizontal="45dp"
         android:text="RIDER" />
@@ -25,14 +24,16 @@
         android:id="@+id/driver"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
-        android:layout_alignTop="@+id/rider"
-        android:layout_marginEnd="11dp"
+        android:layout_marginBottom="165dp"
+        android:layout_marginEnd="29dp"
         android:onClick="driverLogin"
         android:paddingHorizontal="45dp"
         android:text="DRIVER" />
 
     <ImageView
+        android:contentDescription="logo"
         android:id="@+id/logo1"
         android:layout_width="wrap_content"
         android:layout_height="414dp"

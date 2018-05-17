@@ -15,7 +15,7 @@
         android:layout_height="34dp"
         android:layout_above="@+id/lastName"
         android:layout_alignParentStart="true"
-        android:alpha="0.4"
+        android:alpha="0.6"
         android:ems="10"
         android:hint="First Name"
         android:inputType="textPersonName"
@@ -33,7 +33,7 @@
         android:layout_above="@+id/dob"
         android:layout_alignParentStart="true"
         android:layout_marginBottom="16dp"
-        android:alpha="0.4"
+        android:alpha="0.6"
         android:ems="10"
         android:hint="Last Name"
         android:inputType="textPersonName"
@@ -50,7 +50,7 @@
         android:layout_height="34dp"
         android:layout_above="@+id/email"
         android:layout_alignParentStart="true"
-        android:alpha="0.4"
+        android:alpha="0.6"
         android:ems="10"
         android:hint="Date of Birth (ddmmyyyy)"
         android:inputType="date"
@@ -66,7 +66,7 @@
         android:layout_height="34dp"
         android:layout_above="@+id/mobileNb"
         android:layout_alignParentStart="true"
-        android:alpha="0.4"
+        android:alpha="0.6"
         android:ems="10"
         android:hint="Email"
         android:inputType="textEmailAddress"
@@ -82,7 +82,7 @@
         android:layout_height="34dp"
         android:layout_above="@+id/password"
         android:layout_alignParentStart="true"
-        android:alpha="0.4"
+        android:alpha="0.6"
         android:ems="10"
         android:hint="Mobile Number"
         android:inputType="phone"
@@ -98,7 +98,7 @@
         android:layout_height="34dp"
         android:layout_above="@+id/rePassword"
         android:layout_alignParentStart="true"
-        android:alpha="0.4"
+        android:alpha="0.6"
         android:ems="10"
         android:hint="Password"
         android:inputType="textPassword"
@@ -115,7 +115,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
         android:layout_marginBottom="100dp"
-        android:alpha="0.4"
+        android:alpha="0.6"
         android:ems="10"
         android:hint="Re-enter Password"
         android:inputType="textPassword"
@@ -126,7 +126,7 @@
         tools:layout_editor_absoluteX="110dp" />
 
     <Button
-        android:id="@+id/register"
+        android:id="@+id/registerButton"
         tools:layout_editor_absoluteX="148dp"
         tools:layout_editor_absoluteY="426dp"
         android:layout_width="match_parent"
@@ -134,6 +134,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
         android:layout_marginBottom="24dp"
-        android:text="REGISTER" />
+        android:text="REGISTER"
+        android:onClick="onReg"/>
 
 </RelativeLayout>

@@ -30,7 +30,7 @@ public class riderLogin extends AppCompatActivity {
         }
     }
     public void navRegister(View view){
-        startActivity(new Intent(riderLogin.this,register.class));
+        startActivity(new Intent(this,register.class));
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
