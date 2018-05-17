@@ -31,7 +31,7 @@ public class nav_payment extends Fragment {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), add_creditcard.class);
+                Intent intent = new Intent(getActivity(), CreditCardDesign.class);
                 startActivity(intent);
             }
         });
