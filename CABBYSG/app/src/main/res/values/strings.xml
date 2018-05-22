@@ -7,7 +7,6 @@
     <string name="nav_header_desc">Navigation header</string>
     <!--<string name="action_settings">Settings</string> -->
 
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="vaild_thru">VAILD THRU</string>
     <string name="cvc">CVC</string>
@@ -17,6 +16,13 @@
     <string name="todo">TODO</string>
     <string name="add_paymentmethod">ADD PAYMENT METHOD</string>
 
+    <string-array name="triphistory">
+        <item>Select a trip</item>
+        <item>Trip 1</item>
+        <item>@drawable/visa</item>
+        <item>trip 2</item>
+        <item>trip 3</item>
+    </string-array>
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>

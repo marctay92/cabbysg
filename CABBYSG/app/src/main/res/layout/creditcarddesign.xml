@@ -5,7 +5,7 @@
     android:layout_width="wrap_content"
     android:layout_gravity="center"
     android:layout_height="match_parent"
-    tools:context="com.cooltechworks.creditcarddesign.sample.CreditCardDesign">
+    tools:context="com.example.android.cabbysg.CreditCardDesign">
 
   <LinearLayout
       android:id="@+id/card_container"
@@ -14,64 +14,14 @@
       android:orientation="vertical"
       >
 
-      <!--<com.cooltechworks.creditcarddesign.CreditCardView-->
-          <!--android:id="@+id/card_1"-->
-          <!--android:layout_width="wrap_content"-->
-          <!--android:layout_height="wrap_content"-->
-          <!--app:card_number="56656789000000000"-->
-          <!--app:card_holder_name="JOHN MATTEW"-->
-          <!--app:cvv="522"-->
-          <!--app:card_expiration="01/12"-->
-          <!--/>-->
-
-      <!--<com.cooltechworks.creditcarddesign.CreditCardView-->
-          <!--android:id="@+id/card_2"-->
-          <!--android:layout_width="wrap_content"-->
-          <!--android:layout_height="wrap_content"-->
-          <!--app:card_number="34656789000000000"-->
-          <!--app:card_holder_name="JOHN MATTEW"-->
-          <!--app:cvv="522"-->
-          <!--app:card_expiration="01/12"-->
-          <!--/>-->
-
-      <!--<com.cooltechworks.creditcarddesign.CreditCardView-->
-          <!--android:id="@+id/card_3"-->
-          <!--android:layout_width="wrap_content"-->
-          <!--android:layout_height="wrap_content"-->
-          <!--app:card_number="44656789000000000"-->
-          <!--app:card_holder_name="JOHN MATTEW"-->
-          <!--app:cvv="522"-->
-          <!--app:card_expiration="01/12"-->
-          <!--/>-->
-
-
-      <!--<com.cooltechworks.creditcarddesign.CreditCardView-->
-          <!--android:id="@+id/card_4"-->
-          <!--android:layout_width="wrap_content"-->
-          <!--android:layout_height="wrap_content"-->
-          <!--app:card_number="56456789000000000"-->
-          <!--app:card_holder_name="JOHN MATTEW"-->
-          <!--app:cvv="522"-->
-          <!--app:card_expiration="01/12"-->
-          <!--/>-->
-
-      <!--<com.cooltechworks.creditcarddesign.CreditCardView-->
-          <!--android:id="@+id/card_5"-->
-          <!--android:layout_width="wrap_content"-->
-          <!--android:layout_height="wrap_content"-->
-          <!--app:card_number="38056789000000000"-->
-          <!--app:card_holder_name="JOHN MATTEW"-->
-          <!--app:cvv="522"-->
-          <!--app:card_expiration="01/12"-->
-          <!--/>-->
-
-      <Button
-          android:id="@+id/add_card"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:text="ADD CARD"
-          />
+    <Button
+        android:id="@+id/add_card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="ADD CARD"
+        />
 
   </LinearLayout>
+
 
 </ScrollView>

@@ -37,7 +37,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_small"
-                android:hint="XXXX XXXX XXXX XXXX"
+                android:hint="**** **** **** ****"
                 android:inputType="number"
                 android:maxLength="19"
                 android:text="" />

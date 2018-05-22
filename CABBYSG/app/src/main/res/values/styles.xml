@@ -15,7 +15,8 @@
     </style>
 
     <style name="DrawerIconStyle" parent="Widget.AppCompat.DrawerArrowToggle">
-        <item name="color">@android:color/white</item>
+        <item name="color">#FFEE7C</item>
+      <!--  <item name="colorControlNormal">#FFEE7C</item> -->
         <item name="drawerArrowStyle">@style/DrawerIconStyle</item>
     </style>
 

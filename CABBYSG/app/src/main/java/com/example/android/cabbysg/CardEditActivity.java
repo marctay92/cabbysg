@@ -68,7 +68,7 @@ public class CardEditActivity extends AppCompatActivity {
         setKeyboardVisibility(true);
         mCreditCardView = (CreditCardView) findViewById(R.id.credit_card_view);
         Bundle args = savedInstanceState != null ? savedInstanceState : getIntent().getExtras();
-      
+
         loadPager(args);
         checkParams(args);
     }
