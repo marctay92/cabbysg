@@ -15,6 +15,8 @@ import android.widget.ExpandableListView.OnGroupClickListener;
 import android.widget.ExpandableListView.OnGroupCollapseListener;
 import android.widget.ExpandableListView.OnGroupExpandListener;
 import android.widget.Toast;
+import android.widget.Toolbar;
+
 import java.util.List;
 
 public class faq extends AppCompatActivity {
