@@ -22,9 +22,7 @@ public class nav_help extends Fragment {
     public void goCall(View view){
     }
     public void goEmail (View view){
-
     }
-
     public void goFaq(View view){
     }
     public void goManual (View view){
@@ -42,8 +40,8 @@ public class nav_help extends Fragment {
         goCall.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent callIntent = new Intent(Intent.ACTION_CALL);
-                callIntent.setData(Uri.parse("tel:84449912"));
+                Intent callIntent = new Intent(Intent.ACTION_DIAL);
+                callIntent.setData(Uri.parse("tel:+6584449912"));
                 startActivity(callIntent);
             }
         });
@@ -60,6 +58,8 @@ public class nav_help extends Fragment {
                 startActivity(Intent.createChooser(intent, "Choose an Email client :"));
             }
         });*/
+
+        /*Website*/
         ImageView goEmail = view.findViewById(R.id.helpEmail);
         goEmail.setOnClickListener(new View.OnClickListener() {
 
@@ -71,7 +71,6 @@ public class nav_help extends Fragment {
                 startActivity(intent);
             }
         });
-
 
         /*FAQ*/
         ImageView goFaq = view.findViewById(R.id.helpFaq);

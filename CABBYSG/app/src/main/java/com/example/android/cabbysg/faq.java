@@ -61,26 +61,33 @@ public class faq extends AppCompatActivity {
 
         // Adding child data
         List<String> one = new ArrayList<String>();
-        one.add("CabbySG is a ride-hailing_application that acts as a shared platform amongst all taxi companies to utilize the entire fleet of approximately 23000 taxis as well as even more drivers to fulfill the needs of the consumers.");
+        one.add("CabbySG is a ride-hailing application that acts as a shared platform amongst all taxi companies to utilize the entire fleet of approximately  23000 taxis as well as even more drivers to fulfill the needs of the consumers.");
 
-        List<String> nowShowing = new ArrayList<String>();
-        nowShowing.add("The Conjuring");
-        nowShowing.add("Despicable Me 2");
-        nowShowing.add("Turbo");
-        nowShowing.add("Grown Ups 2");
-        nowShowing.add("Red 2");
-        nowShowing.add("The Wolverine");
+        List<String> two = new ArrayList<String>();
+        two.add("Reasons to use");
 
-        List<String> comingSoon = new ArrayList<String>();
-        comingSoon.add("2 Guns");
-        comingSoon.add("The Smurfs 2");
-        comingSoon.add("The Spectacular Now");
-        comingSoon.add("The Canyons");
-        comingSoon.add("Europa Report");
+        List<String> three = new ArrayList<String>();
+        three.add("Methods it works");
+
+        List<String> four = new ArrayList<String>();
+        four.add("Ways to make booking");
+
+        List<String> five = new ArrayList<String>();
+        five.add("Money");
+
+        List<String> six = new ArrayList<String>();
+        six.add("Run Away");
+
+        List<String> seven = new ArrayList<String>();
+        seven.add("Call police");
 
         listDataChild.put(listDataHeader.get(0), one); // Header, Child data
-        listDataChild.put(listDataHeader.get(1), nowShowing);
-        listDataChild.put(listDataHeader.get(2), comingSoon);
+        listDataChild.put(listDataHeader.get(1), two);
+        listDataChild.put(listDataHeader.get(2), three);
+        listDataChild.put(listDataHeader.get(3), four);
+        listDataChild.put(listDataHeader.get(4), five);
+        listDataChild.put(listDataHeader.get(5), six);
+        listDataChild.put(listDataHeader.get(6), seven);
     }
 }
 
