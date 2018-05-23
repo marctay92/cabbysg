@@ -18,10 +18,10 @@
 
     <string-array name="triphistory">
         <item>Select a trip</item>
-        <item>Trip 1</item>
-        <item>@drawable/visa</item>
-        <item>trip 2</item>
-        <item>trip 3</item>
+        <item>14 April 18 | 13:41 From: Ubi Mrt Station To: Orchard Ion</item>
+        <item>14 April 18 | 09:00 \n From: Blk 231 Geylang Ave 2 To: Blk 123 Ubi Ave 1</item>
+        <item>12 April 18 | 01:00 \nFrom: Zouk Singapore To: Blk 231 Geylang Ave 2</item>
+        <item>12 April 18 | 17:30 \nFrom: Suntec City To: City Square Mall</item>
     </string-array>
 
     <string name="hello_world">Hello world!</string>

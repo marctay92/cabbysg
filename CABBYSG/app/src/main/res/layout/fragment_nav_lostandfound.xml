@@ -39,6 +39,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="135dp"
             android:entries="@array/triphistory" />
+
         <!--
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"

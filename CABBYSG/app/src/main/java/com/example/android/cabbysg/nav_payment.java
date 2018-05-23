@@ -27,17 +27,15 @@ public class nav_payment extends android.support.v4.app.Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_nav_payment, container, false);
-/*
+
         Button button = view.findViewById(R.id.addpaymentmethod);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                FragmentTransaction fr = getFragmentManager().beginTransaction();
-                fr.replace(R.id.content_frame, new CardEditActivity());
-                fr.commit();
+                Intent intent = new Intent(getActivity(), CardEditActivity.class);
+                startActivity(intent);
             }
         });
-        */
 
         return view;
     }
