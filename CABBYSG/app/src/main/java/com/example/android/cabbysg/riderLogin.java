@@ -1,20 +1,15 @@
 package com.example.android.cabbysg;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.KeyEvent;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -22,7 +17,7 @@ public class riderLogin extends AppCompatActivity {
 
     EditText riderNb;
     EditText riderPassword;
-    Button riderLoginButton;
+    Context ctx = this;
 
     public void dismissKeyboard(Activity activity) {
         InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -36,16 +31,51 @@ public class riderLogin extends AppCompatActivity {
         String mnumber = riderNb.getText().toString();
         String password = riderPassword.getText().toString();
 
+        boolean validNum = false;
+        boolean validPW = false;
+
         if(TextUtils.isEmpty(mnumber)) {
             riderNb.setError("Please enter your number");
-        }
-        else if (TextUtils.isEmpty(password)) {
+        }else validNum = true;
+
+        if (TextUtils.isEmpty(password)) {
             riderPassword.setError("Please enter your password");
-        }
-        else{
+        }else validPW = true;
+
+        if(validNum && validPW){
             String type = "RiderLogin";
-            BackgroundWorker backgroundWorker = new BackgroundWorker(this);
-            backgroundWorker.execute(type,mnumber,password);
+            AccCreateBackgroundWorker backgroundWorker = new AccCreateBackgroundWorker(this, new VolleyCallback() {
+                /**This is the callback class, when you create this class you have to implement the method
+                 * but it can be left empty, and only the method you need can be implemented
+                 * **/
+                @Override
+                public void onSuccess(String result) {
+
+                }
+
+                @Override
+                public void onSuccess2(Bundle result) {
+
+                }
+
+                @Override
+                public void onSuccessLogin(String userID) {
+                    //Insert intent to homepage for rider
+                    /* Intent i = new Intent(ctx,RiderHome.class); */
+                    System.out.println(userID);
+                }
+
+                @Override
+                public void onFailLogin() {
+                    Toast.makeText(ctx,"Incorrect Credentials",Toast.LENGTH_LONG).show();
+                }
+
+                @Override
+                public void onFailRegister(String remarks) {
+
+                }
+            });
+            backgroundWorker.execute(type, mnumber, password);
         }
     }
     public void navRegister(View view){
@@ -57,8 +87,6 @@ public class riderLogin extends AppCompatActivity {
         setContentView(R.layout.activity_rider_login);
         riderNb = findViewById(R.id.riderNb);
         riderPassword  = findViewById(R.id.riderPassword);
-        riderLoginButton = findViewById(R.id.riderLoginButton);
-
     }
 
     /*public void showDialog (){
