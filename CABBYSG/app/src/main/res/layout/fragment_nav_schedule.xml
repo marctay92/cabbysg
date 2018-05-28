@@ -432,7 +432,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignStart="@+id/location4"
-                android:layout_below="@+id/date2"
+                android:layout_alignTop="@+id/emptycircle2"
                 android:text="426 Bukit Timah"
                 android:textColor="#2C2C2C"
                 android:textSize="14sp" />
