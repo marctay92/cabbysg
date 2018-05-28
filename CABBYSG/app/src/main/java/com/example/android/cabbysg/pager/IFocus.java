@@ -1,4 +1,4 @@
-package com.cooltechworks.creditcarddesign.pager;
+package com.example.android.cabbysg.pager;
 
 /**
  * Created by Harish on 17/01/16.
