@@ -1,4 +1,4 @@
-package com.example.android.cabbysg.pager;
+package com.example.android.cabbysg.creditcard_pager;
 
 import android.os.Bundle;
 import android.text.Editable;
@@ -10,10 +10,8 @@ import android.widget.EditText;
 
 import com.example.android.cabbysg.CardSelector;
 import com.example.android.cabbysg.R;
-import com.example.android.cabbysg.creditcard_pager.CreditCardFragment;
 
 import static com.example.android.cabbysg.CreditCardUtils.EXTRA_CARD_CVV;
-import static com.example.android.cabbysg.CreditCardUtils.EXTRA_CARD_EXPIRY;
 
 /**
  * Created by sharish on 9/1/15.

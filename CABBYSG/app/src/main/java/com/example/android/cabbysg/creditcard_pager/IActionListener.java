@@ -1,6 +1,4 @@
-package com.example.android.cabbysg.pager;
-
-import com.example.android.cabbysg.creditcard_pager.CreditCardFragment;
+package com.example.android.cabbysg.creditcard_pager;
 
 public interface IActionListener {
         public void onActionComplete(CreditCardFragment fragment);

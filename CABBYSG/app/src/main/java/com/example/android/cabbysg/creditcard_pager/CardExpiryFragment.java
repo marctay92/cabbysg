@@ -1,4 +1,4 @@
-package com.example.android.cabbysg.pager;
+package com.example.android.cabbysg.creditcard_pager;
 
 import android.os.Bundle;
 import android.text.Editable;
@@ -6,9 +6,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+
 import com.example.android.cabbysg.CreditCardUtils;
 import com.example.android.cabbysg.R;
-import com.example.android.cabbysg.creditcard_pager.CreditCardFragment;
 
 import java.util.Calendar;
 

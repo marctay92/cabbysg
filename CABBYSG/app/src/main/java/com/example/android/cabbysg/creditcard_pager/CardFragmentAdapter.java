@@ -1,14 +1,10 @@
-package com.example.android.cabbysg.pager;
+package com.example.android.cabbysg.creditcard_pager;
 
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-
-import com.example.android.cabbysg.creditcard_pager.CreditCardFragment;
-import com.example.android.cabbysg.creditcard_pager.IActionListener;
-import com.example.android.cabbysg.creditcard_pager.IFocus;
 
 /**
  * Created by sharish on 9/1/15.

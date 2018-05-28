@@ -1,4 +1,4 @@
-package com.cooltechworks.creditcarddesign.pager;
+package com.example.android.cabbysg.creditcard_pager;
 
 import android.support.v4.app.Fragment;
 import android.text.TextWatcher;

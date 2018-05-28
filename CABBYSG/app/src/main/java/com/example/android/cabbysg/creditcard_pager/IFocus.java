@@ -1,4 +1,4 @@
-package com.example.android.cabbysg.pager;
+package com.example.android.cabbysg.creditcard_pager;
 
 /**
  * Created by Harish on 17/01/16.
