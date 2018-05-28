@@ -24,6 +24,17 @@
         <item>12 April 18 | 17:30 \nFrom: Suntec City To: City Square Mall</item>
     </string-array>
 
+    <string-array name="reportissue">
+        <item>Report an issue</item>
+        <item>My driver went the wrong route.</item>
+        <item>My pickup or drop-off location was wrong.</item>
+        <item>I paid a toll or parking fee for my driver.</item>
+        <item>I was involved in an accident.</item>
+        <item>Review my fare or fees.</item>
+        <item>My driver was unprofessional.</item>
+    </string-array>
+
+
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
 
