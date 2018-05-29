@@ -18,9 +18,6 @@ import android.widget.TextView;
 import io.codetail.animation.SupportAnimator;
 import io.codetail.animation.ViewAnimationUtils;
 
-/**
- * Created by Harish on 03/01/16.
- */
 public class CreditCardView extends FrameLayout {
 
     private static final int TEXTVIEW_CARD_HOLDER_ID = R.id.front_card_holder_name;
@@ -76,7 +73,7 @@ public class CreditCardView extends FrameLayout {
     interface ICustomCardSelector {
         CardSelector getCardSelector(String cardNumber);
     }
-    
+
     private void init() {
 
         mCurrentDrawable = R.drawable.card_color_round_rect_default;

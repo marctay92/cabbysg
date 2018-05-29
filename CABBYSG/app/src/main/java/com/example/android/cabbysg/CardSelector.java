@@ -1,8 +1,5 @@
 package com.example.android.cabbysg;
 
-/**
- * Created by Harish on 01/01/16.
- */
 public class CardSelector {
 
     public static final CardSelector VISA = new CardSelector(R.drawable.card_color_round_rect_purple, R.drawable.chip, R.drawable.chip_inner, android.R.color.transparent, R.drawable.ic_billing_visa_logo, CardSelector.CVV_LENGHT_DEFAULT);

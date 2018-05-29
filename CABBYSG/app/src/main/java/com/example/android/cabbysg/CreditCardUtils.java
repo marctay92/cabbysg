@@ -5,9 +5,6 @@ import android.support.annotation.NonNull;
 import java.util.Calendar;
 import java.util.regex.Pattern;
 
-/**
- * Created by Harish on 03/01/16.
- */
 public class CreditCardUtils {
     public enum CardType {
         UNKNOWN_CARD, AMEX_CARD, MASTER_CARD, VISA_CARD, DISCOVER_CARD

@@ -3,9 +3,6 @@ package com.example.android.cabbysg.creditcard_pager;
 import android.support.v4.app.Fragment;
 import android.text.TextWatcher;
 
-/**
- * Created by sharish on 9/1/15.
- */
 public abstract  class CreditCardFragment extends Fragment implements TextWatcher, IFocus {
 
     protected IActionListener mActionListener;

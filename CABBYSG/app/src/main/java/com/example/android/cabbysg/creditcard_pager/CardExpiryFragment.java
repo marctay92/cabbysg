@@ -15,9 +15,6 @@ import java.util.Calendar;
 import static com.example.android.cabbysg.CreditCardUtils.EXTRA_CARD_EXPIRY;
 import static com.example.android.cabbysg.CreditCardUtils.EXTRA_VALIDATE_EXPIRY_DATE;
 
-/**
- * Created by sharish on 9/1/15.
- */
 public class CardExpiryFragment extends CreditCardFragment {
 
     EditText cardExpiryView;

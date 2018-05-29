@@ -6,9 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-/**
- * Created by sharish on 9/1/15.
- */
+
 public class CardFragmentAdapter extends FragmentStatePagerAdapter implements IActionListener {
 
     public void focus(int position) {

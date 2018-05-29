@@ -14,9 +14,6 @@ import static com.example.android.cabbysg.CreditCardUtils.CARD_NUMBER_FORMAT;
 import static com.example.android.cabbysg.CreditCardUtils.CARD_NUMBER_FORMAT_AMEX;
 import static com.example.android.cabbysg.CreditCardUtils.EXTRA_CARD_NUMBER;
 
-/**
- * Created by sharish on 9/1/15.
- */
 public class CardNumberFragment extends CreditCardFragment {
 
     EditText mCardNumberView;

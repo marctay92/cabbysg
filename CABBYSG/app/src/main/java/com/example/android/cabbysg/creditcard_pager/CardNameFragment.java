@@ -9,11 +9,9 @@ import android.widget.EditText;
 
 import com.example.android.cabbysg.R;
 
+import static com.example.android.cabbysg.CreditCardUtils.EXTRA_CARD_CVV;
 import static com.example.android.cabbysg.CreditCardUtils.EXTRA_CARD_HOLDER_NAME;
 
-/**
- * Created by sharish on 9/1/15.
- */
 public class CardNameFragment extends CreditCardFragment {
 
 
