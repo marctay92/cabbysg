@@ -1,8 +1,8 @@
 package com.example.android.cabbysg;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -12,11 +12,7 @@ import com.example.android.cabbysg.CreditCardView;
 import com.example.android.cabbysg.CardEditActivity;
 import com.example.android.cabbysg.CreditCardUtils;
 
-/**
- * Created by glarencezhao on 10/23/16.
- */
-
-public class MainActivity extends AppCompatActivity {
+public class CreditCardDesign extends AppCompatActivity {
 
     private final int CREATE_NEW_CARD = 0;
 
@@ -26,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.creditcarddesign);
 
         initialize();
         listeners();
@@ -62,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                Intent intent = new Intent(MainActivity.this, CardEditActivity.class);
+                Intent intent = new Intent(CreditCardDesign.this, CardEditActivity.class);
                 startActivityForResult(intent, CREATE_NEW_CARD);
             }
         });
@@ -79,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
                 String cardHolderName = creditCardView.getCardHolderName();
                 String cvv = creditCardView.getCVV();
 
-                Intent intent = new Intent(MainActivity.this, CardEditActivity.class);
+                Intent intent = new Intent(CreditCardDesign.this, CardEditActivity.class);
                 intent.putExtra(CreditCardUtils.EXTRA_CARD_HOLDER_NAME, cardHolderName);
                 intent.putExtra(CreditCardUtils.EXTRA_CARD_NUMBER, cardNumber);
                 intent.putExtra(CreditCardUtils.EXTRA_CARD_EXPIRY, expiry);

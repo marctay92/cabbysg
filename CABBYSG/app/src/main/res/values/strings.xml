@@ -51,5 +51,6 @@
     <string name="name_on_card">NAME ON CARD</string>
     <string name="error_invalid_month">Invalid month</string>
     <string name="error_card_expired">Card expired</string>
+    <string name="creditcarddesign">Credit Card Main Activity</string>
     <integer name="card_name_len">25</integer>
 </resources>

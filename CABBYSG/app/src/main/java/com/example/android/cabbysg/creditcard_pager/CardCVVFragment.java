@@ -12,7 +12,6 @@ import com.example.android.cabbysg.CardSelector;
 import com.example.android.cabbysg.R;
 
 import static com.example.android.cabbysg.CreditCardUtils.EXTRA_CARD_CVV;
-import static com.example.android.cabbysg.CreditCardUtils.EXTRA_CARD_EXPIRY;
 
 
 public class CardCVVFragment extends CreditCardFragment {

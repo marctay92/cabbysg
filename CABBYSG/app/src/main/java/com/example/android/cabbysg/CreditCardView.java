@@ -18,6 +18,7 @@ import android.widget.TextView;
 import io.codetail.animation.SupportAnimator;
 import io.codetail.animation.ViewAnimationUtils;
 
+
 public class CreditCardView extends FrameLayout {
 
     private static final int TEXTVIEW_CARD_HOLDER_ID = R.id.front_card_holder_name;

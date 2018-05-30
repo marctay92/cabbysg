@@ -32,7 +32,7 @@ public class nav_payment extends android.support.v4.app.Fragment {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), CardEditActivity.class);
+                Intent intent = new Intent(getActivity(), CreditCardDesign.class);
                 startActivity(intent);
             }
         });
