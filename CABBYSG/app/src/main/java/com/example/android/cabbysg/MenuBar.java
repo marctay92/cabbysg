@@ -55,7 +55,8 @@ public class MenuBar extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            //NOTICE FOR LATER
+            //super.onBackPressed();
         }
     }
 
