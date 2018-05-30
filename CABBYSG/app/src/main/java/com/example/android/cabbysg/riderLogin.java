@@ -3,6 +3,7 @@ package com.example.android.cabbysg;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -119,5 +120,23 @@ public class riderLogin extends AppCompatActivity {
         });
 
         builder.show();
+    }*/
+
+    /*protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        SharedPreferences sp = getSharedPreferences("LoginState",
+                MODE_PRIVATE);
+        boolean stateValue  = sp.getBoolean("setLoggingOut", false);
+        if (requestCode == MAIN_ACTIVITY_REQUEST_CODE) {
+
+            if (!stateValue) {
+                finish();
+            } else {
+                //AppState.getSingleInstance().setLoggingOut(false);
+                updateLoginState(false);
+                super.onActivityResult(requestCode, resultCode, data);
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
     }*/
 }
