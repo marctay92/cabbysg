@@ -23,18 +23,20 @@ public class MenuBar extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu_bar);
         android.support.v7.widget.Toolbar toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+
+        //setSupportActionBar(toolbar);
 
 
-       /* getSupportActionBar().setHomeButtonEnabled(true);
+ /*      getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setIcon(R.drawable.app_logo); //also displays wide logo
         getSupportActionBar().setDisplayShowTitleEnabled(false); //optional
-
-        getSupportActionBar().setLogo(R.drawable.app_logo);
+*/
+       /* getSupportActionBar().setLogo(R.drawable.app_logo);
         getSupportActionBar().setDisplayUseLogoEnabled(true);
         getSupportActionBar().setIcon(R.drawable.app_logo);
-        */
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+*/
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
