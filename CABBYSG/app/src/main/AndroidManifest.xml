@@ -25,6 +25,7 @@
             android:resource="@array/preloaded_fonts" />
 
         <activity android:name=".CardEditActivity" />
+        <activity android:name=".MainActivity"></activity>
     </application>
 
 </manifest>
