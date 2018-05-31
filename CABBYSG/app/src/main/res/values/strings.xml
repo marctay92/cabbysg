@@ -15,6 +15,7 @@
     <string name="add_payment">ADD PAYMENT</string>
     <string name="todo">TODO</string>
     <string name="add_paymentmethod">ADD PAYMENT METHOD</string>
+    <string name="google_maps_API_key">AIzaSyBuljOjByqE0GRMh19DT2vffTYhKU0wEuo</string>
 
     <string-array name="triphistory">
         <item>Select a trip</item>
@@ -53,4 +54,20 @@
     <string name="error_card_expired">Card expired</string>
     <string name="creditcarddesign">Credit Card Main Activity</string>
     <integer name="card_name_len">25</integer>
+
+    <string-array name="mServiceType">
+        <item>4-Seater</item>
+        <item>6-Seater</item>
+    </string-array>
+
+    <string-array name="mRouteOptions">
+        <item>Fastest</item>
+        <item>Shortest</item>
+        <item>Avoid Tolls</item>
+    </string-array>
+
+    <string-array name="mFareType">
+        <item>Fare</item>
+        <item>Metered</item>
+    </string-array>
 </resources>
