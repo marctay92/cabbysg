@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 import static android.content.ContentValues.TAG;
 import static android.content.Context.MODE_PRIVATE;
@@ -21,6 +22,11 @@ public class nav_profile extends Fragment implements View.OnClickListener {
     Button editProfile;
     Button changePw;
     Button logOut;
+    TextView firstNameView;
+    TextView lastNameView;
+    TextView mobileView;
+    TextView emailView;
+
     int counter;
 
     public nav_profile() {
@@ -33,6 +39,15 @@ public class nav_profile extends Fragment implements View.OnClickListener {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_nav_profile, container, false);
 
+        //Text Views
+        firstNameView=(TextView)rootView.findViewById(R.id.firstName);
+        lastNameView=(TextView)rootView.findViewById(R.id.lastName);
+        mobileView=(TextView)rootView.findViewById(R.id.mobileNb);
+        emailView=(TextView)rootView.findViewById(R.id.email);
+
+        //extract TextViews from database MARCUS
+
+        //Buttons
         editProfile = (Button) rootView.findViewById(R.id.editProfileBtn);
         changePw = (Button) rootView.findViewById(R.id.changePwBtn);
         logOut = (Button) rootView.findViewById(R.id.logOutBtn);

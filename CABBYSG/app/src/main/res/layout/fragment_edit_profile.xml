@@ -19,7 +19,7 @@
         android:textSize="30sp" />
 
     <EditText
-        android:id="@+id/firstName"
+        android:id="@+id/firstNameEdit"
         android:layout_width="300dp"
         android:layout_height="30dp"
         android:layout_alignParentTop="true"
@@ -30,7 +30,7 @@
         android:textAlignment="center" />
 
     <EditText
-        android:id="@+id/lastName"
+        android:id="@+id/lastNameEdit"
         android:layout_width="300dp"
         android:layout_height="30dp"
         android:layout_alignParentTop="true"
@@ -41,7 +41,7 @@
         android:textAlignment="center" />
 
     <EditText
-        android:id="@+id/mobileNb"
+        android:id="@+id/mobileNbEdit"
         android:layout_width="300dp"
         android:layout_height="30dp"
         android:layout_alignParentTop="true"
@@ -52,7 +52,7 @@
         android:textAlignment="center" />
 
     <EditText
-        android:id="@+id/email"
+        android:id="@+id/emailEdit"
         android:layout_width="300dp"
         android:layout_height="30dp"
         android:layout_alignParentTop="true"
@@ -63,20 +63,20 @@
         android:textAlignment="center" />
 
     <Button
-        android:id="@+id/button5"
+        android:id="@+id/deleteAcc"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_alignStart="@+id/firstName"
+        android:layout_alignStart="@+id/firstNameEdit"
         android:layout_marginTop="420dp"
         android:text="DELETE ACCOUNT" />
 
     <Button
-        android:id="@+id/button6"
+        android:id="@+id/saveEdit"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/button5"
-        android:layout_toEndOf="@+id/button5"
+        android:layout_alignTop="@+id/deleteAcc"
+        android:layout_toEndOf="@+id/deleteAcc"
         android:text="SAVE CHANGES" />
 
 </RelativeLayout>
