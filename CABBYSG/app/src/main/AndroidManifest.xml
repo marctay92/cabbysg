@@ -21,7 +21,7 @@
 
         <activity android:name=".riderLogin" />
         <activity android:name=".driverLogin" />
-        <activity android:name=".register" />
+        <activity android:name=".riderRegister" />
 
         <activity
             android:name=".MenuBar"

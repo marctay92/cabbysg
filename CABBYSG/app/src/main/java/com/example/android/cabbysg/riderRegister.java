@@ -142,6 +142,7 @@ public class riderRegister extends AppCompatActivity {
                                 DatabaseReference current_user_db = FirebaseDatabase.getInstance().getReference().child("Rider").child(user_id);
 
                                 Map newPost = new HashMap();
+                                //newPost.put("email",str_email);
                                 newPost.put("firstName",str_firstName);
                                 newPost.put("lastName",str_lastName);
                                 newPost.put("dob",str_dob);
@@ -154,6 +155,18 @@ public class riderRegister extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mAuth.addAuthStateListener(firebaseAuthListener);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mAuth.removeAuthStateListener(firebaseAuthListener);
     }
 
     public boolean isValidPassword(final String password) {
