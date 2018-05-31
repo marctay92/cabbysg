@@ -6,6 +6,7 @@
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <!--<string name="action_settings">Settings</string> -->
+    <string name="google_maps_API_key">AIzaSyBuljOjByqE0GRMh19DT2vffTYhKU0wEuo</string>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="vaild_thru">VAILD THRU</string>
@@ -53,4 +54,19 @@
     <string name="error_card_expired">Card expired</string>
     <string name="creditcarddesign">Credit Card Main Activity</string>
     <integer name="card_name_len">25</integer>
+    <string-array name="mServiceType">
+        <item>4-Seater</item>
+        <item>6-Seater</item>
+    </string-array>
+
+    <string-array name="mRouteOptions">
+        <item>Fastest</item>
+        <item>Avoid Tolls</item>
+        <item>Shortest</item>
+    </string-array>
+
+    <string-array name="mFareType">
+        <item>Fare</item>
+        <item>Metered</item>
+    </string-array>
 </resources>
