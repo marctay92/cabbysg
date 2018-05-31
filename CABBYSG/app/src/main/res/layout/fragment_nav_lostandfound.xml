@@ -68,7 +68,7 @@
             android:visibility="visible" />
 
 
-        <TextView
+        <EditText
             android:id="@+id/textView4"
             android:layout_width="340dp"
             android:layout_height="26dp"
@@ -79,8 +79,7 @@
             android:gravity="center"
             android:hint="Phone Number"
             android:inputType="phone"
-            android:password="false"
-            android:phoneNumber="true"
+            android:textColor="#FFEE7C"
             android:textColorHint="#FFEE7C"
             android:textSize="14sp" />
 
@@ -96,6 +95,7 @@
             android:gravity="center"
             android:hint="Email Address"
             android:inputType="textEmailAddress"
+            android:textColor="#FFEE7C"
             android:textColorHint="#FFEE7C"
             android:textSize="14sp" />
 
