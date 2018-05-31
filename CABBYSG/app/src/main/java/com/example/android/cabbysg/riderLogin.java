@@ -22,11 +22,14 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.HashMap;
+import java.util.Map;
+
 
 public class riderLogin extends AppCompatActivity {
 
     private EditText riderEmail, riderPassword;
-    private Button riderLoginButton, riderRegister;
+    private Button riderLoginButton;
 
     FirebaseAuth mAuth;
     FirebaseAuth.AuthStateListener firebaseAuthListener;
@@ -40,7 +43,6 @@ public class riderLogin extends AppCompatActivity {
         riderPassword  = findViewById(R.id.riderPassword);
 
         riderLoginButton = findViewById(R.id.riderLoginButton);
-        riderRegister = findViewById(R.id.riderRegister);
 
         mAuth = FirebaseAuth.getInstance();
         firebaseAuthListener = new FirebaseAuth.AuthStateListener() {
@@ -56,39 +58,32 @@ public class riderLogin extends AppCompatActivity {
             }
         };
 
-        riderRegister.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String email = riderEmail.getText().toString();
-                String password = riderPassword.getText().toString();
-                mAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(riderLogin.this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if(!task.isSuccessful()){
-                            Toast.makeText(riderLogin.this, "sign up error", Toast.LENGTH_SHORT).show();
-                        }else{
-                            String user_id = mAuth.getCurrentUser().getUid();
-                            DatabaseReference current_user_db = FirebaseDatabase.getInstance().getReference().child("Rider").child(user_id);
-                            current_user_db.setValue(true);
-                        }
-                    }
-                });
-            }
-        });
-
         riderLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String email = riderEmail.getText().toString();
                 String password = riderPassword.getText().toString();
-                mAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener(riderLogin.this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if(!task.isSuccessful()){
-                            Toast.makeText(riderLogin.this, "sign in error", Toast.LENGTH_SHORT).show();
+
+                boolean validEmail = false, validPassword = false;
+
+                if(TextUtils.isEmpty(email)) {
+                    riderEmail.setError("Please enter your number");
+                }else validEmail = true;
+
+                if (TextUtils.isEmpty(password)) {
+                    riderPassword.setError("Please enter your password");
+                }else validPassword = true;
+
+                if(validEmail && validPassword) {
+                    mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(riderLogin.this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (!task.isSuccessful()) {
+                                Toast.makeText(riderLogin.this, "sign in error", Toast.LENGTH_SHORT).show();
+                            }
                         }
-                    }
-                });
+                    });
+                }
             }
         });
     }
@@ -105,69 +100,17 @@ public class riderLogin extends AppCompatActivity {
         mAuth.removeAuthStateListener(firebaseAuthListener);
     }
 
+    public void navRegister(View view){
+        startActivity(new Intent(this,riderRegister.class));
+    }
+
     /*public void dismissKeyboard(Activity activity) {
         InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
         if (null != activity.getCurrentFocus())
             imm.hideSoftInputFromWindow(activity.getCurrentFocus()
                     .getApplicationWindowToken(), 0);
-    }
-
-    public void OnRiderLogin (View view){
-        dismissKeyboard(this);
-        String mnumber = riderNb.getText().toString();
-        String password = riderPassword.getText().toString();
-
-        boolean validNum = false;
-        boolean validPW = false;
-
-        if(TextUtils.isEmpty(mnumber)) {
-            riderNb.setError("Please enter your number");
-        }else validNum = true;
-
-        if (TextUtils.isEmpty(password)) {
-            riderPassword.setError("Please enter your password");
-        }else validPW = true;
-
-        if(validNum && validPW){
-            String type = "RiderLogin";
-            AccCreateBackgroundWorker backgroundWorker = new AccCreateBackgroundWorker(this, new VolleyCallback() {
-                /**This is the callback class, when you create this class you have to implement the method
-                 * but it can be left empty, and only the method you need can be implemented
-                 * *
-                @Override
-                public void onSuccess(String result) {
-
-                }
-
-                @Override
-                public void onSuccess2(Bundle result) {
-
-                }
-
-                @Override
-                public void onSuccessLogin(String userID) {
-                    //Insert intent to homepage for rider
-                    /* Intent i = new Intent(ctx,RiderHome.class);
-                    System.out.println(userID);
-                }
-
-                @Override
-                public void onFailLogin() {
-                    Toast.makeText(ctx,"Incorrect Credentials",Toast.LENGTH_LONG).show();
-                }
-
-                @Override
-                public void onFailRegister(String remarks) {
-
-                }
-            });
-            backgroundWorker.execute(type, mnumber, password);
-        }
     }*/
-    /*public void navRegister(View view){
-        startActivity(new Intent(this,register.class));
-    }
-    */
+
     /*public void showDialog (){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Please enter username ...");
