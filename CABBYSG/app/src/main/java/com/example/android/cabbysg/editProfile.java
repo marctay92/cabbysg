@@ -3,6 +3,8 @@ package com.example.android.cabbysg;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -13,14 +15,20 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 public class editProfile extends Fragment{
 
-    EditText firstNameEditText;
-    EditText lastNameEditText;
-    EditText emailEditText;
-    EditText mobileEditText;
-    Button deleteAccBtn;
-    Button saveChangesBtn;
+    EditText firstNameEditText, lastNameEditText, emailEditText, mobileEditText;
+    Button deleteAccBtn, saveChangesBtn;
+
+    FirebaseAuth mAuth;
+
 
     public editProfile() {
         // Required empty public constructor
@@ -34,16 +42,50 @@ public class editProfile extends Fragment{
        View rootView = inflater.inflate(R.layout.fragment_edit_profile, container, false);
 
        //Edit Text fields
-       firstNameEditText = (EditText)rootView.findViewById(R.id.firstNameEdit);
-       lastNameEditText = (EditText)rootView.findViewById(R.id.lastNameEdit);
-       mobileEditText = (EditText)rootView.findViewById(R.id.mobileNbEdit);
-       emailEditText =(EditText)rootView.findViewById(R.id.emailEdit);
+       firstNameEditText = rootView.findViewById(R.id.firstNameEdit);
+       lastNameEditText = rootView.findViewById(R.id.lastNameEdit);
+       mobileEditText = rootView.findViewById(R.id.mobileNbEdit);
+       emailEditText = rootView.findViewById(R.id.emailEdit);
+
+       /*String user_id = mAuth.getCurrentUser().getUid();
+       DatabaseReference current_user_db = FirebaseDatabase.getInstance().getReference().child("Rider").child(user_id);
+
+       current_user_db.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+       //firstNameEditText.setText();*/
 
         //MARCUS PLEASE TAKE THE INFO FROM DATABASE HERE!!!!
 
        //Button fields
-       deleteAccBtn =(Button)rootView.findViewById(R.id.deleteAcc);
-       saveChangesBtn = (Button)rootView.findViewById(R.id.saveEdit);
+       deleteAccBtn = rootView.findViewById(R.id.deleteAcc);
+       saveChangesBtn = rootView.findViewById(R.id.saveEdit);
 
        deleteAccBtn.setOnClickListener(new View.OnClickListener() {
            @Override
