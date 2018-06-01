@@ -57,6 +57,8 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.example.android.cabbysg.models.PlaceInfo;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -73,6 +75,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 
 /**
@@ -103,6 +106,9 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
     private PlaceAutocompleteAdapter mPlaceAutocompleteAdapter, mPlaceAutocompleteAdapter1;
     private GoogleApiClient mGoogleApiClient;
     private PlaceInfo mPlace;
+    private int mLastSpinnerPosition;
+    private LatLng locLatLng = null;
+    private LatLng desLatLng = null;
 
     public nav_home() {
         // Required empty public constructor
@@ -339,9 +345,8 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
         mRouteOptions.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String selectedItem = parent.getItemAtPosition(position).toString();
-                if (selectedItem.equals("Avoid Tolls")) {
-                    getDirections(mCurrentLocation, mDestination);
+                if (mLastSpinnerPosition == position) {
+                    return;
                 } else {
                     getDirections(mCurrentLocation, mDestination);
                 }
@@ -357,8 +362,8 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String selectedItem = parent.getItemAtPosition(position).toString();
-                if (selectedItem.equals("Metered")) {
-                    calculateFare(mDisTextView.getText().toString(), mDuraTextView.getText().toString());
+                if (mLastSpinnerPosition == position) {
+
                 } else {
                     calculateFare(mDisTextView.getText().toString(), mDuraTextView.getText().toString());
                 }
@@ -380,28 +385,30 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
         mSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if ((mDestination.getText().toString().length() > 0) && (mCurrentLocation.getText().toString().length() > 0)) {
+                String destination = mDestination.getText().toString();
+                String currentLocation = mCurrentLocation.getText().toString();
+                String selectedRoute = mRouteOptions.getSelectedItem().toString();
+                String serviceType = mServiceType.getSelectedItem().toString();
+                fare = mFareTextView.toString();
+                String originLatLng = "origin=" + locLatLng.latitude + "," + locLatLng.longitude;
+                String destinationLatLng = "destination=" + desLatLng.latitude + "," + desLatLng.longitude;
+
+                if ((destination.length() > 0) && (currentLocation.length() > 0)) {
                     //save current location and destination
                 } else {
                     Toast.makeText(getActivity(), "Please enter a valid location and/or destination!", Toast.LENGTH_SHORT).show();
                 }
-                if (mRouteOptions.getSelectedItem().toString().equals("Shortest")) {
+                if (selectedRoute.equals("Shortest")) {
                     //save shortest option
-                } else if (mRouteOptions.getSelectedItem().toString().equals("Fastest")) {
+                } else if (selectedRoute.equals("Fastest")) {
                     //save fastest
                 } else {
                     //save avoid tolls
                 }
-                if (mServiceType.getSelectedItem().toString().equals("4-Seater")) {
+                if (serviceType.equals("4-Seater")) {
                     //save 4-seater
                 } else {
                     //save 6-seater
-                }
-                if (mFareType.getSelectedItem().toString().equals("Fare")) {
-                    fare = mFareTextView.toString();
-                    //save final fare and fare type
-                } else {
-                    //save metered
                 }
                 if (mBookingTime.toString().equals("Now")) {
                     //get current time and save
@@ -503,8 +510,6 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
     private void addMarker(AutoCompleteTextView mCurrentLocation, AutoCompleteTextView mDestination) {
         String locSearchString = mCurrentLocation.getText().toString();
         String desSearchString = mDestination.getText().toString();
-        LatLng locLatLng = null;
-        LatLng desLatLng = null;
         //geocoding location to latlng
         Geocoder geocoder = new Geocoder(getActivity());
         List<Address> list = new ArrayList<>();
@@ -554,8 +559,7 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
     private void getDirections(AutoCompleteTextView mCurrentLocation, AutoCompleteTextView mDestination) {
         String locSearchString = mCurrentLocation.getText().toString();
         String desSearchString = mDestination.getText().toString();
-        LatLng locLatLng = null;
-        LatLng desLatLng = null;
+
         //geocoding location to latlng
         Geocoder geocoder = new Geocoder(getActivity());
         List<Address> list = new ArrayList<>();
