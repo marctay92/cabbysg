@@ -1,91 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/navProfile"
+    android:id="@+id/fragment_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorBackground"
     tools:context=".nav_profile">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="40dp"
-        android:text="PROFILE"
-        android:textColor="@android:color/black"
-        android:textSize="30sp" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/navProfile">
 
-    <TextView
-        android:id="@+id/firstName"
-        android:layout_width="300dp"
-        android:layout_height="30dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="220dp"
-        android:background="#fdffaf"
-        android:text="first"
-        android:textAlignment="center" />
+        <!-- TODO: Update blank fragment layout -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="40dp"
+            android:text="PROFILE"
+            android:textColor="@android:color/black"
+            android:textSize="30sp" />
 
-    <TextView
-        android:id="@+id/lastName"
-        android:layout_width="300dp"
-        android:layout_height="30dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="260dp"
-        android:background="#fdffaf"
-        android:text="last"
-        android:textAlignment="center" />
+        <TextView
+            android:id="@+id/firstName"
+            android:layout_width="300dp"
+            android:layout_height="30dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="220dp"
+            android:background="#fdffaf"
+            android:text="first"
+            android:textAlignment="center" />
 
-    <TextView
-        android:id="@+id/mobileNb"
-        android:layout_width="300dp"
-        android:layout_height="30dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="300dp"
-        android:background="#fdffaf"
-        android:text="mobile"
-        android:textAlignment="center" />
+        <TextView
+            android:id="@+id/lastName"
+            android:layout_width="300dp"
+            android:layout_height="30dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="260dp"
+            android:background="#fdffaf"
+            android:text="last"
+            android:textAlignment="center" />
 
-    <TextView
-        android:id="@+id/email"
-        android:layout_width="300dp"
-        android:layout_height="30dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="340dp"
-        android:background="#fdffaf"
-        android:text="email"
-        android:textAlignment="center" />
+        <TextView
+            android:id="@+id/mobileNb"
+            android:layout_width="300dp"
+            android:layout_height="30dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="300dp"
+            android:background="#fdffaf"
+            android:text="mobile"
+            android:textAlignment="center" />
 
-    <Button
-        android:id="@+id/changePwBtn"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/firstName"
-        android:layout_below="@+id/editProfileBtn"
-        android:text="CHANGE PASSWORD"
-        android:textSize="13sp" />
+        <TextView
+            android:id="@+id/email"
+            android:layout_width="300dp"
+            android:layout_height="30dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="340dp"
+            android:background="#fdffaf"
+            android:text="email"
+            android:textAlignment="center" />
 
-    <Button
-        android:id="@+id/editProfileBtn"
-        android:layout_width="300dp"
-        android:layout_height="55dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="420dp"
-        android:text="Edit Profile" />
+        <Button
+            android:id="@+id/changePwBtn"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/firstName"
+            android:layout_below="@+id/editProfileBtn"
+            android:text="CHANGE PASSWORD"
+            android:textSize="13sp" />
 
-    <Button
-        android:id="@+id/logOutBtn"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/firstName"
-        android:layout_alignTop="@+id/changePwBtn"
-        android:text="LOG OUT" />
+        <Button
+            android:id="@+id/editProfileBtn"
+            android:layout_width="300dp"
+            android:layout_height="55dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="420dp"
+            android:text="Edit Profile" />
 
-</RelativeLayout>
+        <Button
+            android:id="@+id/logOutBtn"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/firstName"
+            android:layout_alignTop="@+id/changePwBtn"
+            android:text="LOG OUT" />
+
+
+    </RelativeLayout>
+
+
+</FrameLayout>

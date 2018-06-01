@@ -60,7 +60,7 @@ public class nav_profile extends Fragment implements View.OnClickListener {
 
         return rootView;
     }
-
+/*
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
 
@@ -81,7 +81,6 @@ public class nav_profile extends Fragment implements View.OnClickListener {
                             editProfile.setVisibility(View.VISIBLE);
                             changePw.setVisibility(View.VISIBLE);
                             logOut.setVisibility(View.VISIBLE);
-                            counter=0;
                         }
                         else if(counter==2){
                             Fragment newFragment=new nav_profile();
@@ -92,7 +91,6 @@ public class nav_profile extends Fragment implements View.OnClickListener {
                             editProfile.setVisibility(View.VISIBLE);
                             changePw.setVisibility(View.VISIBLE);
                             logOut.setVisibility(View.VISIBLE);
-                            counter=0;
                         }
                         else{
 
@@ -104,7 +102,7 @@ public class nav_profile extends Fragment implements View.OnClickListener {
             }
         });
     }
-
+*/
 
     @Override
     public void onClick(View view) {
@@ -140,11 +138,11 @@ public class nav_profile extends Fragment implements View.OnClickListener {
 
     public void replaceFragment(Fragment somefragment) {
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        transaction.replace(R.id.navProfile, somefragment);
+        transaction.replace(R.id.fragment_container, somefragment);
         transaction.addToBackStack(null);
-        editProfile.setVisibility(View.GONE);
-        changePw.setVisibility(View.GONE);
-        logOut.setVisibility(View.GONE);
+        //editProfile.setVisibility(View.GONE);
+        //changePw.setVisibility(View.GONE);
+       // logOut.setVisibility(View.GONE);
         transaction.commit();
     }
 
