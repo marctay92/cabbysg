@@ -26,6 +26,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="220dp"
         android:background="#fdffaf"
+        android:inputType="text"
         android:text="first"
         android:textAlignment="center" />
 
@@ -37,6 +38,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="260dp"
         android:background="#fdffaf"
+        android:inputType="text"
         android:text="last"
         android:textAlignment="center" />
 
@@ -48,6 +50,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="300dp"
         android:background="#fdffaf"
+        android:inputType="number"
         android:text="mobile"
         android:textAlignment="center" />
 
@@ -59,6 +62,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="340dp"
         android:background="#fdffaf"
+        android:inputType="textEmailAddress"
         android:text="email"
         android:textAlignment="center" />
 

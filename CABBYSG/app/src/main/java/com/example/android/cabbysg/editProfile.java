@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,12 +16,20 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import static android.content.ContentValues.TAG;
 
 public class editProfile extends Fragment{
 
@@ -28,6 +37,7 @@ public class editProfile extends Fragment{
     Button deleteAccBtn, saveChangesBtn;
 
     FirebaseAuth mAuth;
+    FirebaseAuth.AuthStateListener firebaseAuthListener;
 
 
     public editProfile() {
@@ -47,10 +57,10 @@ public class editProfile extends Fragment{
        mobileEditText = rootView.findViewById(R.id.mobileNbEdit);
        emailEditText = rootView.findViewById(R.id.emailEdit);
 
-       /*String user_id = mAuth.getCurrentUser().getUid();
-       DatabaseReference current_user_db = FirebaseDatabase.getInstance().getReference().child("Rider").child(user_id);
+       String user_id = mAuth.getCurrentUser().getUid();
+       final DatabaseReference current_user_db = FirebaseDatabase.getInstance().getReference().child("Rider").child(user_id);
 
-       current_user_db.addChildEventListener(new ChildEventListener() {
+       /*current_user_db.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
@@ -94,8 +104,24 @@ public class editProfile extends Fragment{
                builder.setTitle("Confirm Account Deletion?");
                builder.setMessage("Account Deletion is irreversible and all information will be lost");
 
-/**/               builder.setPositiveButton("Continue", null/*set to delete from database*/);
-               builder.setNegativeButton("Cancel",null);
+               DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                   @Override
+                   public void onClick(DialogInterface dialog, int which) {
+                       switch(which){
+                           case DialogInterface.BUTTON_POSITIVE:
+                               // User clicked the Continue button
+                               current_user_db.setValue(null);
+                               break;
+
+                           case DialogInterface.BUTTON_NEGATIVE:
+                               // User clicked the No button
+                               break;
+                       }
+                   }
+               };
+
+               builder.setPositiveButton("Continue", dialogClickListener);
+               builder.setNegativeButton("Cancel",dialogClickListener);
 
                AlertDialog dialog=builder.create();
                dialog.show();
@@ -106,9 +132,9 @@ public class editProfile extends Fragment{
         saveChangesBtn.setOnClickListener(new View.OnClickListener(){
             public void onClick(View view){
                 //Conversion to string
-                String firstNameStr = firstNameEditText.getText().toString();
-                String lastNameStr = lastNameEditText.getText().toString();
-                String mobileStr = mobileEditText.getText().toString();
+                final String firstNameStr = firstNameEditText.getText().toString();
+                final String lastNameStr = lastNameEditText.getText().toString();
+                final String mobileStr = mobileEditText.getText().toString();
                 String emailStr = emailEditText.getText().toString();
                 boolean validEditFirst = false;
                 boolean validEditLast=false;
@@ -132,13 +158,38 @@ public class editProfile extends Fragment{
                     mobileEditText.setError("Please enter your mobile number");
                 } else validEditMobile = true;
 
-//>             if(validEditFirst&&validEditLast&&validEditEmail&&validEditMobile){Save to database}
+                if(validEditFirst&&validEditLast&&validEditEmail&&validEditMobile){
+                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+                    user.updateEmail(emailStr).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (!task.isSuccessful()) {
+                                Log.d(TAG, "User email address is taken or incorrect.");
+                            }else{
+                                String user_id = mAuth.getCurrentUser().getUid();
+                                DatabaseReference current_user_db = FirebaseDatabase.getInstance().getReference().child("Rider").child(user_id);
+
+                                Map newPost = new HashMap();
+                                //newPost.put("email",str_email);
+                                newPost.put("firstName",firstNameStr);
+                                newPost.put("lastName",lastNameStr);
+                                newPost.put("mobileNum",mobileStr);
+
+                                current_user_db.setValue(newPost);
+                            }
+                        }
+                    });
+                }
             }
         });
 
        return rootView;
     }
 
-
-
+    /*@Override
+    public void onStart() {
+        super.onStart();
+        firebaseAuthListener
+    }*/
 }
