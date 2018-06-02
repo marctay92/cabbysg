@@ -44,7 +44,6 @@ public class riderRegister extends AppCompatActivity {
 
     FirebaseAuth mAuth;
     FirebaseAuth.AuthStateListener firebaseAuthListener;
-    Context ctx = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
