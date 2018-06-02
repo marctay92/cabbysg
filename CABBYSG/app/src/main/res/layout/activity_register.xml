@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rootRL"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/background"
+    android:theme="@android:style/Theme.NoTitleBar">
+
+    <EditText
+        android:id="@+id/firstName"
+        android:layout_width="match_parent"
+        android:layout_height="34dp"
+        android:layout_above="@+id/lastName"
+        android:layout_alignParentStart="true"
+        android:alpha="0.6"
+        android:ems="10"
+        android:hint="First Name"
+        android:inputType="textPersonName"
+        android:textAlignment="center"
+        android:textColorHint="@android:color/black"
+        android:textSize="12sp"
+        android:visibility="visible"
+        tools:layout_editor_absoluteX="110dp"
+        tools:layout_editor_absoluteY="103dp" />
+
+    <EditText
+        android:id="@+id/lastName"
+        android:layout_width="match_parent"
+        android:layout_height="34dp"
+        android:layout_above="@+id/dob"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="16dp"
+        android:alpha="0.6"
+        android:ems="10"
+        android:hint="Last Name"
+        android:inputType="textPersonName"
+        android:textAlignment="center"
+        android:textColor="@android:color/black"
+        android:textColorHint="@android:color/black"
+        android:textSize="12sp"
+        app:layout_constraintTop_toBottomOf="@+id/firstName"
+        tools:layout_editor_absoluteX="110dp" />
+
+    <EditText
+        android:id="@+id/dob"
+        android:layout_width="match_parent"
+        android:layout_height="34dp"
+        android:layout_above="@+id/email"
+        android:layout_alignParentStart="true"
+        android:alpha="0.6"
+        android:ems="10"
+        android:hint="Date of Birth (yyyy-mm-dd)"
+        android:inputType="date"
+        android:textAlignment="center"
+        android:textColorHint="@android:color/black"
+        android:textSize="12sp"
+        app:layout_constraintTop_toBottomOf="@+id/lastName"
+        android:focusable="false"
+        tools:layout_editor_absoluteX="110dp" />
+
+    <EditText
+        android:id="@+id/email"
+        android:layout_width="match_parent"
+        android:layout_height="34dp"
+        android:layout_above="@+id/mobileNb"
+        android:layout_alignParentStart="true"
+        android:alpha="0.6"
+        android:ems="10"
+        android:hint="Email"
+        android:inputType="textEmailAddress"
+        android:textAlignment="center"
+        android:textColorHint="@android:color/black"
+        android:textSize="12sp"
+        app:layout_constraintTop_toBottomOf="@+id/dob"
+        tools:layout_editor_absoluteX="110dp" />
+
+    <EditText
+        android:id="@+id/mobileNb"
+        android:layout_width="match_parent"
+        android:layout_height="34dp"
+        android:layout_above="@+id/password"
+        android:layout_alignParentStart="true"
+        android:alpha="0.6"
+        android:ems="10"
+        android:hint="Mobile Number"
+        android:inputType="phone"
+        android:textAlignment="center"
+        android:textColorHint="@android:color/black"
+        android:textSize="12sp"
+        app:layout_constraintTop_toBottomOf="@+id/email"
+        tools:layout_editor_absoluteX="110dp" />
+
+    <EditText
+        android:id="@+id/password"
+        android:layout_width="match_parent"
+        android:layout_height="34dp"
+        android:layout_above="@+id/rePassword"
+        android:layout_alignParentStart="true"
+        android:alpha="0.6"
+        android:ems="10"
+        android:hint="Password"
+        android:inputType="textPassword"
+        android:textAlignment="center"
+        android:textColorHint="@android:color/black"
+        android:textSize="12sp"
+        app:layout_constraintTop_toBottomOf="@+id/mobileNb"
+        tools:layout_editor_absoluteX="110dp" />
+
+    <EditText
+        android:id="@+id/rePassword"
+        android:layout_width="match_parent"
+        android:layout_height="34dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="100dp"
+        android:alpha="0.6"
+        android:ems="10"
+        android:hint="Re-enter Password"
+        android:inputType="textPassword"
+        android:textAlignment="center"
+        android:textColorHint="@android:color/black"
+        android:textSize="12sp"
+        app:layout_constraintTop_toBottomOf="@+id/password"
+        tools:layout_editor_absoluteX="110dp" />
+
+    <Button
+        android:id="@+id/registerButton"
+        tools:layout_editor_absoluteX="148dp"
+        tools:layout_editor_absoluteY="426dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="24dp"
+        android:text="REGISTER"
+        android:onClick="onReg"/>
+
+    <ImageView
+        android:id="@+id/profilePic"
+        android:layout_width="110dp"
+        android:layout_height="110dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginEnd="126dp"
+        android:layout_marginTop="30dp"
+        android:onClick="insertProfilePic"
+        app:srcCompat="@drawable/profile" />
+
+</RelativeLayout>
