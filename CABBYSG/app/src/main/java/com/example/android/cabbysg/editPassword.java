@@ -12,9 +12,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -28,6 +31,7 @@ public class editPassword extends Fragment {
 
     EditText currentPasswordText, newPasswordText, reEnterText;
     Button submitBtn;
+    boolean validCurrent,validNewPassword,validReEnter;
 
     public editPassword() {
     }
@@ -47,14 +51,30 @@ public class editPassword extends Fragment {
        submitBtn.setOnClickListener(new View.OnClickListener(){
            public void onClick(View view){
                //Conversion to string
-               String currentPasswordStr = currentPasswordText.getText().toString();
+               final String currentPasswordStr = currentPasswordText.getText().toString();
                String newPasswordStr = newPasswordText.getText().toString();
                String reEnterStr = reEnterText.getText().toString();
-               boolean validNewPassword = false;
-               boolean validReEnter=false;
-               boolean validCurrent=false;
+               validNewPassword = false;
+               validReEnter=false;
+               validCurrent=false;
 
                //Condition to check
+               FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+               AuthCredential credential = EmailAuthProvider
+                                            .getCredential(user.getEmail(), currentPasswordStr);
+                // Prompt the user to re-provide their sign-in credentials
+               user.reauthenticate(credential).addOnCompleteListener(new OnCompleteListener<Void>() {
+                   @Override
+                   public void onComplete(@NonNull Task<Void> task) {
+                       if (!task.isSuccessful()){
+                           currentPasswordText.setError("Password incorrect");
+                       }else {
+                           validCurrent = true;
+                       }
+                   }
+               });
+
+               //Check new password
                if (TextUtils.isEmpty(newPasswordStr)) {
                    newPasswordText.setError("Please enter your password");
                } else if (!(isValidPassword(newPasswordStr))){
@@ -68,26 +88,23 @@ public class editPassword extends Fragment {
                    newPasswordText.setError("Password does not match");
                } else validReEnter = true;
 
-//>               MARCUS PLEASE DO THE CHECK FOR CURRENT PASSWORD
 
                if(validNewPassword&&validReEnter&&validCurrent){
-                   FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                   String newPassword = "SOME-SECURE-PASSWORD";
-
-                   user.updatePassword(newPassword)
+                   user.updatePassword(newPasswordStr)
                            .addOnCompleteListener(new OnCompleteListener<Void>() {
                                @Override
                                public void onComplete(@NonNull Task<Void> task) {
                                    if (task.isSuccessful()) {
-                                       Log.d(TAG, "User password updated.");
+                                       Fragment newFragment=new nav_profile();
+                                       FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                                       transaction.replace(R.id.editPasswordFragment,newFragment);
+                                       transaction.addToBackStack(null);
+                                       transaction.commit();
+                                   }else {
+                                       Toast.makeText(getContext(),"Unable to update password. Try Again.",Toast.LENGTH_SHORT).show();
                                    }
                                }
                            });
-                   Fragment newFragment=new nav_profile();
-                   FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                   transaction.replace(R.id.editPasswordFragment,newFragment);
-                   transaction.addToBackStack(null);
-                   transaction.commit();
                }
            }
        });

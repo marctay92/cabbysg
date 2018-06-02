@@ -1,8 +1,10 @@
 package com.example.android.cabbysg;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -14,18 +16,20 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 import static android.content.ContentValues.TAG;
 import static android.content.Context.MODE_PRIVATE;
 
 public class nav_profile extends Fragment implements View.OnClickListener {
 
-    Button editProfile;
-    Button changePw;
-    Button logOut;
-    TextView firstNameView;
-    TextView lastNameView;
-    TextView mobileView;
-    TextView emailView;
+    Button editProfile, changePw, logOut;
+    TextView firstNameView,lastNameView,mobileView,emailView;
+
+    FirebaseAuth mAuth;
+    FirebaseAuth.AuthStateListener firebaseAuthListener;
 
     int counter;
 
@@ -38,6 +42,18 @@ public class nav_profile extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_nav_profile, container, false);
+
+        //User Authentication
+        mAuth = FirebaseAuth.getInstance();
+        firebaseAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                if(user==null){
+                    //moveToNewActivity();
+                }
+            }
+        };
 
         //Text Views
         firstNameView= rootView.findViewById(R.id.firstName);
@@ -119,9 +135,10 @@ public class nav_profile extends Fragment implements View.OnClickListener {
                 replaceFragment(fragment);
                 counter = 2;
                 break;
-/*logOut
-            case R.id.logOutBtn:
 
+            case R.id.logOutBtn:
+                FirebaseAuth.getInstance().signOut();
+                break;
                 /*SharedPreferences myPrefs = getSharedPreferences("Activity",
                         MODE_PRIVATE);
                 SharedPreferences.Editor editor = myPrefs.edit();
@@ -137,6 +154,18 @@ public class nav_profile extends Fragment implements View.OnClickListener {
         }
     }
 
+    /*@Override
+    public void onStart() {
+        super.onStart();
+        mAuth.addAuthStateListener(firebaseAuthListener);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        mAuth.removeAuthStateListener(firebaseAuthListener);
+    }*/
+
     public void replaceFragment(Fragment somefragment) {
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_container, somefragment);
@@ -147,14 +176,13 @@ public class nav_profile extends Fragment implements View.OnClickListener {
         transaction.commit();
     }
 
-    /*logout
-    private void setLoginState(boolean status) {
-        SharedPreferences sp = getSharedPreferences("LoginState",
-                MODE_PRIVATE);
-        SharedPreferences.Editor ed = sp.edit();
-        ed.putBoolean("setLoggingOut", status);
-        ed.commit();
+    /*private void moveToNewActivity() {
+        Intent i = new Intent(getActivity(), startpage.class);
+        startActivity(i);
+        getActivity().overridePendingTransition(0,0);
+
     }*/
+
 
 
     /** I believe this is the code use to extract information from the database
