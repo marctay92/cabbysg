@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/black_rectangle_box1"
+        android:layout_width="360dp"
+        android:layout_height="127dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_gravity="center_horizontal"
+        android:src="@drawable/black_rectangle_box"
+        tools:layout_editor_absoluteX="25dp"
+        tools:layout_editor_absoluteY="166dp" />
+
+    <ImageView
+        android:id="@+id/sample1"
+        android:layout_width="352dp"
+        android:layout_height="68dp"
+        android:paddingLeft="5dp"
+        android:paddingTop="5dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="false"
+        android:layout_gravity="center_horizontal"
+        android:src="@drawable/white_rectangle_box"
+        tools:layout_editor_absoluteX="30dp"
+        tools:layout_editor_absoluteY="174dp" />
+
+    <TextView
+        android:id="@+id/sampletext1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:textSize="18sp"
+        tools:layout_editor_absoluteX="126dp"
+        tools:layout_editor_absoluteY="202dp" />
+
+    <TextView
+        android:id="@+id/date1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/sample1"
+        android:layout_below="@+id/sample1"
+        android:text="11 APRIL 18 | 15:20"
+        android:textColor="#FFE446" />
+
+    <TextView
+        android:id="@+id/name1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/sample1"
+        android:layout_below="@+id/date1"
+        android:text="Jo Tan"
+        android:textColor="#FFFCB7" />
+
+    <TextView
+        android:id="@+id/vehNb1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/date1"
+        android:layout_marginStart="93dp"
+        android:text="SHG2634A"
+        android:textColor="#FFFCB7" />
+
+    <TextView
+        android:id="@+id/fare1"
+        android:layout_width="72dp"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/sample1"
+        android:layout_below="@+id/date1"
+        android:text="$ 20.00"
+        android:textColor="#FFFCB7" />
+
+    <TextView
+        android:id="@+id/sgd1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/date1"
+        android:layout_alignEnd="@+id/sample1"
+        android:text="SGD"
+        android:textColor="#FFFCB7"
+        android:textSize="8sp"
+        android:textStyle="bold" />
+
+</RelativeLayout>
