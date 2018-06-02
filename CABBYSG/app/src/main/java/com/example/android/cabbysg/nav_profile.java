@@ -40,17 +40,17 @@ public class nav_profile extends Fragment implements View.OnClickListener {
         View rootView = inflater.inflate(R.layout.fragment_nav_profile, container, false);
 
         //Text Views
-        firstNameView=(TextView)rootView.findViewById(R.id.firstName);
-        lastNameView=(TextView)rootView.findViewById(R.id.lastName);
-        mobileView=(TextView)rootView.findViewById(R.id.mobileNb);
-        emailView=(TextView)rootView.findViewById(R.id.email);
+        firstNameView= rootView.findViewById(R.id.firstName);
+        lastNameView= rootView.findViewById(R.id.lastName);
+        mobileView= rootView.findViewById(R.id.mobileNb);
+        emailView= rootView.findViewById(R.id.email);
 
         //extract TextViews from database MARCUS
 
         //Buttons
-        editProfile = (Button) rootView.findViewById(R.id.editProfileBtn);
-        changePw = (Button) rootView.findViewById(R.id.changePwBtn);
-        logOut = (Button) rootView.findViewById(R.id.logOutBtn);
+        editProfile = rootView.findViewById(R.id.editProfileBtn);
+        changePw = rootView.findViewById(R.id.changePwBtn);
+        logOut = rootView.findViewById(R.id.logOutBtn);
 
         counter=0;
 
@@ -121,7 +121,8 @@ public class nav_profile extends Fragment implements View.OnClickListener {
                 break;
 /*logOut
             case R.id.logOutBtn:
-                SharedPreferences myPrefs = getSharedPreferences("Activity",
+
+                /*SharedPreferences myPrefs = getSharedPreferences("Activity",
                         MODE_PRIVATE);
                 SharedPreferences.Editor editor = myPrefs.edit();
                 editor.clear();

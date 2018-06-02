@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -57,8 +58,8 @@ public class editProfile extends Fragment{
        mobileEditText = rootView.findViewById(R.id.mobileNbEdit);
        emailEditText = rootView.findViewById(R.id.emailEdit);
 
-       String user_id = mAuth.getCurrentUser().getUid();
-       final DatabaseReference current_user_db = FirebaseDatabase.getInstance().getReference().child("Rider").child(user_id);
+       //String user_id = mAuth.getCurrentUser().getUid();
+       //final DatabaseReference current_user_db = FirebaseDatabase.getInstance().getReference().child("Rider").child(user_id);
 
        /*current_user_db.addChildEventListener(new ChildEventListener() {
             @Override
@@ -110,7 +111,16 @@ public class editProfile extends Fragment{
                        switch(which){
                            case DialogInterface.BUTTON_POSITIVE:
                                // User clicked the Continue button
-                               current_user_db.setValue(null);
+                               //current_user_db.setValue(null);
+                               /*user.delete()
+                                       .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                           @Override
+                                           public void onComplete(@NonNull Task<Void> task) {
+                                               if (task.isSuccessful()) {
+                                                   Log.d(TAG, "User account deleted.");
+                                               }
+                                           }
+                                       });*/
                                break;
 
                            case DialogInterface.BUTTON_NEGATIVE:
@@ -159,7 +169,7 @@ public class editProfile extends Fragment{
                 } else validEditMobile = true;
 
                 if(validEditFirst&&validEditLast&&validEditEmail&&validEditMobile){
-                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                    /*FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
                     user.updateEmail(emailStr).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
@@ -177,9 +187,21 @@ public class editProfile extends Fragment{
                                 newPost.put("mobileNum",mobileStr);
 
                                 current_user_db.setValue(newPost);
-                            }
+
+                                Fragment newFragment=new nav_profile();
+                                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                                transaction.replace(R.id.editProfileFragment,newFragment);
+                                transaction.addToBackStack(null);
+                                transaction.commit();
+
+                           }
                         }
-                    });
+                    });*/
+                    Fragment newFragment=new nav_profile();
+                    FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                    transaction.replace(R.id.editProfileFragment,newFragment);
+                    transaction.addToBackStack(null);
+                    transaction.commit();
                 }
             }
         });
@@ -190,6 +212,13 @@ public class editProfile extends Fragment{
     /*@Override
     public void onStart() {
         super.onStart();
-        firebaseAuthListener
+        mAuth.addAuthStateListener(firebaseAuthListener);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        mAuth.removeAuthStateListener(firebaseAuthListener);
     }*/
+
 }
