@@ -1,5 +1,8 @@
 package com.example.android.cabbysg;
 
+import com.google.firebase.database.IgnoreExtraProperties;
+
+@IgnoreExtraProperties
 public class UserInfo {
     private String firstName;
     private String lastName;
@@ -10,35 +13,27 @@ public class UserInfo {
 
     }
 
-    public String getFirstName() {
-        return firstName;
+    public UserInfo(String firstName, String lastName,String mobileNum, String email){
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.mobileNum = mobileNum;
+        this.email = email;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public String getFirstName() {
+        return firstName;
     }
 
     public String getLastName() {
         return lastName;
     }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
     public String getMobileNum() {
         return mobileNum;
     }
 
-    public void setMobileNum(String mobileNum) {
-        this.mobileNum = mobileNum;
-    }
 
     public String getEmail() {
         return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 }

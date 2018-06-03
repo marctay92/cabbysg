@@ -34,6 +34,8 @@ public class nav_profile extends Fragment implements View.OnClickListener {
     Button editProfile, changePw, logOut;
     TextView firstNameView,lastNameView,mobileView,emailView;
 
+    DatabaseReference current_user_db;
+
     FirebaseAuth mAuth;
     //FirebaseAuth.AuthStateListener firebaseAuthListener;
 
@@ -51,6 +53,8 @@ public class nav_profile extends Fragment implements View.OnClickListener {
 
         //User Authentication
         mAuth = FirebaseAuth.getInstance();
+
+        current_user_db = FirebaseDatabase.getInstance().getReference("Rider");
 
         //Text Views
         firstNameView= rootView.findViewById(R.id.firstName);
@@ -70,35 +74,6 @@ public class nav_profile extends Fragment implements View.OnClickListener {
         logOut.setOnClickListener(this);
 
         return rootView;
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        //extract TextViews from database MARCUS
-        final String user_id = mAuth.getCurrentUser().getUid();
-        DatabaseReference current_user_db = FirebaseDatabase.getInstance().getReference().child("Rider").child(user_id);
-        /*current_user_db.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot ds: dataSnapshot.getChildren()){
-                    UserInfo uInfo = new UserInfo();
-                    uInfo.setFirstName(ds.getValue(UserInfo.class).getFirstName());
-                    uInfo.setLastName(ds.getValue(UserInfo.class).getLastName());
-                    uInfo.setMobileNum(ds.getValue(UserInfo.class).getMobileNum());
-                    uInfo.setEmail(ds.getValue(UserInfo.class).getEmail());
-                    firstNameView.setText(uInfo.getFirstName());
-                    lastNameView.setText(uInfo.getLastName());
-                    mobileView.setText(uInfo.getMobileNum());
-                    emailView.setText(uInfo.getEmail());
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });*/
     }
     /*
     @Override
@@ -143,7 +118,6 @@ public class nav_profile extends Fragment implements View.OnClickListener {
         });
     }
 */
-
     @Override
     public void onClick(View view) {
         Fragment fragment = null;
@@ -186,6 +160,26 @@ public class nav_profile extends Fragment implements View.OnClickListener {
         FirebaseUser user = mAuth.getCurrentUser();
         if(user==null){
             moveToNewActivity();
+        }else{
+            //extract TextViews from database MARCUS
+            final String user_id = user.getUid();
+            current_user_db.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    for (DataSnapshot postSnapshot: dataSnapshot.getChildren()){
+                        UserInfo uInfo = postSnapshot.getValue(UserInfo.class);
+                        firstNameView.setText(uInfo.getFirstName());
+                        lastNameView.setText(uInfo.getLastName());
+                        mobileView.setText(uInfo.getMobileNum());
+                        emailView.setText(uInfo.getEmail());
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
         }
     }
 
