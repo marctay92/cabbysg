@@ -44,6 +44,9 @@ dependencies {
     compile 'com.google.android.gms:play-services-maps:15.0.1'
     compile 'com.google.android.gms:play-services-location:15.0.1'
 
+    //Geofire
+    compile 'com.firebase:geofire-android:2.1.2'
+
     //Firebase
     //compile 'com.firebase:geofire-android:2.1.1'
     implementation 'com.google.firebase:firebase-core:16.0.0'

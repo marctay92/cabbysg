@@ -81,7 +81,7 @@ import java.util.Locale;
 
 public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiClient.OnConnectionFailedListener {
 
- private static final String TAG = "MapActivity";
+    private static final String TAG = "MapActivity";
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private static final String COURSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
@@ -103,6 +103,8 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
     private PlaceAutocompleteAdapter mPlaceAutocompleteAdapter, mPlaceAutocompleteAdapter1;
     private GoogleApiClient mGoogleApiClient;
     private PlaceInfo mPlace;
+    private String url;
+    private int mLastSpinnerPosition;
 
     public nav_home() {
         // Required empty public constructor
@@ -339,9 +341,8 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
         mRouteOptions.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String selectedItem = parent.getItemAtPosition(position).toString();
-                if (selectedItem.equals("Avoid Tolls")) {
-                    getDirections(mCurrentLocation, mDestination);
+                if (mLastSpinnerPosition == position) {
+                    return;
                 } else {
                     getDirections(mCurrentLocation, mDestination);
                 }
@@ -357,8 +358,8 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String selectedItem = parent.getItemAtPosition(position).toString();
-                if (selectedItem.equals("Metered")) {
-                    calculateFare(mDisTextView.getText().toString(), mDuraTextView.getText().toString());
+                if (mLastSpinnerPosition == position) {
+
                 } else {
                     calculateFare(mDisTextView.getText().toString(), mDuraTextView.getText().toString());
                 }
@@ -594,13 +595,8 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
         } else {
             Log.e(TAG, "Error: Destination not found");
         }
-        MarkerOptions locMarker = new MarkerOptions()
-                .position(locLatLng);
-        MarkerOptions desMarker = new MarkerOptions()
-                .position(desLatLng);
-        mMap.addMarker(locMarker);
-        mMap.addMarker(desMarker);
-        String url = getRequestUrl(locLatLng, desLatLng);
+
+        url = getRequestUrl(locLatLng, desLatLng);
         TaskRequestDirections taskRequestDirections = new TaskRequestDirections();
         taskRequestDirections.execute(url);
 
@@ -837,6 +833,7 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
                 points = new ArrayList();
                 polylineOptions = new PolylineOptions();
                 List<HashMap<String, String>> path;
+
                 if (mRouteOptions.getSelectedItem().toString().equals("Shortest")) {
                     path = lists.get(shortestRouteDis);
 
