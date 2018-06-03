@@ -219,6 +219,13 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
         }
 
         LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+        /*
+        String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("DriversAvailable");
+
+        GeoFire geoFire = new GeoFire(ref);
+        geoFire.removeLocation(userID);
+         */
     }
 
     private void startLocationUpdates() {
