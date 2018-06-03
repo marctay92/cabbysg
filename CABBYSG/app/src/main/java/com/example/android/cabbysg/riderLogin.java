@@ -1,9 +1,8 @@
 package com.example.android.cabbysg;
 
 import android.app.Activity;
-import android.content.Context;
+import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -22,8 +21,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.util.HashMap;
-import java.util.Map;
+import static android.app.ProgressDialog.STYLE_SPINNER;
 
 
 public class riderLogin extends AppCompatActivity {
@@ -31,13 +29,23 @@ public class riderLogin extends AppCompatActivity {
     private EditText riderEmail, riderPassword;
     private Button riderLoginButton;
 
+
     FirebaseAuth mAuth;
     FirebaseAuth.AuthStateListener firebaseAuthListener;
+    //Create progress dialog
+    ProgressDialog pd;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rider_login);
+        //Init pd
+        pd = new ProgressDialog(riderLogin.this, STYLE_SPINNER);
+        //Set cancelable to not let users click it away
+        pd.setCancelable(false);
+        //Set message and show
+        pd.setMessage("Please Wait...");
 
         riderEmail = findViewById(R.id.riderEmail);
         riderPassword  = findViewById(R.id.riderPassword);
@@ -48,12 +56,15 @@ public class riderLogin extends AppCompatActivity {
         firebaseAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                FirebaseUser user = mAuth.getCurrentUser();
                 if(user!=null){
                     Intent intent = new Intent(riderLogin.this, MenuBar.class);
                     startActivity(intent);
+                    pd.dismiss();
                     finish();
                     return;
+                }else{
+                    pd.dismiss();
                 }
             }
         };
@@ -61,6 +72,7 @@ public class riderLogin extends AppCompatActivity {
         riderLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                pd.show();
                 String email = riderEmail.getText().toString();
                 String password = riderPassword.getText().toString();
 
@@ -98,6 +110,7 @@ public class riderLogin extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         mAuth.removeAuthStateListener(firebaseAuthListener);
+        pd.dismiss();
     }
 
     public void navRegister(View view){

@@ -151,6 +151,7 @@ public class riderRegister extends AppCompatActivity {
                                 newPost.put("lastName",str_lastName);
                                 newPost.put("dob",str_dob);
                                 newPost.put("mobileNum",str_mobileNb);
+                                newPost.put("email",mAuth.getCurrentUser().getEmail());
 
                                 current_user_db.setValue(newPost).addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
@@ -221,4 +222,5 @@ public class riderRegister extends AppCompatActivity {
         newFragment.show(getSupportFragmentManager(), "datePicker");
     }
 
+    
 }

@@ -112,7 +112,8 @@ public class editProfile extends Fragment{
                            case DialogInterface.BUTTON_POSITIVE:
                                // User clicked the Continue button
                                //current_user_db.setValue(null);
-                               /*user.delete()
+                               /*FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                               user.delete()
                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
                                            @Override
                                            public void onComplete(@NonNull Task<Void> task) {

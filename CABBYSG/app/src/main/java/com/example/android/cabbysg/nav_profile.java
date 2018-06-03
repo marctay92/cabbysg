@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -19,6 +20,11 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import static android.content.ContentValues.TAG;
 import static android.content.Context.MODE_PRIVATE;
@@ -29,7 +35,7 @@ public class nav_profile extends Fragment implements View.OnClickListener {
     TextView firstNameView,lastNameView,mobileView,emailView;
 
     FirebaseAuth mAuth;
-    FirebaseAuth.AuthStateListener firebaseAuthListener;
+    //FirebaseAuth.AuthStateListener firebaseAuthListener;
 
     int counter;
 
@@ -45,23 +51,12 @@ public class nav_profile extends Fragment implements View.OnClickListener {
 
         //User Authentication
         mAuth = FirebaseAuth.getInstance();
-        firebaseAuthListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                if(user==null){
-                    //moveToNewActivity();
-                }
-            }
-        };
 
         //Text Views
         firstNameView= rootView.findViewById(R.id.firstName);
         lastNameView= rootView.findViewById(R.id.lastName);
         mobileView= rootView.findViewById(R.id.mobileNb);
         emailView= rootView.findViewById(R.id.email);
-
-        //extract TextViews from database MARCUS
 
         //Buttons
         editProfile = rootView.findViewById(R.id.editProfileBtn);
@@ -76,7 +71,36 @@ public class nav_profile extends Fragment implements View.OnClickListener {
 
         return rootView;
     }
-/*
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        //extract TextViews from database MARCUS
+        final String user_id = mAuth.getCurrentUser().getUid();
+        DatabaseReference current_user_db = FirebaseDatabase.getInstance().getReference().child("Rider").child(user_id);
+        /*current_user_db.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot ds: dataSnapshot.getChildren()){
+                    UserInfo uInfo = new UserInfo();
+                    uInfo.setFirstName(ds.getValue(UserInfo.class).getFirstName());
+                    uInfo.setLastName(ds.getValue(UserInfo.class).getLastName());
+                    uInfo.setMobileNum(ds.getValue(UserInfo.class).getMobileNum());
+                    uInfo.setEmail(ds.getValue(UserInfo.class).getEmail());
+                    firstNameView.setText(uInfo.getFirstName());
+                    lastNameView.setText(uInfo.getLastName());
+                    mobileView.setText(uInfo.getMobileNum());
+                    emailView.setText(uInfo.getEmail());
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });*/
+    }
+    /*
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
 
@@ -138,6 +162,7 @@ public class nav_profile extends Fragment implements View.OnClickListener {
 
             case R.id.logOutBtn:
                 FirebaseAuth.getInstance().signOut();
+                moveToNewActivity();
                 break;
                 /*SharedPreferences myPrefs = getSharedPreferences("Activity",
                         MODE_PRIVATE);
@@ -154,17 +179,21 @@ public class nav_profile extends Fragment implements View.OnClickListener {
         }
     }
 
-    /*@Override
+    @Override
     public void onStart() {
         super.onStart();
-        mAuth.addAuthStateListener(firebaseAuthListener);
+        //mAuth.addAuthStateListener(firebaseAuthListener);
+        FirebaseUser user = mAuth.getCurrentUser();
+        if(user==null){
+            moveToNewActivity();
+        }
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        mAuth.removeAuthStateListener(firebaseAuthListener);
-    }*/
+        //mAuth.removeAuthStateListener(firebaseAuthListener);
+    }
 
     public void replaceFragment(Fragment somefragment) {
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
@@ -176,12 +205,11 @@ public class nav_profile extends Fragment implements View.OnClickListener {
         transaction.commit();
     }
 
-    /*private void moveToNewActivity() {
+    private void moveToNewActivity() {
         Intent i = new Intent(getActivity(), startpage.class);
         startActivity(i);
         getActivity().overridePendingTransition(0,0);
-
-    }*/
+    }
 
 
 
