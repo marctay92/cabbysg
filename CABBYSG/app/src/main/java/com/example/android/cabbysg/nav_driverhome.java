@@ -70,6 +70,7 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
 
     private Marker mCurrent;
     private String customerID = "";
+    private String userID = "GUDHk3NHH6PvAnVmNiGXPNKahHf2";
     private boolean isLoggingOut = false;
 
     Switch location_switch;
@@ -185,6 +186,11 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
                     //Move Camera
                     mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude,longitude),15.0f));
 
+
+                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("DriversAvailable");
+                    GeoFire geoFire = new GeoFire(ref);
+
+                    geoFire.setLocation(userID, new GeoLocation(mLastLocation.getLatitude(),mLastLocation.getLongitude()));
                     //SIMCODER Part 6
                     /*
                     String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -202,7 +208,6 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
                         geoFireAvailable.setLocation(userID, new GeoLocation(mLastLocation.getLatitude(),mLastLocation.getLongitude()));
                     }
                     }
-                    geoFire.setLocation(userID, new GeoLocation(mLastLocation.getLatitude(),mLastLocation.getLongitude()));
                     */
             }
                 } else {
@@ -219,13 +224,11 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
         }
 
         LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
-        /*
-        String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("DriversAvailable");
+
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("DriversAvailable");
 
         GeoFire geoFire = new GeoFire(ref);
         geoFire.removeLocation(userID);
-         */
     }
 
     private void startLocationUpdates() {
