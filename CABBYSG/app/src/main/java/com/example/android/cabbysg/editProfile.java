@@ -3,6 +3,7 @@ package com.example.android.cabbysg;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -49,6 +50,7 @@ public class editProfile extends Fragment{
     boolean validEditLast=false;
     boolean validEditMobile=false;
     boolean validEditEmail=false;
+    boolean saveChanges = false;
     Button deleteAccBtn, saveChangesBtn;
 
     //Create Progress Dialog
@@ -131,18 +133,7 @@ public class editProfile extends Fragment{
                    public void onClick(DialogInterface dialog, int which) {
                        switch(which){
                            case DialogInterface.BUTTON_POSITIVE:
-                               // User clicked the Continue button
-                               //current_user_db.child(user_id).removeValue();
-                               /*user = FirebaseAuth.getInstance().getCurrentUser();
-                               user.delete()
-                                       .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                           @Override
-                                           public void onComplete(@NonNull Task<Void> task) {
-                                               if (task.isSuccessful()) {
-                                                   Log.d(TAG, "User account deleted.");
-                                               }
-                                           }
-                                       });*/
+                               showDialog();
                                break;
 
                            case DialogInterface.BUTTON_NEGATIVE:
@@ -168,6 +159,9 @@ public class editProfile extends Fragment{
                 lastNameStr = lastNameEditText.getText().toString();
                 mobileStr = mobileEditText.getText().toString();
                 emailStr = emailEditText.getText().toString();
+
+                //set condition to run reauthentication with the right function
+                saveChanges = true;
 
                 //Condition to check
                 if(TextUtils.isEmpty(firstNameStr)) {
@@ -228,6 +222,12 @@ public class editProfile extends Fragment{
 
        return rootView;
     }
+    private void moveToNewActivity() {
+        Intent i = new Intent(getActivity(), startpage.class);
+        startActivity(i);
+        getActivity().overridePendingTransition(0,0);
+        pd.dismiss();
+    }
 
     private void showDialog(){
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -248,7 +248,7 @@ public class editProfile extends Fragment{
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 //Put function after clicking OK
-                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
                 // Get auth credentials from the user for re-authentication. The example below shows
                 // email and password credentials but there are multiple possible providers,
@@ -262,24 +262,40 @@ public class editProfile extends Fragment{
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 if(task.isSuccessful()){
-                                    System.out.println("User re-authenticated.");
-                                    String user_id = mAuth.getCurrentUser().getUid();
-                                    DatabaseReference current_user_db = FirebaseDatabase.getInstance().getReference().child("Rider").child(user_id);
+                                    if (saveChanges) {
+                                        System.out.println("User re-authenticated.");
+                                        String user_id = mAuth.getCurrentUser().getUid();
+                                        DatabaseReference current_user_db = FirebaseDatabase.getInstance().getReference().child("Rider").child(user_id);
 
-                                    Map newPost = new HashMap();
-                                    //newPost.put("email",str_email);
-                                    newPost.put("firstName", firstNameStr);
-                                    newPost.put("lastName", lastNameStr);
-                                    newPost.put("mobileNum", mobileStr);
-                                    newPost.put("email",emailStr);
+                                        Map newPost = new HashMap();
+                                        //newPost.put("email",str_email);
+                                        newPost.put("firstName", firstNameStr);
+                                        newPost.put("lastName", lastNameStr);
+                                        newPost.put("mobileNum", mobileStr);
+                                        newPost.put("email", emailStr);
 
-                                    current_user_db.setValue(newPost);
+                                        current_user_db.setValue(newPost);
 
-                                    Fragment newFragment=new nav_profile();
-                                    FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                                    transaction.replace(R.id.editProfileFragment,newFragment);
-                                    transaction.addToBackStack(null);
-                                    transaction.commit();
+                                        Fragment newFragment = new nav_profile();
+                                        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                                        transaction.replace(R.id.editProfileFragment, newFragment);
+                                        transaction.addToBackStack(null);
+                                        transaction.commit();
+                                    }else{
+                                        // User clicked the Continue button
+                                        user.delete()
+                                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<Void> task) {
+                                                        if (task.isSuccessful()) {
+                                                            pd.show();
+                                                            Toast.makeText(getActivity(),"User account deleted",Toast.LENGTH_LONG).show();
+                                                            current_user_db.child(user.getUid()).removeValue();
+                                                            moveToNewActivity();
+                                                        }
+                                                    }
+                                                });
+                                    }
                                 }
                             }
                         });
