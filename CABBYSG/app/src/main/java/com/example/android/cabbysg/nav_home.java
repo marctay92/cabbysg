@@ -14,6 +14,7 @@ import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -39,7 +40,6 @@ import android.widget.Toast;
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
 import com.firebase.geofire.GeoQuery;
-import com.firebase.geofire.GeoQueryDataEventListener;
 import com.firebase.geofire.GeoQueryEventListener;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -397,8 +397,11 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
             public void onClick(View v) {
                 //String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
                 String userID = "ywO5uyDNM0eQ0aOpLSQD0qj9zxO2";
+
                 DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("customerRequest");
+                DatabaseReference reqRef = FirebaseDatabase.getInstance().getReference().child("customerRequest").child(userID).child("Details");
                 GeoFire geoFire = new GeoFire(ref);
+
                 String destination = mDestination.getText().toString();
                 String currentLocation = mCurrentLocation.getText().toString();
                 String selectedRoute = mRouteOptions.getSelectedItem().toString();
@@ -407,9 +410,10 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
                 String originLatLng = "origin=" + locLatLng.latitude + "," + locLatLng.longitude;
                 String destinationLatLng = "destination=" + desLatLng.latitude + "," + desLatLng.longitude;
 
-                System.out.println("Location LatLng " + locLatLng.toString());
-                geoFire.setLocation(userID, new GeoLocation(locLatLng.latitude, locLatLng.longitude));
-                System.out.println("Location LatLng " + locLatLng.toString());
+                System.out.println("GeoFire Location LatLng " + locLatLng.toString());
+
+                geoFire.setLocation(userID, new GeoLocation(locLatLng.latitude,locLatLng.longitude));
+
                 Map newRequest = new HashMap();
 
                 if ((destination.length() > 0) && (currentLocation.length() > 0)) {
@@ -442,7 +446,7 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
                     //get selected time
                 }
                 newRequest.put("fare",fare);
-                ref.child(userID).setValue(newRequest);
+                reqRef.setValue(newRequest);
 
                 getClosestDriver();
 
