@@ -77,5 +77,4 @@ public class schedule_adaptor extends ArrayAdapter<schedule_details> {
     }
 
 
-
 }
