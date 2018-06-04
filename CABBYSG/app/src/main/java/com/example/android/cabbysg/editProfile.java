@@ -26,6 +26,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -37,8 +38,11 @@ public class editProfile extends Fragment{
     EditText firstNameEditText, lastNameEditText, emailEditText, mobileEditText;
     Button deleteAccBtn, saveChangesBtn;
 
+    DatabaseReference current_user_db;
+
     FirebaseAuth mAuth;
-    FirebaseAuth.AuthStateListener firebaseAuthListener;
+    FirebaseUser user;
+    //FirebaseAuth.AuthStateListener firebaseAuthListener;
 
 
     public editProfile() {
@@ -57,6 +61,32 @@ public class editProfile extends Fragment{
        lastNameEditText = rootView.findViewById(R.id.lastNameEdit);
        mobileEditText = rootView.findViewById(R.id.mobileNbEdit);
        emailEditText = rootView.findViewById(R.id.emailEdit);
+
+       //User Authentication
+       mAuth = FirebaseAuth.getInstance();
+
+       user = FirebaseAuth.getInstance().getCurrentUser();
+
+       current_user_db = FirebaseDatabase.getInstance().getReference("Rider");
+
+        //extract TextViews from database MARCUS
+        current_user_db.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot postSnapshot: dataSnapshot.getChildren()){
+                    UserInfo uInfo = postSnapshot.getValue(UserInfo.class);
+                    firstNameEditText.setText(uInfo.getFirstName());
+                    lastNameEditText.setText(uInfo.getLastName());
+                    mobileEditText.setText(uInfo.getMobileNum());
+                    emailEditText.setText(uInfo.getEmail());
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
        //String user_id = mAuth.getCurrentUser().getUid();
        //final DatabaseReference current_user_db = FirebaseDatabase.getInstance().getReference().child("Rider").child(user_id);
@@ -111,8 +141,8 @@ public class editProfile extends Fragment{
                        switch(which){
                            case DialogInterface.BUTTON_POSITIVE:
                                // User clicked the Continue button
-                               //current_user_db.setValue(null);
-                               /*FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                               //current_user_db.child(user_id).removeValue();
+                               /*user = FirebaseAuth.getInstance().getCurrentUser();
                                user.delete()
                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
                                            @Override

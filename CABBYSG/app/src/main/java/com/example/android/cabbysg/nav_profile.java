@@ -37,6 +37,7 @@ public class nav_profile extends Fragment implements View.OnClickListener {
     DatabaseReference current_user_db;
 
     FirebaseAuth mAuth;
+    FirebaseUser user;
     //FirebaseAuth.AuthStateListener firebaseAuthListener;
 
     int counter;
@@ -54,7 +55,10 @@ public class nav_profile extends Fragment implements View.OnClickListener {
         //User Authentication
         mAuth = FirebaseAuth.getInstance();
 
+        user = FirebaseAuth.getInstance().getCurrentUser();
+
         current_user_db = FirebaseDatabase.getInstance().getReference("Rider");
+
 
         //Text Views
         firstNameView= rootView.findViewById(R.id.firstName);
@@ -72,6 +76,25 @@ public class nav_profile extends Fragment implements View.OnClickListener {
         editProfile.setOnClickListener(this);
         changePw.setOnClickListener(this);
         logOut.setOnClickListener(this);
+
+        //extract TextViews from database MARCUS
+        current_user_db.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot postSnapshot: dataSnapshot.getChildren()){
+                    UserInfo uInfo = postSnapshot.getValue(UserInfo.class);
+                    firstNameView.setText(uInfo.getFirstName());
+                    lastNameView.setText(uInfo.getLastName());
+                    mobileView.setText(uInfo.getMobileNum());
+                    emailView.setText(uInfo.getEmail());
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
         return rootView;
     }
@@ -160,26 +183,6 @@ public class nav_profile extends Fragment implements View.OnClickListener {
         FirebaseUser user = mAuth.getCurrentUser();
         if(user==null){
             moveToNewActivity();
-        }else{
-            //extract TextViews from database MARCUS
-            final String user_id = user.getUid();
-            current_user_db.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    for (DataSnapshot postSnapshot: dataSnapshot.getChildren()){
-                        UserInfo uInfo = postSnapshot.getValue(UserInfo.class);
-                        firstNameView.setText(uInfo.getFirstName());
-                        lastNameView.setText(uInfo.getLastName());
-                        mobileView.setText(uInfo.getMobileNum());
-                        emailView.setText(uInfo.getEmail());
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                }
-            });
         }
     }
 
