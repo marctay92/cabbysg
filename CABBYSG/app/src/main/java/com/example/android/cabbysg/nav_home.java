@@ -119,6 +119,7 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
     private int mLastSpinnerPosition;
     private LatLng locLatLng = null;
     private LatLng desLatLng = null;
+    private String userID = "ywO5uyDNM0eQ0aOpLSQD0qj9zxO2";
 
     public nav_home() {
         // Required empty public constructor
@@ -396,7 +397,6 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
             @Override
             public void onClick(View v) {
                 //String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                String userID = "ywO5uyDNM0eQ0aOpLSQD0qj9zxO2";
 
                 DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("customerRequest");
                 DatabaseReference reqRef = FirebaseDatabase.getInstance().getReference().child("customerRequest").child(userID).child("Details");
@@ -472,10 +472,11 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
                     driverFoundID = key;
 
                     DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Drivers").child(driverFoundID);
-                    String customerId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                    //String customerId = FirebaseAuth.getInstance().getCurrentUser().getUid();
                     HashMap map = new HashMap();
-                    map.put("customerRideId", customerId);
+                    map.put("customerRiderId", userID);
                     driverRef.updateChildren(map);
+                    System.out.println("Radius is " + radius);
 
                     getDriverLocation();
                 }
@@ -495,6 +496,8 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
             public void onGeoQueryReady() {
                 if (!driverFound) {
                     radius++;
+                    System.out.println("Radius is " + radius);
+                    getClosestDriver();
                 }
             }
             @Override
@@ -532,7 +535,6 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
                     loc2.setLongitude(driverLatLng.longitude);
 
                     float distance = loc1.distanceTo(loc2);
-
 
                     mDriverMarker = mMap.addMarker(new MarkerOptions().position(driverLatLng));
                 }
