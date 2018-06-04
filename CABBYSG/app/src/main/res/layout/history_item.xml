@@ -43,15 +43,28 @@
         android:id="@+id/date1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:paddingLeft="5dp"
         android:layout_alignStart="@+id/sample1"
         android:layout_below="@+id/sample1"
-        android:text="11 APRIL 18 | 15:20"
+        android:text="11 APRIL 18"
         android:textColor="#FFE446" />
+
+    <TextView
+        android:id="@+id/time1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@+id/date1"
+        android:paddingLeft="3dp"
+        android:layout_below="@+id/sample1"
+        android:text="15:20"
+        android:textColor="#FFE446" />
+
 
     <TextView
         android:id="@+id/name1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:paddingLeft="5dp"
         android:layout_alignStart="@+id/sample1"
         android:layout_below="@+id/date1"
         android:text="Jo Tan"
@@ -68,12 +81,21 @@
         android:textColor="#FFFCB7" />
 
     <TextView
+        android:id="@+id/dollarSign"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toStartOf="@+id/fare1"
+        android:layout_below="@+id/date1"
+        android:text="$"
+        android:textColor="#FFFCB7" />
+
+    <TextView
         android:id="@+id/fare1"
         android:layout_width="72dp"
         android:layout_height="wrap_content"
         android:layout_alignEnd="@+id/sample1"
         android:layout_below="@+id/date1"
-        android:text="$ 20.00"
+        android:text=" 20.00"
         android:textColor="#FFFCB7" />
 
     <TextView

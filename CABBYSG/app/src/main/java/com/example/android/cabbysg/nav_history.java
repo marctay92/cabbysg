@@ -34,11 +34,14 @@ public class nav_history extends Fragment {
 
         historyAdapter adapter = new historyAdapter (getActivity(),arrayOfDetails);
 
-        listView = (ListView)rootView.findViewById(R.id.listOfDetails);
+
+        ListView listView = (ListView)rootView.findViewById(R.id.listOfDetails);
         listView.setAdapter(adapter);
 
-        historyDetails newhistoryDetails = new historyDetails("Joshua","1234","010618","33");
+        historyDetails newhistoryDetails = new historyDetails("Joshua","SHA1234A","1 APRIL 2018","13:00","33.00");
         adapter.add(newhistoryDetails);
+
+
 
         return rootView;
     }
