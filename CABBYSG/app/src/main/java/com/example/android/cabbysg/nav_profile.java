@@ -82,11 +82,13 @@ public class nav_profile extends Fragment implements View.OnClickListener {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot postSnapshot: dataSnapshot.getChildren()){
-                    UserInfo uInfo = postSnapshot.getValue(UserInfo.class);
-                    firstNameView.setText(uInfo.getFirstName());
-                    lastNameView.setText(uInfo.getLastName());
-                    mobileView.setText(uInfo.getMobileNum());
-                    emailView.setText(uInfo.getEmail());
+                    if(user.getUid().equals(postSnapshot.getKey())) {
+                        UserInfo uInfo = postSnapshot.getValue(UserInfo.class);
+                        firstNameView.setText(uInfo.getFirstName());
+                        lastNameView.setText(uInfo.getLastName());
+                        mobileView.setText(uInfo.getMobileNum());
+                        emailView.setText(uInfo.getEmail());
+                    }
                 }
             }
 

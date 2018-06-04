@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -44,6 +45,8 @@ public class editProfile extends Fragment{
     FirebaseUser user;
     //FirebaseAuth.AuthStateListener firebaseAuthListener;
 
+    Map newPost = new HashMap();
+
 
     public editProfile() {
         // Required empty public constructor
@@ -69,16 +72,18 @@ public class editProfile extends Fragment{
 
        current_user_db = FirebaseDatabase.getInstance().getReference("Rider");
 
-        //extract TextViews from database MARCUS
+        //extract TextViews from database
         current_user_db.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot postSnapshot: dataSnapshot.getChildren()){
-                    UserInfo uInfo = postSnapshot.getValue(UserInfo.class);
-                    firstNameEditText.setText(uInfo.getFirstName());
-                    lastNameEditText.setText(uInfo.getLastName());
-                    mobileEditText.setText(uInfo.getMobileNum());
-                    emailEditText.setText(uInfo.getEmail());
+                    if(user.getUid().equals(postSnapshot.getKey())) {
+                        UserInfo uInfo = postSnapshot.getValue(UserInfo.class);
+                        firstNameEditText.setText(uInfo.getFirstName());
+                        lastNameEditText.setText(uInfo.getLastName());
+                        mobileEditText.setText(uInfo.getMobileNum());
+                        emailEditText.setText(uInfo.getEmail());
+                    }
                 }
             }
 
@@ -87,42 +92,6 @@ public class editProfile extends Fragment{
 
             }
         });
-
-       //String user_id = mAuth.getCurrentUser().getUid();
-       //final DatabaseReference current_user_db = FirebaseDatabase.getInstance().getReference().child("Rider").child(user_id);
-
-       /*current_user_db.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-
-
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-       //firstNameEditText.setText();*/
-
-        //MARCUS PLEASE TAKE THE INFO FROM DATABASE HERE!!!!
 
        //Button fields
        deleteAccBtn = rootView.findViewById(R.id.deleteAcc);
@@ -176,7 +145,7 @@ public class editProfile extends Fragment{
                 final String firstNameStr = firstNameEditText.getText().toString();
                 final String lastNameStr = lastNameEditText.getText().toString();
                 final String mobileStr = mobileEditText.getText().toString();
-                String emailStr = emailEditText.getText().toString();
+                final String emailStr = emailEditText.getText().toString();
                 boolean validEditFirst = false;
                 boolean validEditLast=false;
                 boolean validEditMobile=false;
@@ -200,34 +169,29 @@ public class editProfile extends Fragment{
                 } else validEditMobile = true;
 
                 if(validEditFirst&&validEditLast&&validEditEmail&&validEditMobile){
-                    /*FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                    if(!user.getEmail().equals(emailStr)) {
+                        user.updateEmail(emailStr).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (!task.isSuccessful()) {
+                                    Toast.makeText(getActivity(), "User email address is taken or incorrect.",Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+                    }else{
+                        newPost.put("email",emailStr);
+                    }
+                    String user_id = mAuth.getCurrentUser().getUid();
+                    DatabaseReference current_user_db = FirebaseDatabase.getInstance().getReference().child("Rider").child(user_id);
 
-                    user.updateEmail(emailStr).addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if (!task.isSuccessful()) {
-                                Log.d(TAG, "User email address is taken or incorrect.");
-                            }else{
-                                String user_id = mAuth.getCurrentUser().getUid();
-                                DatabaseReference current_user_db = FirebaseDatabase.getInstance().getReference().child("Rider").child(user_id);
+                    Map newPost = new HashMap();
+                    //newPost.put("email",str_email);
+                    newPost.put("firstName", firstNameStr);
+                    newPost.put("lastName", lastNameStr);
+                    newPost.put("mobileNum", mobileStr);
 
-                                Map newPost = new HashMap();
-                                //newPost.put("email",str_email);
-                                newPost.put("firstName",firstNameStr);
-                                newPost.put("lastName",lastNameStr);
-                                newPost.put("mobileNum",mobileStr);
+                    current_user_db.setValue(newPost);
 
-                                current_user_db.setValue(newPost);
-
-                                Fragment newFragment=new nav_profile();
-                                FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                                transaction.replace(R.id.editProfileFragment,newFragment);
-                                transaction.addToBackStack(null);
-                                transaction.commit();
-
-                           }
-                        }
-                    });*/
                     Fragment newFragment=new nav_profile();
                     FragmentTransaction transaction = getFragmentManager().beginTransaction();
                     transaction.replace(R.id.editProfileFragment,newFragment);
