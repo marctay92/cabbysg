@@ -406,7 +406,10 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
                 String fare = mFareTextView.getText().toString();
                 String originLatLng = "origin=" + locLatLng.latitude + "," + locLatLng.longitude;
                 String destinationLatLng = "destination=" + desLatLng.latitude + "," + desLatLng.longitude;
-                geoFire.setLocation(userID,new GeoLocation(locLatLng.latitude,locLatLng.longitude));
+
+                System.out.println("Location LatLng " + locLatLng.toString());
+                geoFire.setLocation(userID, new GeoLocation(locLatLng.latitude, locLatLng.longitude));
+                System.out.println("Location LatLng " + locLatLng.toString());
                 Map newRequest = new HashMap();
 
                 if ((destination.length() > 0) && (currentLocation.length() > 0)) {
