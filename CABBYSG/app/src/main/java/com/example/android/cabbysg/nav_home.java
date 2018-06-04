@@ -36,6 +36,11 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.firebase.geofire.GeoFire;
+import com.firebase.geofire.GeoLocation;
+import com.firebase.geofire.GeoQuery;
+import com.firebase.geofire.GeoQueryDataEventListener;
+import com.firebase.geofire.GeoQueryEventListener;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -52,13 +57,18 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.example.android.cabbysg.models.PlaceInfo;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -385,41 +395,147 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
         mSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                String userID = "ywO5uyDNM0eQ0aOpLSQD0qj9zxO2";
+                DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("customerRequest");
+                GeoFire geoFire = new GeoFire(ref);
                 String destination = mDestination.getText().toString();
                 String currentLocation = mCurrentLocation.getText().toString();
                 String selectedRoute = mRouteOptions.getSelectedItem().toString();
                 String serviceType = mServiceType.getSelectedItem().toString();
-                fare = mFareTextView.toString();
+                String fare = mFareTextView.getText().toString();
                 String originLatLng = "origin=" + locLatLng.latitude + "," + locLatLng.longitude;
                 String destinationLatLng = "destination=" + desLatLng.latitude + "," + desLatLng.longitude;
+                geoFire.setLocation(userID,new GeoLocation(locLatLng.latitude,locLatLng.longitude));
+                Map newRequest = new HashMap();
 
                 if ((destination.length() > 0) && (currentLocation.length() > 0)) {
-                    //save current location and destination
+                    newRequest.put("currentLocation",currentLocation);
+                    newRequest.put("destination",destination);
                 } else {
                     Toast.makeText(getActivity(), "Please enter a valid location and/or destination!", Toast.LENGTH_SHORT).show();
                 }
                 if (selectedRoute.equals("Shortest")) {
                     //save shortest option
+                    newRequest.put("selectedRoute",selectedRoute);
                 } else if (selectedRoute.equals("Fastest")) {
                     //save fastest
+                    newRequest.put("selectedRoute",selectedRoute);
                 } else {
                     //save avoid tolls
+                    newRequest.put("selectedRoute",selectedRoute);
                 }
                 if (serviceType.equals("4-Seater")) {
                     //save 4-seater
+                    newRequest.put("serviceType",serviceType);
                 } else {
                     //save 6-seater
+                    newRequest.put("serviceType",serviceType);
                 }
                 if (mBookingTime.toString().equals("Now")) {
                     //get current time and save
+
                 } else {
                     //get selected time
                 }
+                newRequest.put("fare",fare);
+                ref.child(userID).setValue(newRequest);
+
+                getClosestDriver();
 
             }
         });
 
         hideSoftKeyboard();
+    }
+    private int radius = 1;
+    private boolean driverFound = false;
+    private String driverFoundID;
+    private void getClosestDriver() {
+        DatabaseReference driverLocation = FirebaseDatabase.getInstance().getReference().child("driversAvailable");
+        GeoFire geoFire = new GeoFire(driverLocation);
+        GeoQuery geoQuery = geoFire.queryAtLocation(new GeoLocation(locLatLng.latitude, locLatLng.longitude), radius);
+        geoQuery.removeAllListeners();
+
+        geoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
+            @Override
+            public void onKeyEntered(String key, GeoLocation location) {
+                if (!driverFound) {
+                    driverFound = true;
+                    driverFoundID = key;
+
+                    DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Drivers").child(driverFoundID);
+                    String customerId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                    HashMap map = new HashMap();
+                    map.put("customerRideId", customerId);
+                    driverRef.updateChildren(map);
+
+                    getDriverLocation();
+                }
+            }
+
+            @Override
+            public void onKeyExited(String key) {
+
+            }
+
+            @Override
+            public void onKeyMoved(String key, GeoLocation location) {
+
+            }
+
+            @Override
+            public void onGeoQueryReady() {
+                if (!driverFound) {
+                    radius++;
+                }
+            }
+            @Override
+            public void onGeoQueryError (DatabaseError error){
+
+            }
+        });
+    }
+    private Marker mDriverMarker;
+    private void getDriverLocation(){
+        DatabaseReference driverLocationRef = FirebaseDatabase.getInstance().getReference().child("driversWorking").child(driverFoundID).child("l");
+        driverLocationRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    List<Object> map = (List<Object>) dataSnapshot.getValue();
+                    double locationLat = 0;
+                    double locationLng = 0;
+                    if(map.get(0)!=null){
+                        locationLat = Double.parseDouble(map.get(0).toString());
+                    }
+                    if(map.get(1) != null){
+                        locationLng = Double.parseDouble(map.get(1).toString());
+                    }
+                    LatLng driverLatLng = new LatLng(locationLat,locationLng);
+                    if(mDriverMarker!=null){
+                        mDriverMarker.remove();
+                    }
+                    Location loc1 = new Location("");
+                    loc1.setLatitude(locLatLng.latitude);
+                    loc1.setLongitude(locLatLng.longitude);
+
+                    Location loc2 = new Location("");
+                    loc2.setLatitude(driverLatLng.latitude);
+                    loc2.setLongitude(driverLatLng.longitude);
+
+                    float distance = loc1.distanceTo(loc2);
+
+
+                    mDriverMarker = mMap.addMarker(new MarkerOptions().position(driverLatLng));
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
     @Override
     public void onStart() {
