@@ -106,14 +106,11 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
     private PlaceAutocompleteAdapter mPlaceAutocompleteAdapter, mPlaceAutocompleteAdapter1;
     private GoogleApiClient mGoogleApiClient;
     private PlaceInfo mPlace;
-<<<<<<< HEAD
+
     private String url;
-    private int mLastSpinnerPosition;
-=======
     private int mLastSpinnerPosition;
     private LatLng locLatLng = null;
     private LatLng desLatLng = null;
->>>>>>> Schedule
 
     public nav_home() {
         // Required empty public constructor

@@ -70,7 +70,7 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
     private String MAP_FRAGMENT = "map_fragment";
 
     private Marker mCurrent;
-    private String customerID = "";
+    private String customerId = "";
     private String userID = "GUDHk3NHH6PvAnVmNiGXPNKahHf2";
     private boolean isLoggingOut = false;
 
@@ -128,7 +128,7 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
     private void disconnectDriver(){
         stopLocationUpdates();
         String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("DriversAvailable");
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("driversAvailable");
 
         GeoFire geoFire = new GeoFire(ref);
         geoFire.removeLocation(userID);
@@ -188,13 +188,10 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
                     mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude,longitude),15.0f));
 
 
-                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("DriversAvailable");
-                    GeoFire geoFire = new GeoFire(ref);
-
-                    geoFire.setLocation(userID, new GeoLocation(mLastLocation.getLatitude(),mLastLocation.getLongitude()));
                     //SIMCODER Part 6
-                    /*
-                    String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+                    String userId = userID;
+                            //FirebaseAuth.getInstance().getCurrentUser().getUid();
                     DatabaseReference availableRef = FirebaseDatabase.getInstance().getReference("driversAvailable");
                     DatabaseReference workingRef = FirebaseDatabase.getInstance().getReference("driversWorking");
 
@@ -203,15 +200,14 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
 
                     if(customerId!=""){
                         geoFireAvailable.removeLocation(userId);
-                        geoFireWorking.setLocation(userID, new GeoLocation(mLastLocation.getLatitude(),mLastLocation.getLongitude()));
+                        geoFireWorking.setLocation(userId, new GeoLocation(mLastLocation.getLatitude(),mLastLocation.getLongitude()));
                     } else {
                         geoFireWorking.removeLocation(userId);
-                        geoFireAvailable.setLocation(userID, new GeoLocation(mLastLocation.getLatitude(),mLastLocation.getLongitude()));
+                        geoFireAvailable.setLocation(userId, new GeoLocation(mLastLocation.getLatitude(),mLastLocation.getLongitude()));
                     }
                     }
-                    */
-            }
-                } else {
+
+            } else {
             Log.d("ERROR","Cannot get your location");
         }
 
@@ -223,11 +219,9 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
                 Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-
         LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
 
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("DriversAvailable");
-
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("driversAvailable");
         GeoFire geoFire = new GeoFire(ref);
         geoFire.removeLocation(userID);
     }
@@ -316,18 +310,20 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
             }
         });
         //SIMCODER Part 9
-        //getAssignedCustomer();
+        getAssignedCustomer();
     }
-/* SIMCODER Part 9
+// SIMCODER Part 9
     private void getAssignedCustomer() {
-        String driverId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        DatabaseReference assignedCustomerRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverId).child("customerRideId");
+        String driverId = userID;
+        //FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DatabaseReference assignedCustomerRef = FirebaseDatabase.getInstance().getReference().child("Drivers").child(driverId).child("customerRiderId");
 
         assignedCustomerRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                if (dataSnapshot.exists()){
-                   customerID = dataSnapshot.getValue().toString();
+                   customerId = dataSnapshot.getValue().toString();
+                   Toast.makeText(getActivity(), "Rider Found!", Toast.LENGTH_SHORT).show();
                    getAssignedCustomerPickupLocation();
 
                }
@@ -341,7 +337,7 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
     }
 
     private void getAssignedCustomerPickupLocation() {
-        DatabaseReference assignedCustomerPickupLocationRef = FirebaseDatabase.getInstance().getReference().child("customerRequest").child(customerID).child("l");
+        DatabaseReference assignedCustomerPickupLocationRef = FirebaseDatabase.getInstance().getReference().child("customerRequest").child(customerId).child("l");
         assignedCustomerPickupLocationRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -357,6 +353,17 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
                     }
                     LatLng custLatLng = new LatLng(custLat,custLng);
                     mMap.addMarker(new MarkerOptions().position(custLatLng).title("Pickup Location"));
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(custLatLng,15.0f));
+
+                    DatabaseReference availableRef = FirebaseDatabase.getInstance().getReference("driversAvailable");
+                    DatabaseReference workingRef = FirebaseDatabase.getInstance().getReference("driversWorking");
+
+                    GeoFire geoFireAvailable = new GeoFire(availableRef);
+                    GeoFire geoFireWorking = new GeoFire(workingRef);
+
+                    geoFireAvailable.removeLocation(userID);
+                    geoFireWorking.setLocation(userID, new GeoLocation(mLastLocation.getLatitude(),mLastLocation.getLongitude()));
+
                     }
                 }
 
@@ -367,7 +374,7 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
             }
         });
     }
-    */
+
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {

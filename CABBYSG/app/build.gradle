@@ -43,12 +43,11 @@ dependencies {
     implementation 'com.google.android.gms:play-services-places:15.0.1'
     implementation 'com.google.android.gms:play-services-maps:15.0.1'
     implementation 'com.google.android.gms:play-services-location:15.0.1'
-<<<<<<< HEAD
+
 
     //Geofire
-    implementation 'com.firebase:geofire-android:2.1.2'
-=======
->>>>>>> Schedule
+    implementation 'com.firebase:geofire-android:2.1.1'
+
 
     //Firebase
     //compile 'com.firebase:geofire-android:2.1.1'
