@@ -58,9 +58,7 @@ public class nav_profile extends Fragment implements View.OnClickListener {
 
         //User Authentication
         mAuth = FirebaseAuth.getInstance();
-
         user = FirebaseAuth.getInstance().getCurrentUser();
-
         current_user_db = FirebaseDatabase.getInstance().getReference("Rider");
 
         //Init pd

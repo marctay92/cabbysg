@@ -16,6 +16,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import static android.app.ProgressDialog.STYLE_SPINNER;
 
@@ -28,6 +30,7 @@ public class driverLogin extends AppCompatActivity {
 
     FirebaseAuth mAuth;
     FirebaseAuth.AuthStateListener firebaseAuthListener;
+    //DatabaseReference db = FirebaseDatabase.getInstance().getReference();
     //Create progress dialog
     ProgressDialog pd;
 
@@ -54,11 +57,15 @@ public class driverLogin extends AppCompatActivity {
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = mAuth.getCurrentUser();
                 if(user!=null){
-                    Intent intent = new Intent(driverLogin.this, driver_menubar.class);
-                    startActivity(intent);
-                    pd.dismiss();
-                    finish();
-                    return;
+                    //if (db.child("Drivers").child(user.getUid()).getKey() == user.getUid()) {
+                        Intent intent = new Intent(driverLogin.this, driver_menubar.class);
+                        startActivity(intent);
+                        pd.dismiss();
+                        finish();
+                        return;
+                    //}else if (db.child()){
+
+                    //}
                 }else{
                     pd.dismiss();
                 }
