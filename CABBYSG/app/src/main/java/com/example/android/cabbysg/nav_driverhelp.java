@@ -39,7 +39,6 @@ public class nav_driverhelp extends Fragment {
                 startActivity(callIntent);
             }
         });
-
         /*Website*/
         ImageView goEmail = view.findViewById(R.id.driverHelpEmail);
         goEmail.setOnClickListener(new View.OnClickListener() {
@@ -57,7 +56,6 @@ public class nav_driverhelp extends Fragment {
         goManual.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 driverManual newFragment=null;
                 newFragment= new driverManual();
                 FragmentManager manager=getFragmentManager();
@@ -72,7 +70,6 @@ public class nav_driverhelp extends Fragment {
         goFaq.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 driverFaq newFragment=null;
                 newFragment= new driverFaq();
                 FragmentManager manager=getFragmentManager();
@@ -83,8 +80,6 @@ public class nav_driverhelp extends Fragment {
 
             }
         });
-
-
         return view;
     }
 
