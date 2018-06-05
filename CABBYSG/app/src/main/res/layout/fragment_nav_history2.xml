@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/nav_history2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".nav_history">
@@ -32,7 +33,7 @@
                 android:layout_marginTop="30dp">
 
                 <ImageView
-                    android:id="@+id/black_rectangle_box1"
+                    android:id="@+id/history2BlackBox"
                     android:layout_width="360dp"
                     android:layout_height="250dp"
                     android:layout_alignParentStart="true"
@@ -44,26 +45,25 @@
                     android:id="@+id/sample1"
                     android:layout_width="334dp"
                     android:layout_height="84dp"
-                    android:layout_below="@+id/date1"
+                    android:layout_below="@+id/history2Date"
                     android:layout_centerHorizontal="true"
                     android:layout_gravity="center_horizontal"
                     android:src="@drawable/yellow_rectangle_box" />
 
                 <ImageView
-                    android:id="@+id/profile1"
+                    android:id="@+id/history2Profile"
                     android:layout_width="57dp"
                     android:layout_height="57dp"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignTop="@+id/name1"
-                    android:layout_marginStart="34dp"
+                    android:layout_alignStart="@+id/sample1"
+                    android:layout_alignTop="@+id/history2Name"
                     android:src="@drawable/yellowprofile" />
 
                 <ImageView
                     android:id="@+id/star1"
                     android:layout_width="13dp"
                     android:layout_height="18dp"
-                    android:layout_alignTop="@+id/profile1"
-                    android:layout_toEndOf="@+id/carplateno1"
+                    android:layout_alignTop="@+id/history2Profile"
+                    android:layout_toEndOf="@+id/history2CarPlate"
                     android:src="@drawable/yellowstar" />
 
                 <TextView
@@ -78,49 +78,59 @@
                     android:textSize="18sp" />
 
                 <TextView
-                    android:id="@+id/date1"
+                    android:id="@+id/history2Date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
                     android:layout_alignParentTop="true"
-                    android:text=" 11 APRIL 18 | 15:20"
+                    android:text=" 11 APRIL 18"
                     android:textColor="#FFE446" />
 
                 <TextView
-                    android:id="@+id/name1"
+                    android:id="@+id/history2Time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_toEndOf="@+id/history2Date"
+                    android:paddingLeft="10dp"
+                    android:text=" 11:00"
+                    android:textColor="#FFE446" />
+
+                <TextView
+                    android:id="@+id/history2Name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
                     android:layout_marginBottom="59dp"
-                    android:layout_toEndOf="@+id/date1"
+                    android:layout_toEndOf="@+id/history2Date"
                     android:text="Jo Tan"
                     android:textColor="#FFEE7C" />
 
                 <TextView
-                    android:id="@+id/carplateno1"
+                    android:id="@+id/history2CarPlate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignStart="@+id/emptyyellowcircle"
-                    android:layout_below="@+id/name1"
+                    android:layout_alignStart="@+id/history2Name"
+                    android:layout_below="@+id/history2Name"
                     android:layout_marginTop="-59dp"
                     android:text="SHG2634A"
                     android:textColor="#FFEE7C" />
 
                 <TextView
-                    android:id="@+id/carbrand"
+                    android:id="@+id/history2CarModel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignBottom="@+id/profile1"
-                    android:layout_toStartOf="@+id/star1"
+                    android:layout_alignBottom="@+id/history2Profile"
+                    android:layout_alignStart="@+id/history2Name"
                     android:text="Hyundai i40"
                     android:textColor="#FFEE7C" />
 
                 <TextView
-                    android:id="@+id/tripfare1"
+                    android:id="@+id/history2Fare"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
-                    android:layout_below="@+id/name1"
+                    android:layout_below="@+id/history2Name"
                     android:layout_marginEnd="23dp"
                     android:layout_marginTop="-59dp"
                     android:text="$ 20.00"
@@ -131,7 +141,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
-                    android:layout_below="@+id/name1"
+                    android:layout_below="@+id/history2Name"
                     android:layout_marginTop="-59dp"
                     android:text="SGD"
                     android:textColor="#FFFCB7"
@@ -139,11 +149,11 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/textView1"
+                    android:id="@+id/history2Rating"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignStart="@+id/routeselection1"
-                    android:layout_alignTop="@+id/name1"
+                    android:layout_alignStart="@+id/history2Route"
+                    android:layout_alignTop="@+id/history2Name"
                     android:text="3.9  "
                     android:textColor="#FFE446" />
 
@@ -160,7 +170,7 @@
                     android:layout_width="161dp"
                     android:layout_height="1dp"
                     android:layout_alignParentEnd="true"
-                    android:layout_below="@+id/name1"
+                    android:layout_below="@+id/history2Name"
                     android:layout_gravity="center"
                     android:layout_marginTop="-59dp"
                     android:background="#FFE446" />
@@ -175,18 +185,18 @@
                     android:background="#FFE446" />
 
                 <TextView
-                    android:id="@+id/fare1"
+                    android:id="@+id/wordFare"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/star1"
                     android:layout_marginEnd="0dp"
-                    android:layout_toStartOf="@+id/tripfare1"
+                    android:layout_toStartOf="@+id/history2Fare"
                     android:text="Fare: "
                     android:textColor="#FFEE7C"
                     android:textSize="12sp" />
 
                 <TextView
-                    android:id="@+id/routeselection1"
+                    android:id="@+id/history2Route"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/star1"
@@ -199,7 +209,7 @@
                     android:id="@+id/emptyyellowcircle"
                     android:layout_width="5dp"
                     android:layout_height="13dp"
-                    android:layout_alignEnd="@+id/date1"
+                    android:layout_alignEnd="@+id/history2Date"
                     android:layout_centerVertical="true"
                     android:src="@drawable/emptyyellowcircle" />
 
@@ -207,20 +217,20 @@
                     android:id="@+id/yellowcircle"
                     android:layout_width="6dp"
                     android:layout_height="25dp"
-                    android:layout_alignEnd="@+id/date1"
+                    android:layout_alignEnd="@+id/history2Date"
                     android:layout_alignTop="@+id/location2"
                     android:src="@drawable/yellowcircle" />
 
                 <View
                     android:layout_width="2dp"
                     android:layout_height="17dp"
-                    android:layout_alignEnd="@+id/date1"
+                    android:layout_alignEnd="@+id/history2Date"
                     android:layout_below="@+id/emptyyellowcircle"
                     android:layout_gravity="center"
                     android:background="#9D9D9D" />
 
                 <TextView
-                    android:id="@+id/location1"
+                    android:id="@+id/history2From"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
@@ -229,10 +239,10 @@
                     android:textSize="14sp" />
 
                 <TextView
-                    android:id="@+id/location2"
+                    android:id="@+id/history2To"
                     android:layout_width="wrap_content"
                     android:layout_height="31dp"
-                    android:layout_above="@+id/profile1"
+                    android:layout_above="@+id/history2Profile"
                     android:layout_centerHorizontal="true"
                     android:text="Zouk Singapore"
                     android:textColor="#FFEE7C"
@@ -260,4 +270,4 @@
 
         </LinearLayout>
 
-    </FrameLayout>
+    </LinearLayout>
