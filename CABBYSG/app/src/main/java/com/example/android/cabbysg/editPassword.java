@@ -2,6 +2,7 @@ package com.example.android.cabbysg;
 
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -18,10 +19,12 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthRecentLoginRequiredException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -31,6 +34,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static android.app.ProgressDialog.STYLE_SPINNER;
 import static android.content.ContentValues.TAG;
 
 
@@ -41,6 +45,7 @@ public class editPassword extends Fragment {
     Button submitBtn;
     boolean validCurrent,validNewPassword,validReEnter;
     FirebaseUser user;
+    String email;
 
     public editPassword() {
     }
@@ -55,6 +60,8 @@ public class editPassword extends Fragment {
        newPasswordText= rootView.findViewById(R.id.newPassword);
        reEnterText= rootView.findViewById(R.id.reEnter);
        submitBtn= rootView.findViewById(R.id.confirmChange);
+       user = FirebaseAuth.getInstance().getCurrentUser();
+       email = user.getEmail();
 
        //On click listener
        submitBtn.setOnClickListener(new View.OnClickListener(){
@@ -67,31 +74,19 @@ public class editPassword extends Fragment {
                validReEnter=false;
                validCurrent=false;
 
-               //Condition to check
-               user = FirebaseAuth.getInstance().getCurrentUser();
-               AuthCredential credential = EmailAuthProvider
-                                            .getCredential(user.getEmail(), currentPasswordStr);
-                // Prompt the user to re-provide their sign-in credentials
-               user.reauthenticate(credential).addOnCompleteListener(new OnCompleteListener<Void>() {
-                   @Override
-                   public void onComplete(@NonNull Task<Void> task) {
-                       if (!task.isSuccessful()){
-                           currentPasswordText.setError("Password incorrect");
-                       }else {
-                           validCurrent = true;
-                       }
-                   }
-               });
-
                //Check new password
+               if(TextUtils.isEmpty(currentPasswordStr)){
+                   currentPasswordText.setError("Please enter your current password");
+               }else validCurrent = true;
+
                if (TextUtils.isEmpty(newPasswordStr)) {
-                   newPasswordText.setError("Please enter your password");
+                   newPasswordText.setError("Please enter your new password");
                } else if (!(isValidPassword(newPasswordStr))){
                    newPasswordText.setError("Min 8 characters with at least 1 Upper and 1 number");
                } else validNewPassword = true;
 
                if (TextUtils.isEmpty(reEnterStr)) {
-                   reEnterText.setError("Please enter your password");
+                   reEnterText.setError("Please enter your new password");
                } else if (!(TextUtils.equals(newPasswordStr,reEnterStr))) {
                    reEnterText.setError("Password does not match");
                    newPasswordText.setError("Password does not match");
@@ -99,7 +94,39 @@ public class editPassword extends Fragment {
 
 
                if(validNewPassword&&validReEnter&&validCurrent){
-                   showDialog();
+                   System.out.println("Passwords valid");
+                   AuthCredential credential = EmailAuthProvider
+                           .getCredential(email, currentPasswordStr);
+                   user.reauthenticate(credential)
+                           .addOnCompleteListener(new OnCompleteListener<Void>() {
+                               @Override
+                               public void onComplete(@NonNull Task<Void> task) {
+                                   if(task.isSuccessful()){
+                                       System.out.println("User re-authenticated.");
+                                       user.updatePassword(newPasswordStr)
+                                               .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                   @Override
+                                                   public void onComplete(@NonNull Task<Void> task) {
+                                                       if (task.isSuccessful()) {
+                                                           Toast.makeText(getActivity(),"Password updated",Toast.LENGTH_SHORT).show();
+                                                           Fragment newFragment=new nav_profile();
+                                                           FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                                                           transaction.replace(R.id.editPasswordFragment,newFragment);
+                                                           transaction.addToBackStack(null);
+                                                           transaction.commit();
+                                                       }else {
+                                                           Toast.makeText(getContext(),"Unable to update password. Try Again.",Toast.LENGTH_SHORT).show();
+                                                       }
+                                                   }
+                                               });
+                                   }
+                               }
+                           }).addOnFailureListener(new OnFailureListener() {
+                               @Override
+                               public void onFailure(@NonNull Exception e) {
+                                   Toast.makeText(getActivity(),"User not authenticated. Try again.",Toast.LENGTH_SHORT).show();
+                               }
+                   });
                }
            }
        });
@@ -120,12 +147,11 @@ public class editPassword extends Fragment {
 
         return matcher.matches();
     }
-    private void showDialog(){
+    /*private void showDialog(){
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Re-key in your credentials");
 
         // Set up the input
-        final String email = user.getEmail();
         final EditText password = new EditText(getActivity());
         // Specify the type of input expected
         password.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
@@ -186,5 +212,5 @@ public class editPassword extends Fragment {
         });
 
         builder.show();
-    }
+    }*/
 }

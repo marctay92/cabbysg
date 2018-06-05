@@ -1,6 +1,7 @@
 package com.example.android.cabbysg;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -26,6 +27,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import static android.app.ProgressDialog.STYLE_SPINNER;
 import static android.content.ContentValues.TAG;
 import static android.content.Context.MODE_PRIVATE;
 
@@ -39,6 +41,8 @@ public class nav_profile extends Fragment implements View.OnClickListener {
     FirebaseAuth mAuth;
     FirebaseUser user;
     //FirebaseAuth.AuthStateListener firebaseAuthListener;
+    //Create Progress Dialog
+    ProgressDialog pd;
 
     int counter;
 
@@ -58,6 +62,13 @@ public class nav_profile extends Fragment implements View.OnClickListener {
         user = FirebaseAuth.getInstance().getCurrentUser();
 
         current_user_db = FirebaseDatabase.getInstance().getReference("Rider");
+
+        //Init pd
+        pd = new ProgressDialog(getActivity(), STYLE_SPINNER);
+        //Set cancelable to not let users click it away
+        pd.setCancelable(false);
+        //Set message and show
+        pd.setMessage("Please Wait...");
 
 
         //Text Views
@@ -145,17 +156,20 @@ public class nav_profile extends Fragment implements View.OnClickListener {
 */
     @Override
     public void onClick(View view) {
+        pd.show();
         Fragment fragment = null;
         switch (view.getId()) {
             case R.id.editProfileBtn:
                 fragment = new editProfile();
                 replaceFragment(fragment);
+                pd.dismiss();
                 counter = 1;
                 break;
 
             case R.id.changePwBtn:
                 fragment = new editPassword();
                 replaceFragment(fragment);
+                pd.dismiss();
                 counter = 2;
                 break;
 
@@ -208,6 +222,7 @@ public class nav_profile extends Fragment implements View.OnClickListener {
         Intent i = new Intent(getActivity(), startpage.class);
         startActivity(i);
         getActivity().overridePendingTransition(0,0);
+        pd.dismiss();
     }
 
 

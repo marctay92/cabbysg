@@ -92,6 +92,7 @@ public class riderLogin extends AppCompatActivity {
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (!task.isSuccessful()) {
                                 Toast.makeText(riderLogin.this, "sign in error", Toast.LENGTH_SHORT).show();
+                                pd.dismiss();
                             }
                         }
                     });
