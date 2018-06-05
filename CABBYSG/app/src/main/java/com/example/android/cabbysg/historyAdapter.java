@@ -29,12 +29,12 @@ public class historyAdapter extends ArrayAdapter<historyDetails> {
         if(convertView ==null){
             convertView= LayoutInflater.from(getContext()).inflate(R.layout.history_item,parent,false);
         }
-        TextView name1=(TextView)convertView.findViewById(R.id.name1);
-        TextView date1=(TextView)convertView.findViewById(R.id.date1);
-        TextView fare1=(TextView)convertView.findViewById(R.id.fare1);
-        TextView time1=(TextView)convertView.findViewById(R.id.time1);
-        TextView vehNb1=(TextView)convertView.findViewById(R.id.vehNb1);
-        ImageView blackBox=(ImageView)convertView.findViewById(R.id.black_rectangle_box1);
+        TextView name1= convertView.findViewById(R.id.name1);
+        TextView date1= convertView.findViewById(R.id.date1);
+        TextView fare1= convertView.findViewById(R.id.fare1);
+        TextView time1= convertView.findViewById(R.id.time1);
+        TextView vehNb1= convertView.findViewById(R.id.vehNb1);
+        ImageView blackBox= convertView.findViewById(R.id.black_rectangle_box1);
 
         name1.setText(historydetails.historyDriver);
         date1.setText(historydetails.historyDate);

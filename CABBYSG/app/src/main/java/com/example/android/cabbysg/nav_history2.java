@@ -36,16 +36,16 @@ public class nav_history2 extends Fragment {
         View rootView=inflater.inflate(R.layout.fragment_nav_history2, container, false);
 
         //driverProfilePic=(ImageView)rootView.findViewById(R.id.history2Profile);
-        tripDate=(TextView)rootView.findViewById(R.id.history2Date);
-        tripTime=(TextView)rootView.findViewById(R.id.history2Time);
-        driverName=(TextView)rootView.findViewById(R.id.history2Name);
-        driverVeh=(TextView)rootView.findViewById(R.id.history2CarPlate);
-        carModel=(TextView)rootView.findViewById(R.id.history2CarModel);
-        fare=(TextView)rootView.findViewById(R.id.history2Fare);
-        driverRating=(TextView)rootView.findViewById(R.id.history2Rating);
-        tripType=(TextView)rootView.findViewById(R.id.history2Route);
-        startLocation=(TextView)rootView.findViewById(R.id.history2From);
-        finalLocation=(TextView)rootView.findViewById(R.id.history2To);
+        tripDate= rootView.findViewById(R.id.history2Date);
+        tripTime= rootView.findViewById(R.id.history2Time);
+        driverName= rootView.findViewById(R.id.history2Name);
+        driverVeh= rootView.findViewById(R.id.history2CarPlate);
+        carModel= rootView.findViewById(R.id.history2CarModel);
+        fare= rootView.findViewById(R.id.history2Fare);
+        driverRating= rootView.findViewById(R.id.history2Rating);
+        tripType= rootView.findViewById(R.id.history2Route);
+        startLocation= rootView.findViewById(R.id.history2From);
+        finalLocation= rootView.findViewById(R.id.history2To);
 
 
         return rootView;
