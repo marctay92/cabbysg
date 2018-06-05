@@ -54,7 +54,7 @@ public class driverLogin extends AppCompatActivity {
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = mAuth.getCurrentUser();
                 if(user!=null){
-                    Intent intent = new Intent(driverLogin.this, MenuBar.class);
+                    Intent intent = new Intent(driverLogin.this, driver_menubar.class);
                     startActivity(intent);
                     pd.dismiss();
                     finish();
@@ -87,6 +87,7 @@ public class driverLogin extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (!task.isSuccessful()) {
+                                System.out.println("Driver Logged in");
                                 Toast.makeText(driverLogin.this, "sign in error", Toast.LENGTH_SHORT).show();
                                 pd.dismiss();
                             }
@@ -108,10 +109,6 @@ public class driverLogin extends AppCompatActivity {
         super.onStop();
         mAuth.removeAuthStateListener(firebaseAuthListener);
         pd.dismiss();
-    }
-
-    public void navRegister(View view){
-        startActivity(new Intent(this,riderRegister.class));
     }
 
 }
