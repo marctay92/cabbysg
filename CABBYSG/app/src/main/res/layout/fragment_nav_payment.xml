@@ -46,7 +46,7 @@
             android:layout_height="1dp"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:layout_marginTop="204dp"
+            android:layout_marginTop="202dp"
             android:background="#9D9D9D" />
 
         <View
@@ -61,7 +61,7 @@
         <ImageView
             android:id="@+id/imageView"
             android:layout_width="44dp"
-            android:layout_height="45dp"
+            android:layout_height="44dp"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:layout_marginStart="48dp"
@@ -79,6 +79,35 @@
             android:text="@string/add_paymentmethod"
             android:textColor="#2C2C2C"
             android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="202dp"
+            android:text="CASH"
+            android:textColor="#2C2C2C"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="66dp"
+            android:layout_height="63dp"
+            android:layout_above="@+id/divider"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="39dp"
+            android:src="@drawable/cash" />
+
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="66dp"
+            android:layout_height="47dp"
+            android:layout_alignStart="@+id/imageView2"
+            android:layout_below="@+id/divider3"
+            android:src="@drawable/mastercard" />
 
     </RelativeLayout>
 

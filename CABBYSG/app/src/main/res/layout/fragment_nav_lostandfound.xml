@@ -5,7 +5,6 @@
     android:layout_height="match_parent"
     tools:context=".nav_lostandfound">
 
-    <!-- TODO: Update blank fragment layout -->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -33,25 +32,22 @@
             android:textStyle="bold" />
 
         <Spinner
-            android:id="@+id/spinner1"
-            android:layout_width="334dp"
-            android:layout_height="39dp"
+            android:id="@+id/spinner"
+            android:layout_width="339dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="135dp"
+            android:entries="@array/triphistory" />
+
+        <!--
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="121dp"
             android:background="@android:drawable/btn_dropdown"
             android:popupBackground="#FFEE7C"
-            android:spinnerMode="dropdown" />
+            android:spinnerMode="dropdown" -->
 
-        <TextView
-            android:id="@+id/selectatrip"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="130dp"
-            android:text="Select a trip"
-            android:textColor="#2C2C2C" />
 
         <EditText
             android:id="@+id/description"
@@ -63,16 +59,16 @@
             android:background="#2C2C2C"
             android:ems="10"
             android:gravity="top"
-            android:paddingLeft="2dp"
             android:hint="Description"
             android:inputType="textMultiLine"
-            android:textColorHint="#FFEE7C"
+            android:paddingLeft="2dp"
             android:textColor="#FFEE7C"
+            android:textColorHint="#FFEE7C"
             android:textSize="14sp"
             android:visibility="visible" />
 
 
-        <TextView
+        <EditText
             android:id="@+id/textView4"
             android:layout_width="340dp"
             android:layout_height="26dp"
@@ -83,6 +79,7 @@
             android:gravity="center"
             android:hint="Phone Number"
             android:inputType="phone"
+            android:textColor="#FFEE7C"
             android:textColorHint="#FFEE7C"
             android:textSize="14sp" />
 
@@ -98,18 +95,10 @@
             android:gravity="center"
             android:hint="Email Address"
             android:inputType="textEmailAddress"
+            android:textColor="#FFEE7C"
             android:textColorHint="#FFEE7C"
             android:textSize="14sp" />
 
-        <TextView
-            android:id="@+id/textView6"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="71dp"
-            android:text="IT MAY MEAN NOTHING TO YOU, BUT SOMETHING PRECIOUS TO ANOTHER."
-            android:textSize="8sp" />
 
         <Button
             android:id="@+id/button"
@@ -122,9 +111,6 @@
             android:text="SUBMIT"
             android:textSize="18sp" />
 
-        <![CDATA[
-        />
-    ]]>
     </RelativeLayout>
 
 </FrameLayout>

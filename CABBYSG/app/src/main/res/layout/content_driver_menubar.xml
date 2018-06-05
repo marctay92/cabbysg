@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorBackground"
-    tools:context=".userManual">
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".driver_menubar"
+    tools:showIn="@layout/app_bar_driver_menubar">
 
 </android.support.constraint.ConstraintLayout>

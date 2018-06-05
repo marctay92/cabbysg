@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_driverhome"
+            android:icon="@drawable/ic_home_white"
+            android:title="HOME" />
+        <item
+            android:id="@+id/nav_driverprofile"
+            android:icon="@drawable/ic_person_white"
+            android:title="PROFILE"/>
+        <item
+            android:id="@+id/nav_driverschedule"
+            android:icon="@drawable/ic_schedule_white"
+            android:title="SCHEDULE" />
+        <item
+            android:id="@+id/nav_driverhistory"
+            android:icon="@drawable/ic_history_white"
+            android:title="HISTORY" />
+        <item
+            android:id="@+id/nav_driverlostandfound"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="LOST &amp; FOUND" />
+        <item
+            android:id="@+id/nav_driverhelp"
+            android:icon="@drawable/ic_help_white"
+            android:title="HELP" />
+    </group>
+
+
+</menu>

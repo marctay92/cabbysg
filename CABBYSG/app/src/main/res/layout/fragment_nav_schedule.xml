@@ -3,12 +3,34 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/frag_nav_schedule"
     tools:context=".nav_schedule">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Schedule" />
+        android:orientation="vertical"
+        android:paddingLeft="14dp"
+        android:paddingRight="14dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="52dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="62dp"
+            android:layout_weight="0"
+            android:gravity="center"
+            android:text="SCHEDULE"
+            android:textColor="#2C2C2C"
+            android:textSize="30sp"
+            android:textStyle="bold" />
+
+        <ListView
+            android:id="@+id/schedulelist"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="0" />
+
+    </LinearLayout>
 
 </FrameLayout>
