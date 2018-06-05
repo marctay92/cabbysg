@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.android.cabbysg">
+<uses-permission android:name="android.permission.CALL_PHONE"></uses-permission>
 
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -32,7 +33,12 @@
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
 
+<<<<<<< HEAD
         <activity android:name=".add_creditcard" />
+=======
+        <activity android:name=".faq" />
+        <activity android:name=".userManual"></activity>
+>>>>>>> origin/Help
     </application>
 
 </manifest>
