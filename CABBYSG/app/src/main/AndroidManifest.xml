@@ -49,15 +49,13 @@
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
 
-<<<<<<< HEAD
         <activity
             android:name=".driver_menubar"
             android:label="@string/title_activity_driver_menubar"
             android:theme="@style/AppTheme.NoActionBar"></activity>
-=======
-        <activity android:name=".faq" />
-        <activity android:name=".userManual"></activity>
->>>>>>> Help
+
+        <!--<activity android:name=".userManual"></activity>-->
+
     </application>
 
 </manifest>

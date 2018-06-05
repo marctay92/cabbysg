@@ -54,8 +54,6 @@ public class MenuBar extends AppCompatActivity
         fragmentTransaction.commit();
     }
 
-<<<<<<< HEAD
-=======
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -65,8 +63,6 @@ public class MenuBar extends AppCompatActivity
             super.onBackPressed();
         }
     }
-
->>>>>>> Help
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -118,7 +114,7 @@ public class MenuBar extends AppCompatActivity
 
         } else if (id == R.id.nav_help) {
             setTitle("Help");
-            nav_driverschedule fragment = new nav_driverschedule();
+            nav_driverhelp fragment = new nav_driverhelp();
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.content_frame, fragment,"Help");
             fragmentTransaction.commit();
@@ -129,10 +125,8 @@ public class MenuBar extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-<<<<<<< HEAD
-
 }
-=======
+
 /*
    public class addPaymentMethod extends Activity {
         protected void onCreate(Bundle savedInstanceState) {
@@ -146,7 +140,7 @@ public class MenuBar extends AppCompatActivity
                     startActivity(new Intent(MenuBar.this,add_creditcard.class));
                 }
             });
-        }*/
+        }
     }
  /*
     private void addPaymentMethod(){
@@ -159,4 +153,4 @@ public class MenuBar extends AppCompatActivity
     }
 */
 /*}*/
->>>>>>> Help
+
