@@ -13,8 +13,8 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -55,6 +55,8 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
@@ -63,7 +65,6 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.example.android.cabbysg.models.PlaceInfo;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -603,7 +604,6 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
                                     DEFAULT_ZOOM,
                                     "My Location");
                             setEditText(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()));
-
                         } else {
                             Log.d(TAG, "onComplete: current location is null");
                             Toast.makeText(getActivity(), "unable to get current location", Toast.LENGTH_SHORT).show();
@@ -622,6 +622,10 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
             List<Address> addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1);
             if (addresses != null) {
                 mCurrentLocation.setText(addresses.get(0).getAddressLine(0));
+                if(!getDriversAroundStarted) {
+                    getDriversAround(latLng.latitude, latLng.longitude);
+                }
+
             } else {
                 Log.e(TAG, "No addresses returned!");
             }
@@ -839,6 +843,113 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
                     permissions,
                     LOCATION_PERMISSION_REQUEST_CODE);
         }
+    }
+
+    boolean getDriversAroundStarted = false;
+    List<Marker> availableMarkerList = new ArrayList<Marker>();
+    List<Marker> workingMarkerList = new ArrayList<Marker>();
+    private void getDriversAround(double lat, double lng){
+        getDriversAroundStarted = true;
+        DatabaseReference availableDriversLocation = FirebaseDatabase.getInstance().getReference().child("driversAvailable");
+
+        GeoFire geoFire = new GeoFire(availableDriversLocation);
+        GeoQuery geoQuery = geoFire.queryAtLocation(new GeoLocation(lat,lng), 10000);
+        geoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
+            @Override
+            public void onKeyEntered(String key, GeoLocation location) {
+                for (Marker markerIt : availableMarkerList){
+                    if(markerIt.getTag().equals(key))
+                        return;
+                }
+
+                LatLng driverLocation = new LatLng(location.latitude,location.longitude);
+                Marker mDriverMarker = mMap.addMarker(new MarkerOptions().position(driverLocation).title(key).icon(BitmapDescriptorFactory.fromResource(R.mipmap.available_taxi)));
+                mDriverMarker.setTag(key);
+                availableMarkerList.add(mDriverMarker);
+            }
+
+            @Override
+            public void onKeyExited(String key) {
+                for (Marker markerIt : availableMarkerList){
+                    if(markerIt.getTag().equals(key)) {
+                        markerIt.remove();
+                        availableMarkerList.remove(markerIt);
+                        return;
+                    }
+                }
+            }
+
+            @Override
+            public void onKeyMoved(String key, GeoLocation location) {
+                for (Marker markerIt : availableMarkerList) {
+                    if (markerIt.getTag().equals(key)){
+                        markerIt.setPosition(new LatLng(location.latitude,location.longitude));
+                    }
+
+                }
+            }
+
+            @Override
+            public void onGeoQueryReady() {
+
+            }
+
+            @Override
+            public void onGeoQueryError(DatabaseError error) {
+
+            }
+        });
+        DatabaseReference workingDriversLocation = FirebaseDatabase.getInstance().getReference().child("driversWorking");
+
+        GeoFire geoFire1 = new GeoFire(workingDriversLocation);
+        GeoQuery geoQuery1 = geoFire1.queryAtLocation(new GeoLocation(lat,lng), 10000);
+        geoQuery1.addGeoQueryEventListener(new GeoQueryEventListener() {
+            @Override
+            public void onKeyEntered(String key, GeoLocation location) {
+                for (Marker markerIt : workingMarkerList){
+                    if(markerIt.getTag().equals(key))
+                        return;
+                }
+
+                LatLng workingDriverLocation = new LatLng(location.latitude,location.longitude);
+                Marker mWorkingDriverMarker = mMap.addMarker(new MarkerOptions().position(workingDriverLocation).title(key).icon(BitmapDescriptorFactory.fromResource(R.mipmap.working_taxi)));
+                mWorkingDriverMarker.setTag(key);
+                workingMarkerList.add(mWorkingDriverMarker);
+            }
+
+            @Override
+            public void onKeyExited(String key) {
+                for (Marker markerIt : workingMarkerList){
+                    if(markerIt.getTag().equals(key)) {
+                        markerIt.remove();
+                        workingMarkerList.remove(markerIt);
+                        return;
+                    }
+                }
+            }
+
+            @Override
+            public void onKeyMoved(String key, GeoLocation location) {
+                for (Marker markerIt : workingMarkerList) {
+                    if (markerIt.getTag().equals(key)){
+                        markerIt.setPosition(new LatLng(location.latitude,location.longitude));
+                    }
+
+                }
+            }
+
+            @Override
+            public void onGeoQueryReady() {
+
+            }
+
+            @Override
+            public void onGeoQueryError(DatabaseError error) {
+
+            }
+        });
+
+
     }
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
