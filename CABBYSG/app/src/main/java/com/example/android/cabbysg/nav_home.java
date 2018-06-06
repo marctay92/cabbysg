@@ -32,6 +32,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -120,6 +121,7 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
     private int mLastSpinnerPosition;
     private LatLng locLatLng = null;
     private LatLng desLatLng = null;
+    private ProgressBar mProgressBar;
     private String userID = "ywO5uyDNM0eQ0aOpLSQD0qj9zxO2";
 
     public nav_home() {
@@ -272,6 +274,7 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
 
         mGps = v.findViewById(R.id.ic_gps);
         mSubmit = v.findViewById(R.id.submitBtn);
+        mProgressBar = v.findViewById(R.id.progressBar);
 
         getLocationPermission();
         return v;
@@ -449,6 +452,7 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
                 newRequest.put("fare",fare);
                 reqRef.setValue(newRequest);
 
+                mProgressBar.setVisibility(View.VISIBLE);
                 getClosestDriver();
 
             }
@@ -498,6 +502,7 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
                 if (!driverFound) {
                     radius++;
                     System.out.println("Radius is " + radius);
+
                     getClosestDriver();
                 }
             }
