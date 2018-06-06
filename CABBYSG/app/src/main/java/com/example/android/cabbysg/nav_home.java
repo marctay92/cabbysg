@@ -404,7 +404,7 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
         mSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /*
+
                 //String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
                 DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("customerRequest");
@@ -456,9 +456,9 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
                 }
                 newRequest.put("fare",fare);
                 reqRef.setValue(newRequest);
-*/
+
                 mProgressBar.setVisibility(View.VISIBLE);
-                //getClosestDriver();
+                getClosestDriver();
 
             }
         });
@@ -519,9 +519,11 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
     }
     private Marker mDriverMarker;
     private void getDriverLocation(){
+
         mProgressBar.setVisibility(View.INVISIBLE);
         mLinearLayout1.setVisibility(View.INVISIBLE);
         mLinearLayout2.setVisibility(View.VISIBLE);
+
         DatabaseReference driverLocationRef = FirebaseDatabase.getInstance().getReference().child("driversWorking").child(driverFoundID).child("l");
         driverLocationRef.addValueEventListener(new ValueEventListener() {
             @Override
