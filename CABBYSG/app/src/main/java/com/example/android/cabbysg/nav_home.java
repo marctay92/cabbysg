@@ -123,7 +123,7 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
     private LatLng locLatLng = null;
     private LatLng desLatLng = null;
     private ProgressBar mProgressBar;
-    private LinearLayout mLinearLayout1;
+    private LinearLayout mLinearLayout1, mLinearLayout2;
     private String userID = "ywO5uyDNM0eQ0aOpLSQD0qj9zxO2";
 
     public nav_home() {
@@ -278,6 +278,7 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
         mSubmit = v.findViewById(R.id.submitBtn);
         mProgressBar = v.findViewById(R.id.progressBar);
         mLinearLayout1 = v.findViewById(R.id.linearLayout1);
+        mLinearLayout2 = v.findViewById(R.id.linearLayout2);
 
         getLocationPermission();
         return v;
@@ -403,6 +404,7 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
         mSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                /*
                 //String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
                 DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("customerRequest");
@@ -454,9 +456,9 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
                 }
                 newRequest.put("fare",fare);
                 reqRef.setValue(newRequest);
-
+*/
                 mProgressBar.setVisibility(View.VISIBLE);
-                getClosestDriver();
+                //getClosestDriver();
 
             }
         });
@@ -517,7 +519,9 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
     }
     private Marker mDriverMarker;
     private void getDriverLocation(){
+        mProgressBar.setVisibility(View.INVISIBLE);
         mLinearLayout1.setVisibility(View.INVISIBLE);
+        mLinearLayout2.setVisibility(View.VISIBLE);
         DatabaseReference driverLocationRef = FirebaseDatabase.getInstance().getReference().child("driversWorking").child(driverFoundID).child("l");
         driverLocationRef.addValueEventListener(new ValueEventListener() {
             @Override
