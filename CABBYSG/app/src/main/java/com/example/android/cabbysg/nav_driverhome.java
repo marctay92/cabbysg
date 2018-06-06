@@ -322,8 +322,10 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                if (dataSnapshot.exists()){
+
                    customerId = dataSnapshot.getValue().toString();
                    Toast.makeText(getActivity(), "Rider Found!", Toast.LENGTH_SHORT).show();
+
                    getAssignedCustomerPickupLocation();
 
                }

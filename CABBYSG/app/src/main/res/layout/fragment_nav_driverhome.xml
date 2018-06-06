@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -15,6 +16,8 @@
             android:name="com.google.android.gms.maps.SupportMapFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
             tools:context=".nav_driverhome" />
 
         <Switch
@@ -27,16 +30,16 @@
             android:layout_marginTop="13dp" />
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="120dp"
-            android:layout_marginTop="392dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
             android:background="@android:color/black"
             android:baselineAligned="true"
-            android:layout_alignParentBottom="true"
             android:orientation="horizontal">
 
             <RelativeLayout
-                android:layout_width="132dp"
+                android:layout_width="138dp"
                 android:layout_height="140dp">
 
                 <ImageView
@@ -76,7 +79,7 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:layout_width="132dp"
+                android:layout_width="138dp"
                 android:layout_height="140dp">
 
                 <EditText
@@ -87,9 +90,9 @@
                     android:layout_centerHorizontal="true"
                     android:layout_marginBottom="45dp"
                     android:ems="10"
+                    android:focusable="false"
                     android:inputType="textPersonName"
                     android:text="RATING"
-                    android:focusable="false"
                     android:textColor="@android:color/white"
                     android:textSize="13sp" />
 
@@ -105,10 +108,19 @@
                     android:text="4.8"
                     android:textColor="@color/yellow"
                     android:textSize="24sp" />
+
+                <ImageView
+                    android:id="@+id/imageView4"
+                    android:layout_width="66dp"
+                    android:layout_height="60dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="3dp"
+                    android:src="@drawable/yellowstar" />
             </RelativeLayout>
 
             <RelativeLayout
-                android:layout_width="132dp"
+                android:layout_width="138dp"
                 android:layout_height="140dp">
 
                 <EditText
@@ -118,8 +130,8 @@
                     android:layout_alignParentBottom="true"
                     android:layout_centerHorizontal="true"
                     android:layout_marginBottom="45dp"
-                    android:focusable="false"
                     android:ems="10"
+                    android:focusable="false"
                     android:gravity="center_vertical|center_horizontal|center"
                     android:inputType="textPersonName"
                     android:text="CANCELLATION"
@@ -132,7 +144,7 @@
                     android:layout_height="45dp"
                     android:layout_alignParentBottom="true"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginBottom="17dp"
+                    android:layout_marginBottom="16dp"
                     android:focusable="false"
                     android:inputType="textPersonName"
                     android:text="12.0%"
