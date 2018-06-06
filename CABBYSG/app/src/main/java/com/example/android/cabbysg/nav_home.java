@@ -32,6 +32,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -122,6 +123,7 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
     private LatLng locLatLng = null;
     private LatLng desLatLng = null;
     private ProgressBar mProgressBar;
+    private LinearLayout mLinearLayout1;
     private String userID = "ywO5uyDNM0eQ0aOpLSQD0qj9zxO2";
 
     public nav_home() {
@@ -275,6 +277,7 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
         mGps = v.findViewById(R.id.ic_gps);
         mSubmit = v.findViewById(R.id.submitBtn);
         mProgressBar = v.findViewById(R.id.progressBar);
+        mLinearLayout1 = v.findViewById(R.id.linearLayout1);
 
         getLocationPermission();
         return v;
@@ -514,6 +517,7 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
     }
     private Marker mDriverMarker;
     private void getDriverLocation(){
+        mLinearLayout1.setVisibility(View.INVISIBLE);
         DatabaseReference driverLocationRef = FirebaseDatabase.getInstance().getReference().child("driversWorking").child(driverFoundID).child("l");
         driverLocationRef.addValueEventListener(new ValueEventListener() {
             @Override
