@@ -1,23 +1,16 @@
 package com.example.android.cabbysg;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -28,8 +21,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import static android.app.ProgressDialog.STYLE_SPINNER;
-import static android.content.ContentValues.TAG;
-import static android.content.Context.MODE_PRIVATE;
+
 
 public class nav_profile extends Fragment implements View.OnClickListener {
 
@@ -40,14 +32,11 @@ public class nav_profile extends Fragment implements View.OnClickListener {
 
     FirebaseAuth mAuth;
     FirebaseUser user;
-    //FirebaseAuth.AuthStateListener firebaseAuthListener;
+
     //Create Progress Dialog
     ProgressDialog pd;
 
-    int counter;
-
     public nav_profile() {
-        // Required empty public constructor
     }
 
     @Override
@@ -80,8 +69,6 @@ public class nav_profile extends Fragment implements View.OnClickListener {
         changePw = rootView.findViewById(R.id.changePwBtn);
         logOut = rootView.findViewById(R.id.logOutBtn);
 
-        counter=0;
-
         editProfile.setOnClickListener(this);
         changePw.setOnClickListener(this);
         logOut.setOnClickListener(this);
@@ -109,49 +96,7 @@ public class nav_profile extends Fragment implements View.OnClickListener {
 
         return rootView;
     }
-    /*
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
 
-        super.onViewCreated(view, savedInstanceState);
-        getView().setFocusableInTouchMode(true);
-        getView().requestFocus();
-        getView().setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if (event.getAction() == KeyEvent.ACTION_DOWN) {
-                    if (keyCode == KeyEvent.KEYCODE_BACK) {
-                        if (counter == 1){
-                            Fragment newFragment=new nav_profile();
-                            FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                            transaction.replace(R.id.editProfileFragment,newFragment);
-                            transaction.addToBackStack(null);
-                            transaction.commit();
-                            editProfile.setVisibility(View.VISIBLE);
-                            changePw.setVisibility(View.VISIBLE);
-                            logOut.setVisibility(View.VISIBLE);
-                        }
-                        else if(counter==2){
-                            Fragment newFragment=new nav_profile();
-                            FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                            transaction.replace(R.id.editPasswordFragment,newFragment);
-                            transaction.addToBackStack(null);
-                            transaction.commit();
-                            editProfile.setVisibility(View.VISIBLE);
-                            changePw.setVisibility(View.VISIBLE);
-                            logOut.setVisibility(View.VISIBLE);
-                        }
-                        else{
-
-                        }
-                    }
-                    return true;
-                }
-                return false;
-            }
-        });
-    }
-*/
     @Override
     public void onClick(View view) {
         pd.show();
@@ -161,32 +106,19 @@ public class nav_profile extends Fragment implements View.OnClickListener {
                 fragment = new editProfile();
                 replaceFragment(fragment);
                 pd.dismiss();
-                counter = 1;
                 break;
 
             case R.id.changePwBtn:
                 fragment = new editPassword();
                 replaceFragment(fragment);
                 pd.dismiss();
-                counter = 2;
                 break;
 
             case R.id.logOutBtn:
                 FirebaseAuth.getInstance().signOut();
                 moveToNewActivity();
                 break;
-                /*SharedPreferences myPrefs = getSharedPreferences("Activity",
-                        MODE_PRIVATE);
-                SharedPreferences.Editor editor = myPrefs.edit();
-                editor.clear();
-                editor.commit();
-                //AppState.getSingleInstance().setLoggingOut(true);
-                setLoginState(true);
-                Log.d(TAG, "Now log out and start the activity login");
-                Intent intent = new Intent(nav_profile.this,
-                        LoginPage.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);*/
+
         }
     }
 
@@ -203,16 +135,12 @@ public class nav_profile extends Fragment implements View.OnClickListener {
     @Override
     public void onStop() {
         super.onStop();
-        //mAuth.removeAuthStateListener(firebaseAuthListener);
     }
 
     public void replaceFragment(Fragment somefragment) {
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_container, somefragment);
         transaction.addToBackStack(null);
-        //editProfile.setVisibility(View.GONE);
-        //changePw.setVisibility(View.GONE);
-       // logOut.setVisibility(View.GONE);
         transaction.commit();
     }
 
@@ -222,19 +150,6 @@ public class nav_profile extends Fragment implements View.OnClickListener {
         getActivity().overridePendingTransition(0,0);
         pd.dismiss();
     }
-
-
-
-    /** I believe this is the code use to extract information from the database
-     * however your friend uses multiple "background workers" to achieve this
-
-     @Override public void displayFieldDetails(JsonObject obj) {
-     name = findViewById(R.id.edit_name);
-     name = findViewById(R.id.edit_name);
-     phoneNo = findViewById(R.id.edit_phoneNo);
-     email = findViewById(R.id.edit_email);
-     }**/
-
 }
 
 

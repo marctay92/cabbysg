@@ -1,26 +1,28 @@
 package com.example.android.cabbysg;
 
+
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.text.InputType;
 import android.text.TextUtils;
-import android.text.TextWatcher;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.android.cabbysg.R;
+import com.example.android.cabbysg.UserInfo;
+import com.example.android.cabbysg.nav_profile;
+import com.example.android.cabbysg.startpage;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
@@ -29,7 +31,6 @@ import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthRecentLoginRequiredException;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -40,12 +41,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static android.app.ProgressDialog.STYLE_SPINNER;
-import static android.content.ContentValues.TAG;
 
-public class editProfile extends Fragment{
+public class driverEditProfile extends Fragment {
 
     EditText firstNameEditText, lastNameEditText, emailEditText, mobileEditText;
-    String firstNameStr, lastNameStr, mobileStr, emailStr;
+    TextView carPlateTextView,carModelTextView;
+    String firstNameStr, lastNameStr, mobileStr, emailStr, carPlateStr, carModelStr;
     boolean validEditFirst = false;
     boolean validEditLast=false;
     boolean validEditMobile=false;
@@ -64,9 +65,7 @@ public class editProfile extends Fragment{
 
     Map newPost = new HashMap();
 
-
-    public editProfile() {
-        // Required empty public constructor
+    public driverEditProfile() {
     }
 
 
@@ -74,8 +73,7 @@ public class editProfile extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-       View rootView = inflater.inflate(R.layout.fragment_edit_profile, container, false);
-
+        View rootView = inflater.inflate(R.layout.fragment_driver_edit_profile, container, false);
         //Init pd
         pd = new ProgressDialog(getActivity(), STYLE_SPINNER);
         //Set cancelable to not let users click it away
@@ -83,18 +81,21 @@ public class editProfile extends Fragment{
         //Set message and show
         pd.setMessage("Please Wait...");
 
-       //Edit Text fields
-       firstNameEditText = rootView.findViewById(R.id.firstNameEdit);
-       lastNameEditText = rootView.findViewById(R.id.lastNameEdit);
-       mobileEditText = rootView.findViewById(R.id.mobileNbEdit);
-       emailEditText = rootView.findViewById(R.id.emailEdit);
+        //Edit Text fields
+        firstNameEditText = rootView.findViewById(R.id.dFirstNameEdit);
+        lastNameEditText = rootView.findViewById(R.id.dLastNameEdit);
+        mobileEditText = rootView.findViewById(R.id.dMobileNbEdit);
+        emailEditText = rootView.findViewById(R.id.dEmailEdit);
+        carModelTextView = rootView.findViewById(R.id.dRegNum);
+        carPlateTextView = rootView.findViewById(R.id.dModel);
 
-       //User Authentication
-       mAuth = FirebaseAuth.getInstance();
 
-       user = FirebaseAuth.getInstance().getCurrentUser();
+        //User Authentication
+        mAuth = FirebaseAuth.getInstance();
 
-       current_user_db = FirebaseDatabase.getInstance().getReference("Rider");
+        user = FirebaseAuth.getInstance().getCurrentUser();
+
+        current_user_db = FirebaseDatabase.getInstance().getReference("Drivers");
 
         //extract TextViews from database
         current_user_db.addValueEventListener(new ValueEventListener() {
@@ -102,11 +103,13 @@ public class editProfile extends Fragment{
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot postSnapshot: dataSnapshot.getChildren()){
                     if(user.getUid().equals(postSnapshot.getKey())) {
-                        UserInfo uInfo = postSnapshot.getValue(UserInfo.class);
-                        firstNameEditText.setText(uInfo.getFirstName());
-                        lastNameEditText.setText(uInfo.getLastName());
-                        mobileEditText.setText(uInfo.getMobileNum());
-                        emailEditText.setText(uInfo.getEmail());
+                        DriverInfo dInfo = postSnapshot.getValue(DriverInfo.class);
+                        firstNameEditText.setText(dInfo.firstName);
+                        lastNameEditText.setText(dInfo.lastName);
+                        mobileEditText.setText(dInfo.mobileNum);
+                        emailEditText.setText(dInfo.email);
+                        carPlateTextView.setText(dInfo.model);
+                        carModelTextView.setText(dInfo.regNum);
                     }
                 }
             }
@@ -117,41 +120,41 @@ public class editProfile extends Fragment{
             }
         });
 
-       //Button fields
-       deleteAccBtn = rootView.findViewById(R.id.deleteAcc);
-       saveChangesBtn = rootView.findViewById(R.id.saveEdit);
+        //Button fields
+        deleteAccBtn = rootView.findViewById(R.id.dDeleteAcc);
+        saveChangesBtn = rootView.findViewById(R.id.dSaveEdit);
 
-       deleteAccBtn.setOnClickListener(new View.OnClickListener() {
-           @Override
-           public void onClick(View v) {
-               AlertDialog.Builder builder=new AlertDialog.Builder(v.getContext());
-               builder.setTitle("Confirm Account Deletion?");
-               builder.setMessage("Account Deletion is irreversible and all information will be lost");
+        deleteAccBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder=new AlertDialog.Builder(v.getContext());
+                builder.setTitle("Confirm Account Deletion?");
+                builder.setMessage("Account Deletion is irreversible and all information will be lost");
 
-               DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-                   @Override
-                   public void onClick(DialogInterface dialog, int which) {
-                       switch(which){
-                           case DialogInterface.BUTTON_POSITIVE:
-                               showDialog();
-                               break;
+                DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch(which){
+                            case DialogInterface.BUTTON_POSITIVE:
+                                showDialog();
+                                break;
 
-                           case DialogInterface.BUTTON_NEGATIVE:
-                               // User clicked the No button
-                               break;
-                       }
-                   }
-               };
+                            case DialogInterface.BUTTON_NEGATIVE:
+                                // User clicked the No button
+                                break;
+                        }
+                    }
+                };
 
-               builder.setPositiveButton("Continue", dialogClickListener);
-               builder.setNegativeButton("Cancel",dialogClickListener);
+                builder.setPositiveButton("Continue", dialogClickListener);
+                builder.setNegativeButton("Cancel",dialogClickListener);
 
-               AlertDialog dialog=builder.create();
-               dialog.show();
-           }
-       });
+                AlertDialog dialog=builder.create();
+                dialog.show();
+            }
+        });
 
-       //saveChangesBtn.setOnClickListener(--->"MARCUS PLEASE SEND THE CHANGES TO THE DATABASE HERE!!!");
+        //saveChangesBtn.setOnClickListener(--->"MARCUS PLEASE SEND THE CHANGES TO THE DATABASE HERE!!!");
         saveChangesBtn.setOnClickListener(new View.OnClickListener(){
             public void onClick(View view){
                 //Conversion to string
@@ -159,6 +162,9 @@ public class editProfile extends Fragment{
                 lastNameStr = lastNameEditText.getText().toString();
                 mobileStr = mobileEditText.getText().toString();
                 emailStr = emailEditText.getText().toString();
+                carModelStr = carModelTextView.getText().toString();
+                carPlateStr = carPlateTextView.getText().toString();
+
 
                 //set condition to run reauthentication with the right function
                 saveChanges = true;
@@ -187,7 +193,7 @@ public class editProfile extends Fragment{
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()) {
                                 String user_id = mAuth.getCurrentUser().getUid();
-                                DatabaseReference current_user_db = FirebaseDatabase.getInstance().getReference().child("Rider").child(user_id);
+                                DatabaseReference current_user_db = FirebaseDatabase.getInstance().getReference().child("Drivers").child(user_id);
 
                                 Map newPost = new HashMap();
                                 //newPost.put("email",str_email);
@@ -195,6 +201,8 @@ public class editProfile extends Fragment{
                                 newPost.put("lastName", lastNameStr);
                                 newPost.put("mobileNum", mobileStr);
                                 newPost.put("email",emailStr);
+                                newPost.put("regNum",carPlateStr);
+                                newPost.put("model",carModelStr);
 
                                 current_user_db.setValue(newPost);
 
@@ -219,8 +227,7 @@ public class editProfile extends Fragment{
                 }
             }
         });
-
-       return rootView;
+        return rootView;
     }
     private void moveToNewActivity() {
         Intent i = new Intent(getActivity(), startpage.class);
@@ -265,20 +272,21 @@ public class editProfile extends Fragment{
                                     if (saveChanges) {
                                         System.out.println("User re-authenticated.");
                                         String user_id = mAuth.getCurrentUser().getUid();
-                                        DatabaseReference current_user_db = FirebaseDatabase.getInstance().getReference().child("Rider").child(user_id);
+                                        DatabaseReference current_user_db = FirebaseDatabase.getInstance().getReference().child("Drivers").child(user_id);
 
                                         Map newPost = new HashMap();
-                                        //newPost.put("email",str_email);
                                         newPost.put("firstName", firstNameStr);
                                         newPost.put("lastName", lastNameStr);
                                         newPost.put("mobileNum", mobileStr);
-                                        newPost.put("email", emailStr);
+                                        newPost.put("email",emailStr);
+                                        newPost.put("regNum",carPlateStr);
+                                        newPost.put("model",carModelStr);
 
                                         current_user_db.setValue(newPost);
 
                                         Fragment newFragment = new nav_driverprofile();
                                         FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                                        transaction.replace(R.id.editProfileFragment, newFragment);
+                                        transaction.replace(R.id.driverEditProfile, newFragment);
                                         transaction.addToBackStack(null);
                                         transaction.commit();
                                     }else{
@@ -290,7 +298,7 @@ public class editProfile extends Fragment{
                                                         if (task.isSuccessful()) {
                                                             pd.show();
                                                             Toast.makeText(getActivity(),"User account deleted",Toast.LENGTH_LONG).show();
-                                                            current_user_db.child(user.getUid()).removeValue();
+                                                            current_user_db.removeValue();
                                                             moveToNewActivity();
                                                         }
                                                     }
@@ -316,5 +324,4 @@ public class editProfile extends Fragment{
         super.onStop();
         mAuth.removeAuthStateListener(firebaseAuthListener);
     }*/
-
 }
