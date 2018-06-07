@@ -14,7 +14,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyA8BOs4vOO2km8_VTq8CymhQ2z-23Hg_1w" />
@@ -23,25 +22,25 @@
             android:name=".MenuBar"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity
+            android:name=".driver_menubar"
+            android:label="@string/title_activity_driver_menubar"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-
         <activity
-            android:name="com.example.android.cabbysg.CardEditActivity"
-            android:windowSoftInputMode="adjustResize"
-            android:label="@string/app_name">
-        </activity>
-
+            android:name=".CardEditActivity"
+            android:label="@string/app_name"
+            android:windowSoftInputMode="adjustResize"></activity>
         <activity
-            android:name="com.example.android.cabbysg.CreditCardDesign"
+            android:name=".CreditCardDesign"
             android:label="@string/creditcarddesign"
-            android:windowSoftInputMode="adjustResize"
-            android:theme="@style/AppTheme">
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

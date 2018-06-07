@@ -1,12 +1,15 @@
 package com.example.android.cabbysg;
 
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -14,29 +17,15 @@ import android.widget.Spinner;
 import android.widget.Toast;
 import android.widget.Toolbar;
 
-public class MenuBar extends AppCompatActivity
+public class driver_menubar extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_menu_bar);
+        setContentView(R.layout.activity_driver_menubar);
         android.support.v7.widget.Toolbar toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.toolbar);
-
-        //setSupportActionBar(toolbar);
-
-
- /*      getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setIcon(R.drawable.app_logo); //also displays wide logo
-        getSupportActionBar().setDisplayShowTitleEnabled(false); //optional
-*/
-       /* getSupportActionBar().setLogo(R.drawable.app_logo);
-        getSupportActionBar().setDisplayUseLogoEnabled(true);
-        getSupportActionBar().setIcon(R.drawable.app_logo);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-*/
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -47,10 +36,10 @@ public class MenuBar extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        setTitle("Home");
-        nav_home fragment = new nav_home();
+        setTitle("DriverHome");
+        nav_driverhome fragment = new nav_driverhome();
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.content_frame, fragment,"Home");
+        fragmentTransaction.replace(R.id.content_frame, fragment,"DriverHome");
         fragmentTransaction.commit();
     }
 
@@ -61,53 +50,46 @@ public class MenuBar extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_home) {
-            setTitle("Home");
-            nav_home fragment = new nav_home();
-            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.content_frame, fragment,"Home");
-            fragmentTransaction.commit();
-
-        } else if (id == R.id.nav_profile) {
-            setTitle("Profile");
-            nav_profile fragment = new nav_profile();
-            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.content_frame, fragment,"Profile");
-            fragmentTransaction.commit();
-
-        } else if (id == R.id.nav_payment) {
-            setTitle("Payment");
-            nav_payment fragment = new nav_payment();
-            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.content_frame, fragment,"Payment");
-            fragmentTransaction.commit();
-
-        } else if (id == R.id.nav_schedule) {
-            setTitle("Schedule");
-            nav_schedule fragment = new nav_schedule();
-            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.content_frame, fragment,"Schedule");
-            fragmentTransaction.commit();
-
-        } else if (id == R.id.nav_history) {
-            setTitle("History");
-            nav_history fragment = new nav_history();
-            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.content_frame, fragment,"History");
-            fragmentTransaction.commit();
-
-        } else if (id == R.id.nav_lostandfound) {
-            setTitle("Lost & Found");
-            nav_lostandfound fragment = new nav_lostandfound();
-            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.content_frame, fragment,"LostandFound");
-            fragmentTransaction.commit();
-
-        } else if (id == R.id.nav_help) {
-            setTitle("Help");
+        if (id == R.id.nav_driverhome) {
+            setTitle("DriverHome");
             nav_driverhome fragment = new nav_driverhome();
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.content_frame, fragment,"Help");
+            fragmentTransaction.replace(R.id.content_frame, fragment,"Driver Home");
+            fragmentTransaction.commit();
+
+        } else if (id == R.id.nav_driverprofile) {
+            setTitle("DriverProfile");
+            nav_driverprofile fragment = new nav_driverprofile();
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.content_frame, fragment,"Driver Profile");
+            fragmentTransaction.commit();
+
+        } else if (id == R.id.nav_driverschedule) {
+            setTitle("DriverSchedule");
+            nav_driverschedule fragment = new nav_driverschedule();
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.content_frame, fragment,"Driver Schedule");
+            fragmentTransaction.commit();
+
+        } else if (id == R.id.nav_driverhistory) {
+            setTitle("DriverHistory");
+            nav_driverhistory fragment = new nav_driverhistory();
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.content_frame, fragment,"Driver History");
+            fragmentTransaction.commit();
+
+        } else if (id == R.id.nav_driverlostandfound) {
+            setTitle("Driver Lost & Found");
+            nav_driverlostandfound fragment = new nav_driverlostandfound();
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.content_frame, fragment,"Driver LostandFound");
+            fragmentTransaction.commit();
+
+        } else if (id == R.id.nav_driverhelp) {
+            setTitle("DriverHelp");
+            nav_driverhelp fragment = new nav_driverhelp();
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.content_frame, fragment,"Driver Help");
             fragmentTransaction.commit();
 
         }

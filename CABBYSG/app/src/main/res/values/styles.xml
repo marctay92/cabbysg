@@ -9,17 +9,16 @@
         <item name="listPreferredItemHeightSmall">82dp</item>
     </style>
 
- <style name="AppTheme.NoActionBar">
+    <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
 
     <style name="DrawerIconStyle" parent="Widget.AppCompat.DrawerArrowToggle">
         <item name="color">#FFEE7C</item>
-      <!--  <item name="colorControlNormal">#FFEE7C</item> -->
+        <!--  <item name="colorControlNormal">#FFEE7C</item> -->
         <item name="drawerArrowStyle">@style/DrawerIconStyle</item>
     </style>
-
 
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />

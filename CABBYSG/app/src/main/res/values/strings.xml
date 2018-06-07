@@ -69,4 +69,5 @@
         <item>Fare</item>
         <item>Metered</item>
     </string-array>
+    <string name="title_activity_driver_menubar">driver_menubar</string>
 </resources>
