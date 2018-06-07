@@ -320,7 +320,7 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
                if (dataSnapshot.exists()){
                    customerId = dataSnapshot.getValue().toString();
 
-                   DatabaseReference reqRef = FirebaseDatabase.getInstance().getReference().child("customerRequest").child(customerId);
+                   DatabaseReference reqRef = FirebaseDatabase.getInstance().getReference().child("customerRequest").child(customerId).child("Details");
                    reqRef.addListenerForSingleValueEvent(new ValueEventListener() {
                        @Override
                        public void onDataChange(@NonNull final DataSnapshot dataSnapshot) {
