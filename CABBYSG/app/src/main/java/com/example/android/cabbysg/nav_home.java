@@ -97,7 +97,7 @@ import java.util.Map;
 
 public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiClient.OnConnectionFailedListener {
 
- private static final String TAG = "MapActivity";
+ private static final String TAG = "Rider Home";
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private static final String COURSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
@@ -478,20 +478,19 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
             @Override
             public void onKeyEntered(final String key, GeoLocation location) {
                 if (!driverFound) {
-
                     DatabaseReference driverFoundRef = FirebaseDatabase.getInstance().getReference().child("customerRequest").child(userID).child("driverFound");
-                    DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Drivers").child(driverFoundID);
-                    //String customerId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                    HashMap map = new HashMap();
-                    map.put("customerRiderId", userID);
-                    driverRef.updateChildren(map);
-
                     driverFoundRef.addValueEventListener(new ValueEventListener() {
                       @Override
                       public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                           if(dataSnapshot.getValue()=="true"){
                               driverFound = true;
                               driverFoundID = key;
+                              DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Drivers").child(driverFoundID);
+                              //String customerId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                              HashMap map = new HashMap();
+                              map.put("customerRiderId", userID);
+                              driverRef.updateChildren(map);
+
 
                               System.out.println("Radius is " + radius);
 
