@@ -1,8 +1,12 @@
 package com.example.android.cabbysg;
 
 import android.Manifest;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 //import android.location.LocationListener;
 import android.net.Uri;
@@ -15,11 +19,15 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.LinearLayout;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -27,6 +35,7 @@ import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.data.DataBufferSafeParcelable;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.Places;
@@ -302,6 +311,7 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
                     startLocationUpdates();
                     displayLocation();
                     Toast.makeText(getActivity(), "You are online!", Toast.LENGTH_SHORT).show();
+                    displayAlertDialog();
                 } else{
                     stopLocationUpdates();
                     mCurrent.remove();
@@ -318,12 +328,86 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
         //FirebaseAuth.getInstance().getCurrentUser().getUid();
         DatabaseReference assignedCustomerRef = FirebaseDatabase.getInstance().getReference().child("Drivers").child(driverId).child("customerRiderId");
 
+
         assignedCustomerRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                if (dataSnapshot.exists()){
-
                    customerId = dataSnapshot.getValue().toString();
+
+                   DatabaseReference reqRef = FirebaseDatabase.getInstance().getReference().child("customerRequest").child(customerId);
+                   reqRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                       @Override
+                       public void onDataChange(@NonNull final DataSnapshot dataSnapshot) {
+                           for (DataSnapshot ds : dataSnapshot.getChildren()){
+
+                               if (dataSnapshot.child("driverFound").getValue()== 0) {
+                                   String location = ds.child("currentLocation").getValue().toString();
+                                   String destination = ds.child("destination").getValue().toString();
+                                   String fare = ds.child("fare").getValue().toString();
+                                   String selectedRoute = ds.child("selectedRoute").getValue().toString();
+
+                                   //display request info
+                                   AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+
+                                   TextView title = new TextView(getActivity());
+                                   title.setText("Request Found!");
+                                   title.setPadding(10, 10, 10, 10);   // Set Position
+                                   title.setGravity(Gravity.CENTER);
+                                   title.setTextColor(Color.BLACK);
+                                   title.setTextSize(20);
+                                   alertDialog.setCustomTitle(title);
+
+                                   TextView msg = new TextView(getActivity());
+
+                                   msg.setText("Location: " + location + "\n" +
+                                           "Destination: " + destination + "\n" +
+                                           "Fare: " + fare + "\n" +
+                                           "Selected Route: " + selectedRoute);
+                                   msg.setGravity(Gravity.CENTER_HORIZONTAL);
+                                   msg.setTextColor(Color.BLACK);
+                                   alertDialog.setView(msg);
+
+                                   // Set Button
+                                   // you can more buttons
+                                   alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "ACCEPT", new DialogInterface.OnClickListener() {
+                                       public void onClick(DialogInterface dialog, int which) {
+                                            dataSnapshot.child("driverFound").getRef().setValue(1);
+                                       }
+                                   });
+
+                                   alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "CANCEL", new DialogInterface.OnClickListener() {
+                                       public void onClick(DialogInterface dialog, int which) {
+                                           // Perform Action on Button
+                                       }
+                                   });
+
+                                   new Dialog(getActivity().getApplicationContext());
+                                   alertDialog.show();
+                                   // Set Properties for OK Button
+                                   final Button okBT = alertDialog.getButton(AlertDialog.BUTTON_NEUTRAL);
+                                   LinearLayout.LayoutParams neutralBtnLP = (LinearLayout.LayoutParams) okBT.getLayoutParams();
+                                   neutralBtnLP.gravity = Gravity.FILL_HORIZONTAL;
+                                   okBT.setPadding(50, 10, 10, 10);   // Set Position
+                                   okBT.setTextColor(Color.YELLOW);
+                                   okBT.setLayoutParams(neutralBtnLP);
+
+                                   final Button cancelBT = alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE);
+                                   LinearLayout.LayoutParams negBtnLP = (LinearLayout.LayoutParams) okBT.getLayoutParams();
+                                   negBtnLP.gravity = Gravity.FILL_HORIZONTAL;
+                                   cancelBT.setTextColor(Color.RED);
+                                   cancelBT.setLayoutParams(negBtnLP);
+                               }
+                           }
+                       }
+
+                       @Override
+                       public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                       }
+                   });
+
+
                    Toast.makeText(getActivity(), "Rider Found!", Toast.LENGTH_SHORT).show();
 
                    getAssignedCustomerPickupLocation();
@@ -336,6 +420,61 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
 
             }
         });
+    }
+
+    private void displayAlertDialog() {
+        AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+
+        TextView title = new TextView(getActivity());
+        title.setText("Request Found!");
+        title.setPadding(10, 10, 10, 10);   // Set Position
+        title.setGravity(Gravity.CENTER);
+        title.setTextColor(Color.BLACK);
+        title.setTextSize(20);
+        alertDialog.setCustomTitle(title);
+
+        TextView msg = new TextView(getActivity());
+
+        msg.setText("Location: " + "\n" +
+                "Destination: " + "\n" +
+                "Fare: " +"\n" +
+                "Selected Route: ");
+        msg.setGravity(Gravity.CENTER_HORIZONTAL);
+        msg.setTextColor(Color.BLACK);
+        alertDialog.setView(msg);
+
+        // Set Button
+        // you can more buttons
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL,"OK", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                // Perform Action on Button
+            }
+        });
+
+        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE,"CANCEL", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                // Perform Action on Button
+            }
+        });
+
+        new Dialog(getActivity().getApplicationContext());
+        alertDialog.show();
+
+        // Set Properties for OK Button
+        final Button okBT = alertDialog.getButton(AlertDialog.BUTTON_NEUTRAL);
+        LinearLayout.LayoutParams neutralBtnLP = (LinearLayout.LayoutParams) okBT.getLayoutParams();
+        neutralBtnLP.gravity = Gravity.FILL_HORIZONTAL;
+        okBT.setPadding(50, 10, 10, 10);   // Set Position
+        okBT.setTextColor(Color.BLUE);
+        okBT.setLayoutParams(neutralBtnLP);
+
+        final Button cancelBT = alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE);
+        LinearLayout.LayoutParams negBtnLP = (LinearLayout.LayoutParams) okBT.getLayoutParams();
+        negBtnLP.gravity = Gravity.FILL_HORIZONTAL;
+        cancelBT.setTextColor(Color.RED);
+        cancelBT.setLayoutParams(negBtnLP);
+
+
     }
 
     private void getAssignedCustomerPickupLocation() {
