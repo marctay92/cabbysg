@@ -2,10 +2,12 @@ package com.example.android.cabbysg;
 
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Address;
@@ -21,6 +23,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.text.format.DateFormat;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,6 +32,7 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -67,6 +71,7 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.example.android.cabbysg.models.PlaceInfo;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -89,6 +94,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 
 
 /**
@@ -97,11 +103,9 @@ import java.util.Map;
 
 public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiClient.OnConnectionFailedListener {
 
-<<<<<<< HEAD
+
  private static final String TAG = "Rider Home";
-=======
-    private static final String TAG = "MapActivity";
->>>>>>> DriverMaps
+
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private static final String COURSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
@@ -110,9 +114,10 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
             new LatLng(-40, -168), new LatLng(71, 136));
     //widgets
     private AutoCompleteTextView mDestination, mCurrentLocation;
-    private ImageView mGps, mSubmit;
+    private ImageView mGps, mSubmit, mCancelRequest;
     private Spinner mServiceType, mRouteOptions, mFareType;
     private TextView mDisTextView, mDuraTextView, mFareTextView;
+    private TextView mRequestLocation, mRequestDestination, mRequestName, mRequestCarPlate, mRequestModel, mRequestFare;
     private static EditText mBookingTime;
     private String fare;
 
@@ -123,6 +128,8 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
     private PlaceAutocompleteAdapter mPlaceAutocompleteAdapter, mPlaceAutocompleteAdapter1;
     private GoogleApiClient mGoogleApiClient;
     private PlaceInfo mPlace;
+    private LatLng driverLatLng;
+    private Boolean requestBol = false;
 
     private String url;
     private int mLastSpinnerPosition;
@@ -131,6 +138,7 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
     private ProgressBar mProgressBar;
     private LinearLayout mLinearLayout1, mLinearLayout2;
     private String userID = "ywO5uyDNM0eQ0aOpLSQD0qj9zxO2";
+
 
     public nav_home() {
         // Required empty public constructor
@@ -181,7 +189,9 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
             mDuraTextView.setText("");
             mFareTextView.setText("");
             if ((mDestination.getText().toString().length() > 0) && (mCurrentLocation.getText().toString().length() > 0)) {
-                getDirections(mCurrentLocation, mDestination);
+                String locSearchString = mCurrentLocation.getText().toString();
+                String desSearchString = mDestination.getText().toString();
+                getDirections(locSearchString, desSearchString);
             } else {
                 moveCamera(new LatLng(place.getViewport().getCenter().latitude,
                         place.getViewport().getCenter().longitude), DEFAULT_ZOOM, mPlace.getName());
@@ -238,7 +248,9 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
             mDisTextView.setText("");
             mDuraTextView.setText("");
             if ((mDestination.getText().toString().length() > 0) && (mCurrentLocation.getText().toString().length() > 0)) {
-                getDirections(mCurrentLocation, mDestination);
+                String locSearchString = mCurrentLocation.getText().toString();
+                String desSearchString = mDestination.getText().toString();
+                getDirections(locSearchString, desSearchString);
             } else {
                 moveCamera(new LatLng(place.getViewport().getCenter().latitude,
                         place.getViewport().getCenter().longitude), DEFAULT_ZOOM, mPlace.getName());
@@ -285,6 +297,14 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
         mProgressBar = v.findViewById(R.id.progressBar);
         mLinearLayout1 = v.findViewById(R.id.linearLayout1);
         mLinearLayout2 = v.findViewById(R.id.linearLayout2);
+
+        mRequestLocation = v.findViewById(R.id.reqLocation);
+        mRequestDestination = v.findViewById(R.id.reqDestination);
+        mRequestName = v.findViewById(R.id.reqDriverName);
+        mRequestCarPlate = v.findViewById(R.id.reqPlateNo);
+        mRequestModel = v.findViewById(R.id.reqModel);
+        mRequestFare = v.findViewById(R.id.reqFare);
+        mCancelRequest = v.findViewById(R.id.cancelRequest);
 
         getLocationPermission();
         return v;
@@ -373,7 +393,11 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
                 if (mLastSpinnerPosition == position) {
                     return;
                 } else {
-                    getDirections(mCurrentLocation, mDestination);
+                    String locSearchString = mCurrentLocation.getText().toString();
+                    String desSearchString = mDestination.getText().toString();
+                    if ((mDestination.getText().toString().length() > 0) && (mCurrentLocation.getText().toString().length() > 0)) {
+                        getDirections(locSearchString, desSearchString);
+                    }
                 }
             }
 
@@ -410,7 +434,7 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
         mSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                requestBol = true;
                 //String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
                 DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("customerRequest");
@@ -461,11 +485,46 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
                     //get selected time
                 }
                 newRequest.put("fare",fare);
+                newRequest.put("driverFound", "false");
                 reqRef.setValue(newRequest);
 
                 mProgressBar.setVisibility(View.VISIBLE);
                 getClosestDriver();
 
+            }
+        });
+        mCancelRequest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new AlertDialog.Builder(getActivity())
+                        .setTitle("Cancel Booking")
+                        .setMessage("Do you really want to cancel your booking?")
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                requestBol = false;
+                                geoQuery.removeAllListeners();
+                                driverLocationRef.removeEventListener(driverLocationRefListener);
+
+                                if (driverFoundID != null){
+                                    DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverFoundID);
+                                    driverRef.setValue(true);
+                                    driverFoundID = null;
+                                    driverRef.child("customerRiderId").removeValue();
+                                }
+                                driverFound = false;
+                                radius = 1;
+                                //String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+                                DatabaseReference ref = FirebaseDatabase.getInstance().getReference("customerRequest");
+                                ref.child(userID).removeValue();
+                                mMap.clear();
+                                mLinearLayout1.setVisibility(View.VISIBLE);
+                                mLinearLayout2.setVisibility(View.INVISIBLE);
+
+
+                            }})
+                        .setNegativeButton(android.R.string.no, null).show();
             }
         });
 
@@ -474,16 +533,19 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
     private int radius = 1;
     private boolean driverFound = false;
     private String driverFoundID;
+
+    GeoQuery geoQuery;
     private void getClosestDriver() {
+
         DatabaseReference driverLocation = FirebaseDatabase.getInstance().getReference().child("driversAvailable");
         GeoFire geoFire = new GeoFire(driverLocation);
-        GeoQuery geoQuery = geoFire.queryAtLocation(new GeoLocation(locLatLng.latitude, locLatLng.longitude), radius);
+        geoQuery = geoFire.queryAtLocation(new GeoLocation(locLatLng.latitude, locLatLng.longitude), radius);
         geoQuery.removeAllListeners();
 
         geoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
             @Override
             public void onKeyEntered(final String key, GeoLocation location) {
-                if (!driverFound) {
+                if (!driverFound && requestBol) {
                     driverFoundID = key;
                     DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Drivers").child(driverFoundID);
                     //String customerId = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -491,21 +553,23 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
                     map.put("customerRiderId", userID);
                     driverRef.updateChildren(map);
 
-                    DatabaseReference driverFoundRef = FirebaseDatabase.getInstance().getReference().child("customerRequest").child(userID).child("driverFound");
-                    driverFoundRef.addValueEventListener(new ValueEventListener() {
+                    DatabaseReference driverFoundRef = FirebaseDatabase.getInstance().getReference().child("customerRequest").child(userID).child("Details").child("driverFound");
+                    driverFoundRef.addListenerForSingleValueEvent(new ValueEventListener() {
                       @Override
                       public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                          if(dataSnapshot.getValue()=="true"){
-                              driverFound = true;
-                              driverFoundID = key;
-                              DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Drivers").child(driverFoundID);
-                              //String customerId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                              HashMap map = new HashMap();
-                              map.put("customerRiderId", userID);
-                              driverRef.updateChildren(map);
-                              System.out.println("Radius is " + radius);
-
-                              getDriverLocation();
+                          Log.d(TAG,"DRIVERFOUND VALUE: "+dataSnapshot.getValue());
+                          if (dataSnapshot.exists()) {
+                              if (dataSnapshot.getValue().equals("true")) {
+                                  driverFound = true;
+                                  /*driverFoundID = key;
+                                  DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Drivers").child(driverFoundID);
+                                  //String customerId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                                  HashMap map = new HashMap();
+                                  map.put("customerRiderId", userID);
+                                  driverRef.updateChildren(map); */
+                                  System.out.println("Final radius is " + radius);
+                                  getDriverLocation();
+                              }
                           }
                       }
 
@@ -545,17 +609,20 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
         });
     }
     private Marker mDriverMarker;
+    private DatabaseReference driverLocationRef;
+    private ValueEventListener driverLocationRefListener;
     private void getDriverLocation(){
 
+        Log.d(TAG,"Getting Driver's location!");
         mProgressBar.setVisibility(View.INVISIBLE);
         mLinearLayout1.setVisibility(View.INVISIBLE);
         mLinearLayout2.setVisibility(View.VISIBLE);
 
-        DatabaseReference driverLocationRef = FirebaseDatabase.getInstance().getReference().child("driversWorking").child(driverFoundID).child("l");
-        driverLocationRef.addValueEventListener(new ValueEventListener() {
+        driverLocationRef = FirebaseDatabase.getInstance().getReference().child("driversWorking").child(driverFoundID).child("l");
+        driverLocationRefListener = driverLocationRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists()){
+                if(dataSnapshot.exists() && requestBol){
                     List<Object> map = (List<Object>) dataSnapshot.getValue();
                     double locationLat = 0;
                     double locationLng = 0;
@@ -565,7 +632,7 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
                     if(map.get(1) != null){
                         locationLng = Double.parseDouble(map.get(1).toString());
                     }
-                    LatLng driverLatLng = new LatLng(locationLat,locationLng);
+                    driverLatLng = new LatLng(locationLat,locationLng);
                     if(mDriverMarker!=null){
                         mDriverMarker.remove();
                     }
@@ -578,8 +645,17 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
                     loc2.setLongitude(driverLatLng.longitude);
 
                     float distance = loc1.distanceTo(loc2);
+                    mMap.clear();
+                    String url1 = getRequestUrl(driverLatLng, locLatLng);
+                    TaskRequestDirections taskRequestDirections = new TaskRequestDirections();
+                    taskRequestDirections.execute(url1);
+                    displayRequestDetails();
+                    if (distance<100){
+                        Toast toast = Toast.makeText(getActivity(),"Driver has arrived!", Toast.LENGTH_LONG);
+                        toast.setGravity(Gravity.CENTER, 0, 0);
+                        toast.show();
+                    }
 
-                    mDriverMarker = mMap.addMarker(new MarkerOptions().position(driverLatLng));
                 }
             }
 
@@ -589,6 +665,53 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
             }
         });
     }
+
+    private void displayRequestDetails() {
+        DatabaseReference driverLocationRef = FirebaseDatabase.getInstance().getReference().child("customerRequest").child(userID).child("Details");
+        driverLocationRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    String location = dataSnapshot.child("currentLocation").getValue().toString();
+                    String destination = dataSnapshot.child("destination").getValue().toString();
+                    String fare = dataSnapshot.child("fare").getValue().toString();
+                    mRequestLocation.setText(location);
+                    mRequestDestination.setText(destination);
+                    mRequestFare.setText(fare);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        DatabaseReference driverDetailsRef = FirebaseDatabase.getInstance().getReference().child("Drivers").child(driverFoundID);
+        driverDetailsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    String driverFirstName = dataSnapshot.child("firstName").getValue().toString();
+                    String driverLastName = dataSnapshot.child("lastName").getValue().toString();
+                    String driverCarPlate = dataSnapshot.child("Vehicle").child("regNum").getValue().toString();
+                    String driverCarModel = dataSnapshot.child("Vehicle").child("model").getValue().toString();
+
+                    mRequestName.setText(driverFirstName+" "+driverLastName);
+                    mRequestCarPlate.setText(driverCarPlate);
+                    mRequestModel.setText(driverCarModel);
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
+    }
+
     @Override
     public void onStart() {
         super.onStart();
@@ -723,13 +846,15 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
                 .position(locLatLng);
         MarkerOptions desMarker = new MarkerOptions()
                 .position(desLatLng);
-        mMap.addMarker(locMarker);
-        mMap.addMarker(desMarker);
+        if (mLinearLayout2.isShown()){
+            mMap.addMarker(new MarkerOptions().position(driverLatLng).title("Your Driver").icon(BitmapDescriptorFactory.fromResource(R.mipmap.working_taxi)));
+        }else {
+            mMap.addMarker(locMarker);
+            mMap.addMarker(desMarker);
+        }
     }
 
-    private void getDirections(AutoCompleteTextView mCurrentLocation, AutoCompleteTextView mDestination) {
-        String locSearchString = mCurrentLocation.getText().toString();
-        String desSearchString = mDestination.getText().toString();
+    private void getDirections(String locSearchString, String desSearchString) {
 
         //geocoding location to latlng
         Geocoder geocoder = new Geocoder(getActivity());
@@ -908,13 +1033,14 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
             @Override
             public void onKeyExited(String key) {
                 for (Marker markerIt : availableMarkerList){
-                    if(markerIt.getTag().equals(key)) {
-                        markerIt.remove();
-                        availableMarkerList.remove(markerIt);
-                        return;
-                    }
+                        if (Objects.equals(markerIt.getTag(), key)) {
+                                markerIt.remove();
+                                availableMarkerList.remove(markerIt);
+                                return;
+                            }
+                        }
                 }
-            }
+
 
             @Override
             public void onKeyMoved(String key, GeoLocation location) {
@@ -1158,8 +1284,10 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
                 mDisTextView.setText(distance);
                 mDuraTextView.setText(duration);
                 calculateFare(distance, duration);
+
             } else {
-                Toast.makeText(getActivity(), "Directions not found!", Toast.LENGTH_SHORT).show();
+                Log.e(TAG,"Directions not found!");
+                //Toast.makeText(getActivity(), "Directions not found!", Toast.LENGTH_SHORT).show();
             }
         }
 

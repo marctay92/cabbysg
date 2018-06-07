@@ -80,7 +80,7 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
 
     private Marker mCurrent;
     private String customerId = "";
-    private String userID = "GUDHk3NHH6PvAnVmNiGXPNKahHf2";
+    private String userID = "S7qswgzCNadNN7z3vn8FfKutdTB3";
     private boolean isLoggingOut = false;
 
     Switch location_switch;
@@ -304,33 +304,31 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
                 }
             }
         });
-        //SIMCODER Part 9
+
         getAssignedCustomer();
     }
-// SIMCODER Part 9
+
     private void getAssignedCustomer() {
         String driverId = userID;
         //FirebaseAuth.getInstance().getCurrentUser().getUid();
-        DatabaseReference assignedCustomerRef = FirebaseDatabase.getInstance().getReference().child("Drivers").child(driverId).child("customerRiderId");
-
+        final DatabaseReference assignedCustomerRef = FirebaseDatabase.getInstance().getReference().child("Drivers").child(driverId).child("customerRiderId");
 
         assignedCustomerRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                if (dataSnapshot.exists()){
                    customerId = dataSnapshot.getValue().toString();
-
-                   DatabaseReference reqRef = FirebaseDatabase.getInstance().getReference().child("customerRequest").child(customerId).child("Details");
-                   reqRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                   Log.d(TAG,"Customer Rider ID: "+customerId);
+                   final DatabaseReference reqRef = FirebaseDatabase.getInstance().getReference().child("customerRequest").child(customerId).child("Details");
+                   reqRef.addValueEventListener(new ValueEventListener() {
                        @Override
                        public void onDataChange(@NonNull final DataSnapshot dataSnapshot) {
-                           for (DataSnapshot ds : dataSnapshot.getChildren()){
-
-                               if (dataSnapshot.child("driverFound").getValue()== "false") {
-                                   String location = ds.child("currentLocation").getValue().toString();
-                                   String destination = ds.child("destination").getValue().toString();
-                                   String fare = ds.child("fare").getValue().toString();
-                                   String selectedRoute = ds.child("selectedRoute").getValue().toString();
+                           if (dataSnapshot.exists()) {
+                               if (dataSnapshot.child("driverFound").getValue().equals("false")) {
+                                   String location = dataSnapshot.child("currentLocation").getValue().toString();
+                                   String destination = dataSnapshot.child("destination").getValue().toString();
+                                   String fare = dataSnapshot.child("fare").getValue().toString();
+                                   String selectedRoute = dataSnapshot.child("selectedRoute").getValue().toString();
 
                                    //display request info
                                    AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
@@ -357,13 +355,17 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
                                    // you can more buttons
                                    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "ACCEPT", new DialogInterface.OnClickListener() {
                                        public void onClick(DialogInterface dialog, int which) {
-                                            dataSnapshot.child("driverFound").getRef().setValue("true");
+                                           reqRef.child("driverFound").setValue("true");
+                                           Toast.makeText(getActivity(), "Rider Found!", Toast.LENGTH_SHORT).show();
+                                           getAssignedCustomerPickupLocation();
                                        }
                                    });
 
                                    alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "CANCEL", new DialogInterface.OnClickListener() {
                                        public void onClick(DialogInterface dialog, int which) {
                                            // Perform Action on Button
+                                           assignedCustomerRef.removeValue();
+
                                        }
                                    });
 
@@ -383,19 +385,26 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
                                    cancelBT.setTextColor(Color.RED);
                                    cancelBT.setLayoutParams(negBtnLP);
                                }
+                           } else{
+                               customerId = "";
+                               if(pickUpMarker != null){
+                                   pickUpMarker.remove();
+                               }
+                               if(assignedCustomerPickupLocationRefListener != null){
+                                   assignedCustomerPickupLocationRef.removeEventListener(assignedCustomerPickupLocationRefListener);
+                               }
+                               Toast toast = Toast.makeText(getActivity(),"Your rider has cancelled the ride!", Toast.LENGTH_LONG);
+                               toast.setGravity(Gravity.CENTER, 0, 0);
+                               toast.show();
+                                }
                            }
-                       }
+
 
                        @Override
                        public void onCancelled(@NonNull DatabaseError databaseError) {
 
                        }
                    });
-
-
-                   Toast.makeText(getActivity(), "Rider Found!", Toast.LENGTH_SHORT).show();
-
-                   getAssignedCustomerPickupLocation();
 
                }
             }
@@ -407,13 +416,15 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
         });
     }
 
-
+    Marker pickUpMarker;
+    private DatabaseReference assignedCustomerPickupLocationRef, workingRef;
+    private ValueEventListener assignedCustomerPickupLocationRefListener;
     private void getAssignedCustomerPickupLocation() {
-        DatabaseReference assignedCustomerPickupLocationRef = FirebaseDatabase.getInstance().getReference().child("customerRequest").child(customerId).child("l");
-        assignedCustomerPickupLocationRef.addValueEventListener(new ValueEventListener() {
+        assignedCustomerPickupLocationRef = FirebaseDatabase.getInstance().getReference().child("customerRequest").child(customerId).child("l");
+        assignedCustomerPickupLocationRefListener = assignedCustomerPickupLocationRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()){
+                if (dataSnapshot.exists() && !customerId.equals("")){
                     List<Object> map = (List<Object>) dataSnapshot.getValue();
                     double custLat = 0;
                     double custLng = 0;
@@ -424,11 +435,11 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
                         custLng = Double.parseDouble(map.get(1).toString());
                     }
                     LatLng custLatLng = new LatLng(custLat,custLng);
-                    mMap.addMarker(new MarkerOptions().position(custLatLng).title("Pickup Location"));
+                    pickUpMarker = mMap.addMarker(new MarkerOptions().position(custLatLng).title("Pickup Location"));
                     mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(custLatLng,15.0f));
 
-                    DatabaseReference availableRef = FirebaseDatabase.getInstance().getReference("driversAvailable");
-                    DatabaseReference workingRef = FirebaseDatabase.getInstance().getReference("driversWorking");
+                     DatabaseReference availableRef = FirebaseDatabase.getInstance().getReference("driversAvailable");
+                     workingRef = FirebaseDatabase.getInstance().getReference("driversWorking");
 
                     GeoFire geoFireAvailable = new GeoFire(availableRef);
                     GeoFire geoFireWorking = new GeoFire(workingRef);
