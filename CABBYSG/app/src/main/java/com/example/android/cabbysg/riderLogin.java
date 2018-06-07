@@ -32,6 +32,8 @@ public class riderLogin extends AppCompatActivity {
 
     FirebaseAuth mAuth;
     FirebaseAuth.AuthStateListener firebaseAuthListener;
+    DatabaseReference rider_db = FirebaseDatabase.getInstance().getReference("Rider");
+    DatabaseReference driver_db = FirebaseDatabase.getInstance().getReference("Drivers");
     //Create progress dialog
     ProgressDialog pd;
 
@@ -58,11 +60,20 @@ public class riderLogin extends AppCompatActivity {
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = mAuth.getCurrentUser();
                 if(user!=null){
-                    Intent intent = new Intent(riderLogin.this, MenuBar.class);
-                    startActivity(intent);
-                    pd.dismiss();
-                    finish();
-                    return;
+                    if(rider_db.child(user.getUid()).getKey().equals(user.getUid())) {
+                        Intent intent = new Intent(riderLogin.this, MenuBar.class);
+                        startActivity(intent);
+                        pd.dismiss();
+                        finish();
+                        return;
+                    }else if(driver_db.child(user.getUid()).getKey().equals(user.getUid())){
+                        Toast.makeText(riderLogin.this,"Login to wrong page.",Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(riderLogin.this, startpage.class);
+                        startActivity(intent);
+                        pd.dismiss();
+                        finish();
+                        return;
+                    }
                 }else{
                     pd.dismiss();
                 }

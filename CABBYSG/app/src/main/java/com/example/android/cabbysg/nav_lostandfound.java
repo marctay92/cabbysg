@@ -99,9 +99,9 @@ public class nav_lostandfound extends Fragment {
                 if(validDescription&&validPhoneNum&&validEmail){
                     Map newPost = new HashMap();
                     //newPost.put("email",str_email);
-                    newPost.put("firstName", itemDescriptionStr);
-                    newPost.put("lastName", lostPhoneNumStr);
-                    newPost.put("mobileNum", lostEmailStr);
+                    newPost.put("itemDescription", itemDescriptionStr);
+                    newPost.put("PhoneNum", lostPhoneNumStr);
+                    newPost.put("Email", lostEmailStr);
                     newPost.put("riderID",user.getUid());
 
                     lost_item_db.setValue(newPost);

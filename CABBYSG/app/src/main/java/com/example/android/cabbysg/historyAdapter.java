@@ -36,11 +36,13 @@ public class historyAdapter extends ArrayAdapter<historyDetails> {
         TextView vehNb1= convertView.findViewById(R.id.vehNb1);
         ImageView blackBox= convertView.findViewById(R.id.black_rectangle_box1);
 
-        name1.setText(historydetails.historyDriver);
-        date1.setText(historydetails.historyDate);
-        fare1.setText(historydetails.historyPrice);
-        time1.setText(historydetails.historyTime);
-        vehNb1.setText(historydetails.historyVeh);
+        String fullName = historydetails.getFirstName() + " " + historydetails.getLastName();
+
+        name1.setText(fullName);
+        date1.setText(historydetails.tripDate);
+        fare1.setText(historydetails.fare);
+        time1.setText(historydetails.tripTime);
+        vehNb1.setText(historydetails.regNum);
 
         //setOnclickListener(new View.OnClickListener)
         blackBox.setOnClickListener(new View.OnClickListener(){

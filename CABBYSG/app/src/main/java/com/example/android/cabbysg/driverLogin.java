@@ -33,6 +33,8 @@ public class driverLogin extends AppCompatActivity {
     //DatabaseReference db = FirebaseDatabase.getInstance().getReference();
     //Create progress dialog
     ProgressDialog pd;
+    DatabaseReference rider_db = FirebaseDatabase.getInstance().getReference("Rider");
+    DatabaseReference driver_db = FirebaseDatabase.getInstance().getReference("Drivers");
 
 
     @Override
@@ -57,15 +59,20 @@ public class driverLogin extends AppCompatActivity {
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = mAuth.getCurrentUser();
                 if(user!=null){
-                    //if (db.child("Drivers").child(user.getUid()).getKey() == user.getUid()) {
+                    if(driver_db.child(user.getUid()).getKey().equals(user.getUid())) {
                         Intent intent = new Intent(driverLogin.this, driver_menubar.class);
                         startActivity(intent);
                         pd.dismiss();
                         finish();
                         return;
-                    //}else if (db.child()){
-
-                    //}
+                    }else if(rider_db.child(user.getUid()).getKey().equals(user.getUid())){
+                        Toast.makeText(driverLogin.this,"Login to wrong page.",Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(driverLogin.this, startpage.class);
+                        startActivity(intent);
+                        pd.dismiss();
+                        finish();
+                        return;
+                    }
                 }else{
                     pd.dismiss();
                 }
