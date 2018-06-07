@@ -22,9 +22,7 @@
                 android:id="@+id/credit_card_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-
-                />
+                android:layout_gravity="center" />
 
             <com.example.android.cabbysg.creditcard_views.HeightWrappingViewPager
                 android:id="@+id/card_field_container_pager"

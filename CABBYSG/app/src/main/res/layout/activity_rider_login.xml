@@ -11,9 +11,11 @@
     <EditText
         android:id="@+id/riderPassword"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
+        android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/riderEmail"
+        android:layout_marginTop="270dp"
+        android:background="#FFE446"
         android:ems="10"
         android:hint="Password"
         android:inputType="textPassword"
@@ -22,10 +24,11 @@
     <EditText
         android:id="@+id/riderEmail"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="219dp"
+        android:layout_marginTop="217dp"
+        android:background="#FFE446"
         android:ems="10"
         android:hint="Email"
         android:inputType="textEmailAddress"
@@ -34,24 +37,29 @@
     <Button
         android:id="@+id/riderRegister"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="45dp"
+        android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/imageView"
-        android:layout_marginStart="20dp"
+        android:layout_marginBottom="96dp"
+        android:layout_marginStart="25dp"
+        android:background="#FFE446"
         android:onClick="navRegister"
         android:paddingHorizontal="45dp"
-        android:text="Register" />
+        android:text="Register"
+        android:textSize="16sp" />
 
     <Button
         android:id="@+id/riderLoginButton"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="45dp"
         android:layout_alignParentEnd="true"
         android:layout_alignTop="@+id/riderRegister"
         android:layout_marginEnd="17dp"
+        android:background="#FFE446"
         android:onClick="OnRiderLogin"
-        android:paddingHorizontal="50dp"
-        android:text="Login" />
+        android:paddingHorizontal="45dp"
+        android:text="Login"
+        android:textSize="16sp" />
 
     <ImageView
         android:id="@+id/imageView"
@@ -66,8 +74,9 @@
         android:id="@+id/forgotPasswordText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/riderRegister"
+        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
+        android:layout_marginBottom="60dp"
         android:onClick="forgotPassword"
         android:text="Forgot Password" />
 </RelativeLayout>
