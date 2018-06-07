@@ -125,23 +125,9 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
     public void onStop() {
         super.onStop();
         mGoogleApiClient.disconnect();
-        //SIMCODER Part 6,14
-        /*
-        if (!isLoggingOut)
-        {
-        disconnectDriver();
-        }
-         */
-    }
-    /*
-    private void disconnectDriver(){
-        stopLocationUpdates();
-        String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("driversAvailable");
 
-        GeoFire geoFire = new GeoFire(ref);
-        geoFire.removeLocation(userID);
-    } */
+    }
+
     private void getLocationPermission() {
         Log.d(TAG, "getLocationPermission: getting location permissions");
         String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION,
@@ -311,7 +297,6 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
                     startLocationUpdates();
                     displayLocation();
                     Toast.makeText(getActivity(), "You are online!", Toast.LENGTH_SHORT).show();
-                    displayAlertDialog();
                 } else{
                     stopLocationUpdates();
                     mCurrent.remove();
@@ -341,7 +326,7 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
                        public void onDataChange(@NonNull final DataSnapshot dataSnapshot) {
                            for (DataSnapshot ds : dataSnapshot.getChildren()){
 
-                               if (dataSnapshot.child("driverFound").getValue()== 0) {
+                               if (dataSnapshot.child("driverFound").getValue()== "false") {
                                    String location = ds.child("currentLocation").getValue().toString();
                                    String destination = ds.child("destination").getValue().toString();
                                    String fare = ds.child("fare").getValue().toString();
@@ -372,7 +357,7 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
                                    // you can more buttons
                                    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "ACCEPT", new DialogInterface.OnClickListener() {
                                        public void onClick(DialogInterface dialog, int which) {
-                                            dataSnapshot.child("driverFound").getRef().setValue(1);
+                                            dataSnapshot.child("driverFound").getRef().setValue("true");
                                        }
                                    });
 
@@ -422,60 +407,6 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
         });
     }
 
-    private void displayAlertDialog() {
-        AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
-
-        TextView title = new TextView(getActivity());
-        title.setText("Request Found!");
-        title.setPadding(10, 10, 10, 10);   // Set Position
-        title.setGravity(Gravity.CENTER);
-        title.setTextColor(Color.BLACK);
-        title.setTextSize(20);
-        alertDialog.setCustomTitle(title);
-
-        TextView msg = new TextView(getActivity());
-
-        msg.setText("Location: " + "\n" +
-                "Destination: " + "\n" +
-                "Fare: " +"\n" +
-                "Selected Route: ");
-        msg.setGravity(Gravity.CENTER_HORIZONTAL);
-        msg.setTextColor(Color.BLACK);
-        alertDialog.setView(msg);
-
-        // Set Button
-        // you can more buttons
-        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL,"OK", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                // Perform Action on Button
-            }
-        });
-
-        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE,"CANCEL", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                // Perform Action on Button
-            }
-        });
-
-        new Dialog(getActivity().getApplicationContext());
-        alertDialog.show();
-
-        // Set Properties for OK Button
-        final Button okBT = alertDialog.getButton(AlertDialog.BUTTON_NEUTRAL);
-        LinearLayout.LayoutParams neutralBtnLP = (LinearLayout.LayoutParams) okBT.getLayoutParams();
-        neutralBtnLP.gravity = Gravity.FILL_HORIZONTAL;
-        okBT.setPadding(50, 10, 10, 10);   // Set Position
-        okBT.setTextColor(Color.BLUE);
-        okBT.setLayoutParams(neutralBtnLP);
-
-        final Button cancelBT = alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE);
-        LinearLayout.LayoutParams negBtnLP = (LinearLayout.LayoutParams) okBT.getLayoutParams();
-        negBtnLP.gravity = Gravity.FILL_HORIZONTAL;
-        cancelBT.setTextColor(Color.RED);
-        cancelBT.setLayoutParams(negBtnLP);
-
-
-    }
 
     private void getAssignedCustomerPickupLocation() {
         DatabaseReference assignedCustomerPickupLocationRef = FirebaseDatabase.getInstance().getReference().child("customerRequest").child(customerId).child("l");
