@@ -480,18 +480,19 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
                 if (!driverFound) {
 
                     DatabaseReference driverFoundRef = FirebaseDatabase.getInstance().getReference().child("customerRequest").child(userID).child("driverFound");
-                  driverFoundRef.addValueEventListener(new ValueEventListener() {
+                    DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Drivers").child(driverFoundID);
+                    //String customerId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                    HashMap map = new HashMap();
+                    map.put("customerRiderId", userID);
+                    driverRef.updateChildren(map);
+
+                    driverFoundRef.addValueEventListener(new ValueEventListener() {
                       @Override
                       public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                           if(dataSnapshot.getValue()=="true"){
                               driverFound = true;
                               driverFoundID = key;
 
-                              DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Drivers").child(driverFoundID);
-                              //String customerId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                              HashMap map = new HashMap();
-                              map.put("customerRiderId", userID);
-                              driverRef.updateChildren(map);
                               System.out.println("Radius is " + radius);
 
                               getDriverLocation();
