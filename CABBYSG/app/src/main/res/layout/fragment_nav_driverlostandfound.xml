@@ -67,37 +67,12 @@
             android:textSize="14sp"
             android:visibility="visible" />
 
-
-        <EditText
-            android:id="@+id/textView4"
-            android:layout_width="340dp"
-            android:layout_height="26dp"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="164dp"
-            android:background="#2C2C2C"
-            android:gravity="center"
-            android:hint="Phone Number"
-            android:inputType="phone"
-            android:textColor="#FFEE7C"
-            android:textColorHint="#FFEE7C"
-            android:textSize="14sp" />
-
-        <EditText
-            android:id="@+id/email"
-            android:layout_width="340dp"
-            android:layout_height="26dp"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="116dp"
-            android:background="#2C2C2C"
-            android:ems="10"
-            android:gravity="center"
-            android:hint="Email Address"
-            android:inputType="textEmailAddress"
-            android:textColor="#FFEE7C"
-            android:textColorHint="#FFEE7C"
-            android:textSize="14sp" />
+        <ImageView
+            android:id="@+id/lostandfoundphoto"
+            android:layout_width="100sp"
+            android:layout_height="100sp"
+            android:layout_marginBottom="20sp"
+            android:src="@drawable/uploadicon" />
 
 
         <Button
