@@ -40,8 +40,8 @@ public class CreditCardDesign extends AppCompatActivity {
 
         String name = "Glarence Zhao";
         String cvv = "420";
-        String expiry = "01/18";
-        String cardNumber = "4242424242424242";
+        String expiry = "01/20";
+        String cardNumber = "4111 1111 1111 1111";
 
         sampleCreditCardView.setCVV(cvv);
         sampleCreditCardView.setCardHolderName(name);
