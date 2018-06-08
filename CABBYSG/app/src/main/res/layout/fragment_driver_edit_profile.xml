@@ -1,17 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/driverProfile"
-    android:background="@color/colorBackground"
+    android:id="@+id/driverEditProfile"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorBackground"
-    tools:context=".nav_driverprofile">
+    tools:context=".driverEditProfile">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/navProfile">
+        android:layout_height="match_parent">
 
         <TextView
             android:layout_width="wrap_content"
@@ -19,100 +16,96 @@
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="40dp"
-            android:text="PROFILE"
+            android:text="EDIT PROFILE"
             android:textColor="@android:color/black"
             android:textSize="30sp" />
 
-        <TextView
-            android:id="@+id/dFirstName"
+        <EditText
+            android:id="@+id/dFirstNameEdit"
             android:layout_width="300dp"
             android:layout_height="30dp"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="220dp"
             android:background="#fdffaf"
+            android:inputType="text"
             android:text="first"
             android:textAlignment="center" />
 
-        <TextView
-            android:id="@+id/dLastName"
+        <EditText
+            android:id="@+id/dLastNameEdit"
             android:layout_width="300dp"
             android:layout_height="30dp"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="260dp"
             android:background="#fdffaf"
+            android:inputType="text"
             android:text="last"
             android:textAlignment="center" />
 
-        <TextView
-            android:id="@+id/dMobileNb"
+        <EditText
+            android:id="@+id/dMobileNbEdit"
             android:layout_width="300dp"
             android:layout_height="30dp"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="300dp"
             android:background="#fdffaf"
+            android:inputType="number"
             android:text="mobile"
             android:textAlignment="center" />
 
-        <TextView
-            android:id="@+id/dEmail"
+        <EditText
+            android:id="@+id/dEmailEdit"
             android:layout_width="300dp"
             android:layout_height="30dp"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="340dp"
             android:background="#fdffaf"
+            android:inputType="textEmailAddress"
             android:text="email"
             android:textAlignment="center" />
 
         <TextView
-            android:id="@+id/dCarPlate"
+            android:id="@+id/dRegNum"
             android:layout_width="300dp"
             android:layout_height="30dp"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="380dp"
             android:background="#fdffaf"
-            android:text="carplate"
+            android:text="Car Registration Number"
             android:textAlignment="center" />
 
         <TextView
-            android:id="@+id/dCarModel"
+            android:id="@+id/dModel"
             android:layout_width="300dp"
             android:layout_height="30dp"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="420dp"
             android:background="#fdffaf"
-            android:text="model"
+            android:text="Car Model"
             android:textAlignment="center" />
 
         <Button
-            android:id="@+id/dChangePwBtn"
+            android:id="@+id/dDeleteAcc"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
-            android:layout_alignStart="@+id/dFirstName"
-            android:layout_below="@+id/dEditProfileBtn"
-            android:text="CHANGE PASSWORD"
-            android:textSize="13sp" />
+            android:layout_alignParentTop="true"
+            android:layout_alignStart="@+id/dFirstNameEdit"
+            android:layout_marginTop="460dp"
+            android:text="DELETE ACCOUNT" />
 
         <Button
-            android:id="@+id/dEditProfileBtn"
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="20dp"
-            android:layout_below="@+id/dCarModel"
-            android:text="Edit Profile" />
-
-        <Button
-            android:id="@+id/dLogOutBtn"
+            android:id="@+id/dSaveEdit"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
-            android:layout_alignEnd="@+id/dFirstName"
-            android:layout_alignTop="@+id/dChangePwBtn"
-            android:text="LOG OUT" />
+            android:layout_alignTop="@+id/dDeleteAcc"
+            android:layout_toEndOf="@+id/dDeleteAcc"
+            android:text="SAVE CHANGES" />
     </RelativeLayout>
+
 </FrameLayout>
