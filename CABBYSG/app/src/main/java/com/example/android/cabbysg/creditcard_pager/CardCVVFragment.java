@@ -14,7 +14,8 @@ import com.example.android.cabbysg.R;
 import static com.example.android.cabbysg.CreditCardUtils.EXTRA_CARD_CVV;
 
 
-public class CardCVVFragment extends CreditCardFragment {
+public class
+CardCVVFragment extends CreditCardFragment {
 
     private EditText mCardCVVView;
     private int mMaxCVV = CardSelector.CVV_LENGHT_DEFAULT;
