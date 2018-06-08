@@ -27,6 +27,7 @@ public class nav_profile extends Fragment implements View.OnClickListener {
 
     Button editProfile, changePw, logOut;
     TextView firstNameView,lastNameView,mobileView,emailView;
+    de.hdodenhof.circleimageview.CircleImageView profilePic;
 
     DatabaseReference current_user_db;
 
@@ -63,6 +64,9 @@ public class nav_profile extends Fragment implements View.OnClickListener {
         lastNameView= rootView.findViewById(R.id.lastName);
         mobileView= rootView.findViewById(R.id.mobileNb);
         emailView= rootView.findViewById(R.id.email);
+
+        //Image Views
+        profilePic = rootView.findViewById(R.id.profile_image);
 
         //Buttons
         editProfile = rootView.findViewById(R.id.editProfileBtn);

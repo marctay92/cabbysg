@@ -8,4 +8,15 @@
     tools:context=".driver_menubar"
     tools:showIn="@layout/app_bar_driver_menubar">
 
+    <FrameLayout
+        android:id="@+id/content_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:background="#FFFEF8"
+        android:visibility="visible"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toEndOf="parent"></FrameLayout>
+
 </android.support.constraint.ConstraintLayout>

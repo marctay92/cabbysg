@@ -1,10 +1,14 @@
 package com.example.android.cabbysg;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -21,8 +25,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.google.android.gms.auth.api.signin.internal.Storage;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
@@ -35,7 +42,13 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -45,13 +58,17 @@ import static android.content.ContentValues.TAG;
 public class editProfile extends Fragment{
 
     EditText firstNameEditText, lastNameEditText, emailEditText, mobileEditText;
-    String firstNameStr, lastNameStr, mobileStr, emailStr;
+    String firstNameStr, lastNameStr, mobileStr, emailStr,profileUrlStr;
+    de.hdodenhof.circleimageview.CircleImageView editProfilePic;
+
     boolean validEditFirst = false;
     boolean validEditLast=false;
     boolean validEditMobile=false;
     boolean validEditEmail=false;
     boolean saveChanges = false;
     Button deleteAccBtn, saveChangesBtn;
+
+    private Uri resultUri;
 
     //Create Progress Dialog
     ProgressDialog pd;
@@ -60,7 +77,6 @@ public class editProfile extends Fragment{
 
     FirebaseAuth mAuth;
     FirebaseUser user;
-    //FirebaseAuth.AuthStateListener firebaseAuthListener;
 
     Map newPost = new HashMap();
 
@@ -88,25 +104,40 @@ public class editProfile extends Fragment{
        lastNameEditText = rootView.findViewById(R.id.lastNameEdit);
        mobileEditText = rootView.findViewById(R.id.mobileNbEdit);
        emailEditText = rootView.findViewById(R.id.emailEdit);
+       editProfilePic = rootView.findViewById(R.id.editProfile_image);
 
        //User Authentication
        mAuth = FirebaseAuth.getInstance();
 
        user = FirebaseAuth.getInstance().getCurrentUser();
 
-       current_user_db = FirebaseDatabase.getInstance().getReference("Rider");
+       current_user_db = FirebaseDatabase.getInstance().getReference("Rider").child(user.getUid());
 
         //extract TextViews from database
         current_user_db.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot postSnapshot: dataSnapshot.getChildren()){
-                    if(user.getUid().equals(postSnapshot.getKey())) {
-                        UserInfo uInfo = postSnapshot.getValue(UserInfo.class);
-                        firstNameEditText.setText(uInfo.getFirstName());
-                        lastNameEditText.setText(uInfo.getLastName());
-                        mobileEditText.setText(uInfo.getMobileNum());
-                        emailEditText.setText(uInfo.getEmail());
+                if(dataSnapshot.exists() && dataSnapshot.getChildrenCount()>0) {
+                    Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
+                    if(map.get("firstName")!=null){
+                        firstNameStr = map.get("firstName").toString();
+                        firstNameEditText.setText(firstNameStr);
+                    }
+                    if(map.get("lastName")!=null){
+                        lastNameStr = map.get("lastName").toString();
+                        lastNameEditText.setText(lastNameStr);
+                    }
+                    if(map.get("mobileNum")!=null){
+                        mobileStr = map.get("mobileNum").toString();
+                        mobileEditText.setText(mobileStr);
+                    }
+                    if(map.get("email")!=null){
+                        emailStr = map.get("email").toString();
+                        emailEditText.setText(emailStr);
+                    }
+                    if(map.get("profileImageUrl")!=null){
+                        profileUrlStr = map.get("profileImageUrl").toString();
+                        Glide.with(getActivity()).load(profileUrlStr).into(editProfilePic);
                     }
                 }
             }
@@ -114,6 +145,15 @@ public class editProfile extends Fragment{
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
+            }
+        });
+
+        editProfilePic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_PICK);
+                intent.setType("image/*");
+                startActivityForResult(intent,1);
             }
         });
 
@@ -187,7 +227,7 @@ public class editProfile extends Fragment{
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()) {
                                 String user_id = mAuth.getCurrentUser().getUid();
-                                DatabaseReference current_user_db = FirebaseDatabase.getInstance().getReference().child("Rider").child(user_id);
+                                final DatabaseReference current_user_db = FirebaseDatabase.getInstance().getReference().child("Rider").child(user_id);
 
                                 Map newPost = new HashMap();
                                 //newPost.put("email",str_email);
@@ -195,8 +235,41 @@ public class editProfile extends Fragment{
                                 newPost.put("lastName", lastNameStr);
                                 newPost.put("mobileNum", mobileStr);
                                 newPost.put("email",emailStr);
+                                current_user_db.updateChildren(newPost);
 
-                                current_user_db.setValue(newPost);
+                                if(resultUri!=null){
+                                    StorageReference filePath = FirebaseStorage.getInstance().getReference().child("profile_images").child(user_id);
+                                    Bitmap bitmap = null;
+
+                                    try {
+                                        bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(),resultUri);
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+
+                                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                                    bitmap.compress(Bitmap.CompressFormat.JPEG,20,baos);
+                                    byte[] data = baos.toByteArray();
+                                    UploadTask uploadTask = filePath.putBytes(data);
+                                    uploadTask.addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            return;
+                                        }
+                                    });
+                                    uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                        @Override
+                                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                            Task<Uri> downloadUrl = taskSnapshot.getMetadata().getReference().getDownloadUrl();
+
+                                            Map newImage = new HashMap();
+                                            newImage.put("profileImageUrl",downloadUrl.toString());
+                                            current_user_db.updateChildren(newImage);
+                                            return;
+                                        }
+                                    });
+
+                                }
 
                                 Fragment newFragment=new nav_profile();
                                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
@@ -222,6 +295,9 @@ public class editProfile extends Fragment{
 
        return rootView;
     }
+
+
+
     private void moveToNewActivity() {
         Intent i = new Intent(getActivity(), startpage.class);
         startActivity(i);
@@ -305,6 +381,15 @@ public class editProfile extends Fragment{
         builder.show();
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==1 && requestCode == Activity.RESULT_OK){
+            final Uri imageUri = data.getData();
+            resultUri = imageUri;
+            editProfilePic.setImageURI(resultUri);
+        }
+    }
     /*@Override
     public void onStart() {
         super.onStart();
