@@ -68,10 +68,30 @@
             android:visibility="visible" />
 
         <ImageView
-            android:id="@+id/lostandfoundphoto"
+            android:id="@+id/lostandfoundphoto1"
             android:layout_width="100sp"
             android:layout_height="100sp"
-            android:layout_marginBottom="20sp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignStart="@+id/spinner"
+            android:layout_marginBottom="146dp"
+            android:src="@drawable/uploadicon" />
+
+        <ImageView
+            android:id="@+id/lostandfoundphoto2"
+            android:layout_width="100sp"
+            android:layout_height="100sp"
+            android:layout_alignTop="@+id/lostandfoundphoto1"
+            android:layout_toRightOf="@+id/lostandfoundphoto1"
+            android:layout_marginLeft="20dp"
+            android:src="@drawable/uploadicon" />
+
+        <ImageView
+            android:id="@+id/lostandfoundphoto3"
+            android:layout_width="100sp"
+            android:layout_height="100sp"
+            android:layout_alignTop="@+id/lostandfoundphoto1"
+            android:layout_toRightOf="@+id/lostandfoundphoto2"
+            android:layout_marginLeft="20dp"
             android:src="@drawable/uploadicon" />
 
 
@@ -79,12 +99,14 @@
             android:id="@+id/button"
             android:layout_width="355dp"
             android:layout_height="38dp"
-            android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="23dp"
+            android:layout_marginTop="20dp"
+            android:layout_below="@+id/lostandfoundphoto2"
             android:background="#FFEE7C"
             android:text="SUBMIT"
             android:textSize="18sp" />
+            <!--android:layout_alignParentBottom="true"-->
+
 
     </RelativeLayout>
 
