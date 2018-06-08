@@ -6,22 +6,50 @@
     android:layout_width="wrap_content"
     android:layout_gravity="center"
     android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:background="#FFFEF8"
     tools:context="com.example.android.cabbysg.CreditCardDesign">
+<!--
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#2C2C2C"
+        android:minHeight="@dimen/abc_action_bar_default_height_material">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:src="@drawable/app_logo"/>
+
+    </android.support.v7.widget.Toolbar>
+    -->
 
     <LinearLayout
         android:id="@+id/card_container"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="fill_parent"
+        android:layout_weight="1"
         android:orientation="vertical">
+
 
         <Button
             android:id="@+id/add_card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="ADD CARD"
-            />
+            android:layout_marginTop="50dp"
+            android:background="#FFEE7C"
+            android:paddingBottom="5dp"
+            android:paddingLeft="80dp"
+            android:paddingRight="80dp"
+            android:paddingTop="5dp"
+            android:text="ADD PAYMENT METHOD"
+            android:textSize="16sp" />
 
     </LinearLayout>
+
 
 
 </ScrollView>

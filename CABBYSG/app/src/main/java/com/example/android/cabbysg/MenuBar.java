@@ -1,5 +1,6 @@
 package com.example.android.cabbysg;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentTransaction;
@@ -91,6 +92,9 @@ public class MenuBar extends AppCompatActivity
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.content_frame, fragment,"Payment");
             fragmentTransaction.commit();
+            //Intent intent=new Intent(this,CreditCardDesign.class);
+            //startActivity(intent);
+
 
         } else if (id == R.id.nav_schedule) {
             setTitle("Schedule");
