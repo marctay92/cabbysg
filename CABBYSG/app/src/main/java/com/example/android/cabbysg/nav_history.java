@@ -42,14 +42,15 @@ public class nav_history extends Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_nav_history, container, false);
 
-        user = FirebaseAuth.getInstance().getCurrentUser();
-        history_db = FirebaseDatabase.getInstance().getReference("RiderHistory").child(user.getUid()).child("1");
+        //user = FirebaseAuth.getInstance().getCurrentUser();
+        // history_db = FirebaseDatabase.getInstance().getReference("RiderHistory").child(user.getUid()).child("1");
 
         listView = rootView.findViewById(R.id.listOfDetails);
 
-        final historyAdapter adapter = new historyAdapter (getActivity(),arrayOfDetails);
+        //final
+        historyAdapter adapter = new historyAdapter (getActivity(),arrayOfDetails);
         listView.setAdapter(adapter);
-
+/*
         history_db.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -66,10 +67,10 @@ public class nav_history extends Fragment {
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
-        });
+        });*/
 
-        /*historyDetails newhistoryDetails = new historyDetails("Joshua","SHA1234A","1 APRIL 2018","13:00","33.00");
-        adapter.add(newhistoryDetails);*/
+        historyDetails newhistoryDetails = new historyDetails("1234","Driver1","Joshua","Kwek","Toyota Altis","SKW2733D","NLB","SIM","09 June 2018","12:29","Shortest","10.00","5");
+        adapter.add(newhistoryDetails);
         return rootView;
     }
 

@@ -378,6 +378,9 @@ public class editProfile extends Fragment{
                                                         if (task.isSuccessful()) {
                                                             pd.show();
                                                             Toast.makeText(getActivity(),"User account deleted",Toast.LENGTH_LONG).show();
+                                                            DeleteUserCredit();
+                                                            DeleteUserScheduled();
+                                                            DeleteUserLostItem();
                                                             current_user_db.child(user.getUid()).removeValue();
                                                             moveToNewActivity();
                                                         }
@@ -391,6 +394,65 @@ public class editProfile extends Fragment{
         });
 
         builder.show();
+    }
+    private void DeleteUserCredit(){
+        DatabaseReference userCreditCardDatabase = FirebaseDatabase.getInstance().getReference().child("Rider").child(user.getUid()).child("creditCard");
+        userCreditCardDatabase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    for(DataSnapshot creditCard : dataSnapshot.getChildren()){
+                        DatabaseReference creditCard_db = FirebaseDatabase.getInstance().getReference().child("creditCard").child(creditCard.getKey());
+                        creditCard_db.removeValue();
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void DeleteUserScheduled(){
+        DatabaseReference userCreditCardDatabase = FirebaseDatabase.getInstance().getReference().child("Rider").child(user.getUid()).child("scheduledRides");
+        userCreditCardDatabase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    for(DataSnapshot scheduled : dataSnapshot.getChildren()){
+                        DatabaseReference scheduled_db = FirebaseDatabase.getInstance().getReference().child("scheduledRides").child(scheduled.getKey());
+                        scheduled_db.removeValue();
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void DeleteUserLostItem(){
+        DatabaseReference userLostItemDatabase = FirebaseDatabase.getInstance().getReference().child("Rider").child(user.getUid()).child("LostItem");
+        userLostItemDatabase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    for(DataSnapshot scheduled : dataSnapshot.getChildren()){
+                        DatabaseReference scheduled_db = FirebaseDatabase.getInstance().getReference().child("scheduledRides").child(scheduled.getKey());
+                        scheduled_db.removeValue();
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     /*@Override

@@ -12,9 +12,10 @@ public class historyDetails {
     public String tripDate;
     public String tripTime;
     public String selectedRoute;
+    public String rating;
     public String fare;
 
-    public historyDetails(String tripID, String driverID, String firstName, String lastName, String model, String regNum, String pickUpLocation, String destination, String tripDate, String tripTime, String selectedRoute, String fare){
+    public historyDetails(String tripID, String driverID, String firstName, String lastName, String model, String regNum, String pickUpLocation, String destination, String tripDate, String tripTime, String selectedRoute, String fare, String rating){
         this.tripID =tripID;
         this.driverID =driverID;
         this.firstName=firstName;
@@ -27,6 +28,7 @@ public class historyDetails {
         this.tripTime=tripTime;
         this.selectedRoute=selectedRoute;
         this.fare=fare;
+        this.rating=rating;
     }
 
     public String getDriverID() {
@@ -72,4 +74,5 @@ public class historyDetails {
     public String getFare() {
         return fare;
     }
+    public String getRating(){return rating;}
 }

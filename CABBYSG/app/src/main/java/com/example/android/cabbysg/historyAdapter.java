@@ -29,12 +29,18 @@ public class historyAdapter extends ArrayAdapter<historyDetails> {
         if(convertView ==null){
             convertView= LayoutInflater.from(getContext()).inflate(R.layout.history_item,parent,false);
         }
-        TextView name1= convertView.findViewById(R.id.name1);
-        TextView date1= convertView.findViewById(R.id.date1);
-        TextView fare1= convertView.findViewById(R.id.fare1);
-        TextView time1= convertView.findViewById(R.id.time1);
-        TextView vehNb1= convertView.findViewById(R.id.vehNb1);
-        ImageView blackBox= convertView.findViewById(R.id.black_rectangle_box1);
+        TextView name1= convertView.findViewById(R.id.history2Name);
+        TextView date1= convertView.findViewById(R.id.history2Date);
+        TextView fare1= convertView.findViewById(R.id.history2Fare);
+        TextView time1= convertView.findViewById(R.id.history2Time);
+        TextView vehNb1= convertView.findViewById(R.id.history2CarPlate);
+        TextView vehModel1= convertView.findViewById(R.id.history2CarModel);
+        TextView driverRating1=convertView.findViewById(R.id.history2Rating);
+        TextView route1=convertView.findViewById(R.id.history2Route);
+        TextView from1=convertView.findViewById(R.id.history2From);
+        TextView to1=convertView.findViewById(R.id.history2To);
+        ImageView blackBox= convertView.findViewById(R.id.history2BlackBox);
+        //history2Profile (profile picture of driver)
 
         String fullName = historydetails.getFirstName() + " " + historydetails.getLastName();
 
@@ -43,7 +49,12 @@ public class historyAdapter extends ArrayAdapter<historyDetails> {
         fare1.setText(historydetails.fare);
         time1.setText(historydetails.tripTime);
         vehNb1.setText(historydetails.regNum);
-
+        vehModel1.setText(historydetails.model);
+        driverRating1.setText(historydetails.rating);
+        route1.setText(historydetails.selectedRoute);
+        from1.setText(historydetails.pickUpLocation);
+        to1.setText(historydetails.destination);
+/*
         //setOnclickListener(new View.OnClickListener)
         blackBox.setOnClickListener(new View.OnClickListener(){
 
@@ -53,7 +64,7 @@ public class historyAdapter extends ArrayAdapter<historyDetails> {
                 //historyDetails historydetails=getItem(position);
 
                 /*Intent intent=new Intent(getActivity(),nav_history2.class);
-                startActivity(intent);*/
+                startActivity(intent);
                 nav_history fragment=null;
                 fragment=new nav_history();
                 nav_history2 someFragment= null;
@@ -65,7 +76,8 @@ public class historyAdapter extends ArrayAdapter<historyDetails> {
                 transaction.addToBackStack(null);
                 transaction.commit();
             }
-        });
+        }); */
+
         return convertView;
     }
 }
