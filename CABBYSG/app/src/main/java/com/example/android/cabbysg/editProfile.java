@@ -260,15 +260,19 @@ public class editProfile extends Fragment{
                                     uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                                         @Override
                                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                            Task<Uri> downloadUrl = taskSnapshot.getMetadata().getReference().getDownloadUrl();
-
-                                            Map newImage = new HashMap();
-                                            newImage.put("profileImageUrl",downloadUrl.toString());
-                                            current_user_db.updateChildren(newImage);
+                                            Task<Uri> downloadUrl = taskSnapshot.getMetadata().getReference().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                                @Override
+                                                public void onSuccess(Uri uri) {
+                                                    Uri profileImageUrl = uri;
+                                                    Map newImage = new HashMap();
+                                                    newImage.put("profileImageUrl",profileImageUrl.toString());
+                                                    System.out.println(newImage.get("profileImageUrl"));
+                                                    current_user_db.updateChildren(newImage);
+                                                }
+                                            });
                                             return;
                                         }
                                     });
-
                                 }
 
                                 Fragment newFragment=new nav_profile();
@@ -296,7 +300,15 @@ public class editProfile extends Fragment{
        return rootView;
     }
 
-
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 1 && resultCode == Activity.RESULT_OK){
+            final Uri imageUri = data.getData();
+            resultUri = imageUri;
+            editProfilePic.setImageURI(resultUri);
+        }
+    }
 
     private void moveToNewActivity() {
         Intent i = new Intent(getActivity(), startpage.class);
@@ -381,15 +393,6 @@ public class editProfile extends Fragment{
         builder.show();
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode==1 && requestCode == Activity.RESULT_OK){
-            final Uri imageUri = data.getData();
-            resultUri = imageUri;
-            editProfilePic.setImageURI(resultUri);
-        }
-    }
     /*@Override
     public void onStart() {
         super.onStart();
