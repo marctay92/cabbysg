@@ -30,10 +30,10 @@ public class addCardAdapter extends ArrayAdapter<cardDetailsContainer> {
         String mask = cardDetails.replaceAll("\\w(?=\\w{4})", "*");
 
         if (details.cardType.equals("MASTER_CARD")){
-            cardImageType.setImageResource(R.drawable.ic_billing_mastercard_logo);
+            cardImageType.setImageResource(R.drawable.mastercard);
         }
         if (details.cardType.equals("VISA_CARD")){
-            cardImageType.setImageResource(R.drawable.ic_billing_visa_logo);
+            cardImageType.setImageResource(R.drawable.visa);
         }
 
         cardNumber.setText(mask);
