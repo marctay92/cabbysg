@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -22,9 +23,20 @@ public class addCardAdapter extends ArrayAdapter<cardDetailsContainer> {
         if(convertView==null){
             convertView= LayoutInflater.from(getContext()).inflate(R.layout.paymentlayout,parent,false);
         }
-        TextView cardNumber = (TextView)convertView.findViewById(R.id.cardNumber);
+        TextView cardNumber = convertView.findViewById(R.id.cardNumber);
+        ImageView cardImageType = convertView.findViewById(R.id.cardImageType);
 
-        cardNumber.setText(details.cardDetailsNumber);
+        String cardDetails = details.cardDetailsNumber;
+        String mask = cardDetails.replaceAll("\\w(?=\\w{4})", "*");
+
+        if (details.cardType.equals("MASTER_CARD")){
+            cardImageType.setImageResource(R.drawable.ic_billing_mastercard_logo);
+        }
+        if (details.cardType.equals("VISA_CARD")){
+            cardImageType.setImageResource(R.drawable.ic_billing_visa_logo);
+        }
+
+        cardNumber.setText(mask);
         return convertView;
     }
 }
