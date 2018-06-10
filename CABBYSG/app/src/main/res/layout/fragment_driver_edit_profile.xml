@@ -20,6 +20,17 @@
             android:textColor="@android:color/black"
             android:textSize="30sp" />
 
+        <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/editDriverProfileImage"
+            android:layout_width="96dp"
+            android:layout_height="96dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="97dp"
+            android:src="@drawable/profile"
+            app:civ_border_color="#FF000000"
+            app:civ_border_width="2dp" />
+
         <EditText
             android:id="@+id/dFirstNameEdit"
             android:layout_width="300dp"

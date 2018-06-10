@@ -34,6 +34,9 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.example.android.cabbysg.nav_lostandfound.isEmailValid;
+import static com.example.android.cabbysg.nav_lostandfound.isNameValid;
+
 
 public class riderRegister extends AppCompatActivity {
     EditText firstName, lastName, email, mobileNb, password, rePassword;
@@ -102,21 +105,29 @@ public class riderRegister extends AppCompatActivity {
 
                 if(TextUtils.isEmpty(str_firstName)) {
                     firstName.setError("Please enter your first name");
-                } else validFirstName = true;
+                } else if(!isNameValid(str_firstName)){
+                    firstName.setError("Invalid First Name");
+                }else validFirstName = true;
 
                 if (TextUtils.isEmpty(str_lastName)) {
                     lastName.setError("Please enter your last name");
+                } else if(!isNameValid(str_lastName)){
+                    lastName.setError("Invalid Last Name");
                 } else validLastName = true;
 
                 if (TextUtils.isEmpty(str_email)) {
                     email.setError("Please enter your email");
-                    //} else if (){
-
+                } else if(!isEmailValid(str_email)){
+                    email.setError("Please enter a valid email");
                 } else validEmail = true;
 
                 if (TextUtils.isEmpty(str_mobileNb)) {
-                    mobileNb.setError("Please enter your mobile number");
-                } else validNum = true;
+                    mobileNb.setError("Please enter your phone number");
+                }else if (!TextUtils.isDigitsOnly(str_mobileNb)){
+                    mobileNb.setError("Please enter only numbers");
+                }else if(str_mobileNb.length() > 8 || str_mobileNb.length()<8){
+                    mobileNb.setError("Please enter only 8 digits");
+                }else validNum = true;
 
                 if (TextUtils.isEmpty(str_password)) {
                     password.setError("Please enter your password");

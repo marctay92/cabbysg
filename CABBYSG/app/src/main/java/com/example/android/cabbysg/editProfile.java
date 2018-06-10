@@ -54,6 +54,8 @@ import java.util.Map;
 
 import static android.app.ProgressDialog.STYLE_SPINNER;
 import static android.content.ContentValues.TAG;
+import static com.example.android.cabbysg.nav_lostandfound.isEmailValid;
+import static com.example.android.cabbysg.nav_lostandfound.isNameValid;
 
 public class editProfile extends Fragment{
 
@@ -206,19 +208,29 @@ public class editProfile extends Fragment{
                 //Condition to check
                 if(TextUtils.isEmpty(firstNameStr)) {
                     firstNameEditText.setError("Please enter your first name");
-                } else validEditFirst = true;
+                } else if(!isNameValid(firstNameStr)){
+                    lastNameEditText.setError("Invalid First Name");
+                }else validEditFirst = true;
 
                 if (TextUtils.isEmpty(lastNameStr)) {
                     lastNameEditText.setError("Please enter your last name");
+                } else if(!isNameValid(lastNameStr)){
+                    lastNameEditText.setError("Invalid Last Name");
                 } else validEditLast = true;
 
                 if (TextUtils.isEmpty(emailStr)) {
                     emailEditText.setError("Please enter your email");
+                } else if(!isEmailValid(emailStr)){
+                    emailEditText.setError("Please enter a valid email");
                 } else validEditEmail = true;
 
                 if (TextUtils.isEmpty(mobileStr)) {
-                    mobileEditText.setError("Please enter your mobile number");
-                } else validEditMobile = true;
+                    mobileEditText.setError("Please enter your phone number");
+                }else if (!TextUtils.isDigitsOnly(mobileStr)){
+                    mobileEditText.setError("Please enter only numbers");
+                }else if(mobileStr.length() > 8 || mobileStr.length()<8){
+                    mobileEditText.setError("Please enter only 8 digits");
+                }else validEditMobile = true;
 
                 if(validEditFirst&&validEditLast&&validEditEmail&&validEditMobile){
                     pd.show();
@@ -353,22 +365,60 @@ public class editProfile extends Fragment{
                                     if (saveChanges) {
                                         System.out.println("User re-authenticated.");
                                         String user_id = mAuth.getCurrentUser().getUid();
-                                        DatabaseReference current_user_db = FirebaseDatabase.getInstance().getReference().child("Rider").child(user_id);
+                                        final DatabaseReference current_user_db = FirebaseDatabase.getInstance().getReference().child("Rider").child(user_id);
 
                                         Map newPost = new HashMap();
                                         //newPost.put("email",str_email);
                                         newPost.put("firstName", firstNameStr);
                                         newPost.put("lastName", lastNameStr);
                                         newPost.put("mobileNum", mobileStr);
-                                        newPost.put("email", emailStr);
+                                        newPost.put("email",emailStr);
+                                        current_user_db.updateChildren(newPost);
 
-                                        current_user_db.setValue(newPost);
+                                        if(resultUri!=null){
+                                            StorageReference filePath = FirebaseStorage.getInstance().getReference().child("profile_images").child(user_id);
+                                            Bitmap bitmap = null;
 
-                                        Fragment newFragment = new nav_driverprofile();
+                                            try {
+                                                bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(),resultUri);
+                                            } catch (IOException e) {
+                                                e.printStackTrace();
+                                            }
+
+                                            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                                            bitmap.compress(Bitmap.CompressFormat.JPEG,20,baos);
+                                            byte[] data = baos.toByteArray();
+                                            UploadTask uploadTask = filePath.putBytes(data);
+                                            uploadTask.addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    return;
+                                                }
+                                            });
+                                            uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                                @Override
+                                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                                    Task<Uri> downloadUrl = taskSnapshot.getMetadata().getReference().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                                        @Override
+                                                        public void onSuccess(Uri uri) {
+                                                            Uri profileImageUrl = uri;
+                                                            Map newImage = new HashMap();
+                                                            newImage.put("profileImageUrl",profileImageUrl.toString());
+                                                            System.out.println(newImage.get("profileImageUrl"));
+                                                            current_user_db.updateChildren(newImage);
+                                                        }
+                                                    });
+                                                    return;
+                                                }
+                                            });
+                                        }
+
+                                        Fragment newFragment=new nav_profile();
                                         FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                                        transaction.replace(R.id.editProfileFragment, newFragment);
+                                        transaction.replace(R.id.editProfileFragment,newFragment);
                                         transaction.addToBackStack(null);
                                         transaction.commit();
+                                        pd.dismiss();
                                     }else{
                                         // User clicked the Continue button
                                         user.delete()
@@ -387,9 +437,19 @@ public class editProfile extends Fragment{
                                                     }
                                                 });
                                     }
+                                }else{
+                                    Toast.makeText(getActivity(),"Password Invalid",Toast.LENGTH_SHORT).show();
                                 }
                             }
                         });
+            }
+        });
+
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener()
+        {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
             }
         });
 
