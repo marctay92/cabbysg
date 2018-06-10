@@ -119,7 +119,7 @@ public class MenuBar extends AppCompatActivity
 
         } else if (id == R.id.nav_help) {
             setTitle("Help");
-            nav_driverhelp fragment = new nav_driverhelp();
+            nav_driverhistory fragment = new nav_driverhistory();
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.content_frame, fragment,"Help");
             fragmentTransaction.commit();
