@@ -41,7 +41,7 @@
         android:layout_marginTop="220dp"
         android:background="#fdffaf"
         android:inputType="text"
-        android:text="first"
+        android:hint="First Name"
         android:textAlignment="center" />
 
     <EditText
@@ -53,7 +53,7 @@
         android:layout_marginTop="260dp"
         android:background="#fdffaf"
         android:inputType="text"
-        android:text="last"
+        android:hint="Last Name"
         android:textAlignment="center" />
 
     <EditText
@@ -65,7 +65,7 @@
         android:layout_marginTop="300dp"
         android:background="#fdffaf"
         android:inputType="number"
-        android:text="mobile"
+        android:hint="mobile"
         android:textAlignment="center" />
 
     <EditText
@@ -77,7 +77,7 @@
         android:layout_marginTop="340dp"
         android:background="#fdffaf"
         android:inputType="textEmailAddress"
-        android:text="email"
+        android:hint="email"
         android:textAlignment="center" />
 
     <Button
