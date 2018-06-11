@@ -4,6 +4,7 @@ package com.example.android.cabbysg;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,8 +15,11 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
@@ -32,6 +36,7 @@ public class schedule_adaptor extends ArrayAdapter<schedule_details> {
         final DatabaseReference scheduledRidesDatabase = FirebaseDatabase.getInstance().getReference().child("scheduledRides").child(scheduleDetails.schedule_ID);
         final DatabaseReference riderScheduleDatabase = FirebaseDatabase.getInstance().getReference().child("Rider").child(user_id).child("scheduledRides").child(scheduleDetails.schedule_ID);
         final DatabaseReference driverScheduleDatabase = FirebaseDatabase.getInstance().getReference().child("Drivers").child(scheduleDetails.schedule_driverID).child("scheduledRides").child(scheduleDetails.schedule_ID);
+        System.out.println("DriverID" + scheduleDetails.schedule_driverID);
 
         if (convertView == null){
             convertView= LayoutInflater.from(getContext()).inflate(R.layout.schedule_template,parent,false);
@@ -39,29 +44,40 @@ public class schedule_adaptor extends ArrayAdapter<schedule_details> {
 
         TextView s_date = convertView.findViewById(R.id.s_date);
         TextView s_time = convertView.findViewById(R.id.s_time);
-        TextView s_name = convertView.findViewById(R.id.s_name);
-        TextView s_carplatenumber = convertView.findViewById(R.id.s_carplatenumber);
-        TextView s_rating = convertView.findViewById(R.id.s_rating);
+        final TextView s_name = convertView.findViewById(R.id.s_name);
+        final TextView s_carplatenumber = convertView.findViewById(R.id.s_carplatenumber);
+        final TextView s_rating = convertView.findViewById(R.id.s_rating);
         TextView s_destination = convertView.findViewById(R.id.s_destination);
         TextView s_location = convertView.findViewById(R.id.s_location);
         TextView s_type = convertView.findViewById(R.id.s_type);
         TextView s_price = convertView.findViewById(R.id.s_price);
-        de.hdodenhof.circleimageview.CircleImageView profilePic = convertView.findViewById(R.id.s_profile);
+        final de.hdodenhof.circleimageview.CircleImageView profilePic = convertView.findViewById(R.id.s_profile);
         ImageView s_cancel= convertView.findViewById(R.id.s_cancel);
 
         s_date.setText(scheduleDetails.schedule_date);
         s_time.setText(scheduleDetails.schedule_time);
-        s_name.setText(scheduleDetails.schedule_driverName);
-        s_carplatenumber.setText(scheduleDetails.schedule_carplatenumber);
-        s_rating.setText(scheduleDetails.schedule_rating);
+
+        DatabaseReference driver_db = FirebaseDatabase.getInstance().getReference().child("Drivers").child(scheduleDetails.schedule_driverID);
+        driver_db.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                s_name.setText(dataSnapshot.child("firstName").getValue().toString() + " " + dataSnapshot.child("lastName").getValue().toString());
+                s_carplatenumber.setText(dataSnapshot.child("regNum").getValue().toString());
+                s_rating.setText(dataSnapshot.child("rating").getValue().toString());
+                if(dataSnapshot.child("profileImageUrl").exists()){
+                    Glide.with(getContext()).load(dataSnapshot.child("profileImageUrl").getValue().toString()).into(profilePic);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
         s_destination.setText(scheduleDetails.schedule_destination);
         s_location.setText(scheduleDetails.schedule_location);
         s_type.setText(scheduleDetails.schedule_routeType);
         s_price.setText(scheduleDetails.schedule_fare);
-
-        if(!scheduleDetails.schedule_pic.equals("")){
-            Glide.with(getContext()).load(scheduleDetails.schedule_pic).into(profilePic);
-        }
 
         s_cancel.setOnClickListener(new View.OnClickListener() {
             @Override

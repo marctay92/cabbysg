@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,7 +32,7 @@ public class nav_schedule extends Fragment {
 
     FirebaseUser user;
     String userId;
-    String startLocationStr,driverIdStr,destinationStr,selectedRouteStr,fareStr,driverFullNameStr,driverRatingStr,regNumStr,driverFirstNameStr,profilePicStr,driverLastNameStr,scheduleID;
+    String startLocationStr,driverIdStr,destinationStr,selectedRouteStr,fareStr,scheduleID;
     ArrayList<schedule_details>arrayOfSchedule=new ArrayList<schedule_details>();
     ListView listView;
     schedule_adaptor adapter;
@@ -48,11 +49,6 @@ public class nav_schedule extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_nav_schedule, container, false);
 
 //MARCUS CHANGE TO DATABASE
-        driverFirstNameStr = "";
-        driverLastNameStr = "";
-        regNumStr = "";
-        driverRatingStr = "";
-        profilePicStr = "";
 
         user = FirebaseAuth.getInstance().getCurrentUser();
         userId = user.getUid();
@@ -80,93 +76,53 @@ public class nav_schedule extends Fragment {
                     }
                 }
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
         });
     }
-
     private void FetchScheduledInfo(String rideKey){
         DatabaseReference scheduledRidesDatabase = FirebaseDatabase.getInstance().getReference().child("scheduledRides").child(rideKey);
         arrayOfSchedule.clear();
         scheduledRidesDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Long timestamp = 0L;
                 if(dataSnapshot.exists()){
-                    Long timestamp = 0L;
-                    for(DataSnapshot child: dataSnapshot.getChildren()){
-                        System.out.println(child.getKey()+":"+child.getValue());
-                        if(child.getKey().equals("driverID")) {
-                            //System.out.println(child.getKey()+":"+child.getValue());
-                            driverIdStr = child.getValue().toString();
-                            DatabaseReference driver_db = FirebaseDatabase.getInstance().getReference().child("Drivers").child(driverIdStr);
-                            driver_db.addValueEventListener(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                    if (dataSnapshot.exists()) {
-                                        for (DataSnapshot child1 : dataSnapshot.getChildren()) {
-                                            System.out.println(child1.getKey()+":"+child1.getValue());
-                                            if (child1.getKey().equals("firstName")) {
-                                                driverFirstNameStr = child1.getValue().toString();
-                                            }
-                                            if(child1.getKey().equals("lastName")){
-                                                driverLastNameStr = child1.getValue().toString();
-                                            }
-                                            if(child1.getKey().equals("regNum")) {
-                                                regNumStr = child1.getValue().toString();
-                                            }
-                                            if (child1.getKey().equals("rating")) {
-                                                driverRatingStr = child1.getValue().toString();
-                                            }
-                                            if(child1.getKey().equals("profileImageUrl")){
-                                                profilePicStr = child1.getValue().toString();
-                                            }
-                                        }
-                                    }
-                                }
-
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                }
-                            });
+                    for(DataSnapshot child: dataSnapshot.getChildren()) {
+                        if (child.getKey().equals("driverID")) {
+                            driverIdStr = dataSnapshot.child("driverID").getValue().toString();
+                            System.out.println("driverID: " + driverIdStr);
                         }
-                        if(child.getKey().equals("startLocation")){
-                            startLocationStr = child.getValue().toString();
+                        if (child.getKey().equals("startLocation")) {
+                            startLocationStr = dataSnapshot.child("startLocation").getValue().toString();
                         }
-                        if(child.getKey().equals("destination")){
-                            destinationStr = child.getValue().toString();
+                        if (child.getKey().equals("destination")) {
+                            destinationStr = dataSnapshot.child("destination").getValue().toString();
+                        }
+                        if (child.getKey().equals("selectedRoute")) {
+                            selectedRouteStr = dataSnapshot.child("selectedRoute").getValue().toString();
                         }
 
-                        if(child.getKey().equals("selectedRoute")){
-                            selectedRouteStr = child.getValue().toString();
+                        if (child.getKey().equals("fare")) {
+                            fareStr = dataSnapshot.child("fare").getValue().toString();
                         }
-
-                        if(child.getKey().equals("fare")){
-                            fareStr = child.getValue().toString();
-                        }
-
-                        if(child.getKey().equals("timestamp")){
-                            timestamp = Long.valueOf(child.getValue().toString());
+                        if (child.getKey().equals("timestamp")) {
+                            timestamp = Long.valueOf(dataSnapshot.child("timestamp").getValue().toString());
                         }
                     }
-                    driverFullNameStr = driverFirstNameStr + " " + driverLastNameStr;
-                    schedule_details obj = new schedule_details(scheduleID,getDate(timestamp),getTime(timestamp),driverIdStr,profilePicStr,driverFullNameStr,regNumStr,driverRatingStr,destinationStr, startLocationStr,selectedRouteStr,fareStr);
+                    schedule_details obj = new schedule_details(scheduleID,getDate(timestamp),getTime(timestamp),driverIdStr,destinationStr, startLocationStr,selectedRouteStr,fareStr);
                     arrayOfSchedule.add(obj);
                     adapter.notifyDataSetChanged();
                 }
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
         });
-
     }
-
     private ArrayList<schedule_details> getDataSetHistory(){
         return arrayOfSchedule;
     }
@@ -183,19 +139,4 @@ public class nav_schedule extends Fragment {
         String time = DateFormat.format("hh:mm",cal).toString();
         return time;
     }
-
-
 }
-
-    /*@Override
-    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-        arrayOfSchedule.clear();
-        for (DataSnapshot postSnapshot: dataSnapshot.getChildren()){
-            if (user.getUid().equals(postSnapshot.getKey())){
-                schedule_details scheduleTrip = postSnapshot.getValue(schedule_details.class);
-                arrayOfSchedule.add(scheduleTrip);
-            }
-        }
-        schedule_adaptor adapter = new schedule_adaptor(getActivity(), arrayOfSchedule);
-        listView.setAdapter(adapter);
-    }*/
