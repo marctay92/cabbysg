@@ -120,11 +120,9 @@ public class MenuBar extends AppCompatActivity
 
         } else if (id == R.id.nav_help) {
             setTitle("Help");
-<<<<<<< HEAD
-            nav_driverhome fragment = new nav_driverhome();
-=======
-            nav_driverhistory fragment = new nav_driverhistory();
->>>>>>> profile
+            nav_help fragment = new nav_help();
+            //nav_driverhome fragment = new nav_driverhome();
+            //nav_driverhistory fragment = new nav_driverhistory();
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.content_frame, fragment,"Help");
             fragmentTransaction.commit();
