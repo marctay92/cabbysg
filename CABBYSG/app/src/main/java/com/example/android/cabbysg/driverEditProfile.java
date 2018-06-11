@@ -103,6 +103,7 @@ public class driverEditProfile extends Fragment {
         emailEditText = rootView.findViewById(R.id.dEmailEdit);
         carModelTextView = rootView.findViewById(R.id.dRegNum);
         carPlateTextView = rootView.findViewById(R.id.dModel);
+        editDriverProfileImage = rootView.findViewById(R.id.editDriverProfileImage);
 
 
         //User Authentication
@@ -136,7 +137,7 @@ public class driverEditProfile extends Fragment {
                     }
                     if(map.get("profileImageUrl")!=null){
                         profileUrlStr = map.get("profileImageUrl").toString();
-                        Glide.with(getActivity()).load(profileUrlStr).into(editDriverProfileImage);
+                        Glide.with(getContext()).load(profileUrlStr).into(editDriverProfileImage);
                     }
                 }
             }

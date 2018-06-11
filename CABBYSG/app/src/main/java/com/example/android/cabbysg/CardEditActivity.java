@@ -1,24 +1,32 @@
 package com.example.android.cabbysg;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.android.cabbysg.creditcard_pager.CardFragmentAdapter;
 import com.example.android.cabbysg.creditcard_pager.CardFragmentAdapter.ICardEntryCompleteListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,6 +37,7 @@ import static com.example.android.cabbysg.CreditCardUtils.EXTRA_CARD_EXPIRY;
 import static com.example.android.cabbysg.CreditCardUtils.EXTRA_CARD_HOLDER_NAME;
 import static com.example.android.cabbysg.CreditCardUtils.EXTRA_CARD_NUMBER;
 import static com.example.android.cabbysg.CreditCardUtils.EXTRA_ENTRY_START_PAGE;
+import static com.example.android.cabbysg.nav_lostandfound.isNameValid;
 
 
 public class CardEditActivity extends AppCompatActivity {
@@ -44,6 +53,8 @@ public class CardEditActivity extends AppCompatActivity {
     private int mStartPage = 0;
     private CardFragmentAdapter mCardAdapter;
 
+    //AlertDialog.Builder builder = new AlertDialog.Builder(getApplication());
+//new ContextThemeWrapper(getApplication(), R.style.Theme_AppCompat_Dialog_Alert)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,9 +71,21 @@ public class CardEditActivity extends AppCompatActivity {
                 if (pager.getCurrentItem() == max - 1) {
                     // if last card.
                     onDoneTapped();
-                } else {
+                }else{
                     showNext();
                 }
+                /*if (pager.getCurrentItem() == 0 && mCardNumber.length()==16 ){
+                    if(CreditCardUtils.selectCardType(mCardNumber).toString()=="VISA_CARD" || CreditCardUtils.selectCardType(mCardNumber).toString()=="MASTER_CARD") {
+                        showNext();
+                    }
+                }else if (pager.getCurrentItem() == 0){
+                    Toast.makeText(getApplication(),"Please key in valid Master or Visa Card Number",Toast.LENGTH_SHORT).show();
+                }
+                if (pager.getCurrentItem() == 1 && !mExpiry.e){
+                    showNext();
+                }else if (pager.getCurrentItem() == 0){
+                    Toast.makeText(getApplication(),"Please key in valid Master or Visa Card Number",Toast.LENGTH_SHORT).show();
+                }*/
             }
         });
         findViewById(R.id.previous).setOnClickListener(new View.OnClickListener() {
@@ -235,28 +258,27 @@ public class CardEditActivity extends AppCompatActivity {
     public void showNext() {
         final ViewPager pager = findViewById(R.id.card_field_container_pager);
         CardFragmentAdapter adapter = (CardFragmentAdapter) pager.getAdapter();
+            int max = adapter.getCount();
+            int currentIndex = pager.getCurrentItem();
 
-        int max = adapter.getCount();
-        int currentIndex = pager.getCurrentItem();
+            if (currentIndex + 1 < max) {
 
-        if (currentIndex + 1 < max) {
+                pager.setCurrentItem(currentIndex + 1);
+            } else {
+                // completed the card entry.
+                setKeyboardVisibility(false);
+            }
 
-            pager.setCurrentItem(currentIndex + 1);
-        } else {
-            // completed the card entry.
-            setKeyboardVisibility(false);
-        }
-
-        refreshNextButton();
+            refreshNextButton();
     }
 
     private void onDoneTapped() {
-        Intent intent = new Intent();
+        final Intent intent = new Intent();
 
         FirebaseUser user;
         user = FirebaseAuth.getInstance().getCurrentUser();
 
-        creditCard_db= FirebaseDatabase.getInstance().getReference().child("creditCard").child(mCardNumber);
+        creditCard_db= FirebaseDatabase.getInstance().getReference().child("creditCard");
         rider_db = FirebaseDatabase.getInstance().getReference().child("Rider").child(user.getUid()).child("creditCard");
 
         intent.putExtra(EXTRA_CARD_CVV, mCVV);
@@ -265,32 +287,114 @@ public class CardEditActivity extends AppCompatActivity {
         intent.putExtra(EXTRA_CARD_NUMBER, mCardNumber);
 
         //put database
-        Map newPost = new HashMap();
+        final Map newPost = new HashMap();
         //newPost.put("email",str_email);
-        newPost.put("cvv", mCVV);
-        newPost.put("cardHolderName", mCardHolderName);
-        newPost.put("expiry", mExpiry);
-        newPost.put("cardType",mCreditCardView.getCardType());
-        creditCard_db.updateChildren(newPost);
-        rider_db.child(mCardNumber).setValue(true);
+        if(!mCVV.equals("") && mCVV.length()==3 && mCardHolderName!="" && mCardNumber.length()==16 && !mExpiry.equals("")) {
+            if ((CreditCardUtils.selectCardType(mCardNumber).toString() == "VISA_CARD" || CreditCardUtils.selectCardType(mCardNumber).toString() == "MASTER_CARD")&& isNameValid(mCardHolderName)) {
+                newPost.put("cvv", mCVV);
+                newPost.put("cardHolderName", mCardHolderName);
+                newPost.put("expiry", mExpiry);
+                newPost.put("cardType", mCreditCardView.getCardType());
+                rider_db.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull final DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.exists()) {
+                            for (DataSnapshot creditCard : dataSnapshot.getChildren()) {
+                                final String cardNum = creditCard.getKey();
+                                if (CreditCardUtils.selectCardType(cardNum).toString() == "VISA_CARD" && mCreditCardView.getCardType().toString().equals("VISA_CARD")) {
+                                    creditCard_db.child(mCardNumber).updateChildren(newPost);
+                                    creditCard_db.child(cardNum).removeValue();
+                                    rider_db.child(cardNum).removeValue();
+                                    rider_db.child(mCardNumber).setValue(true);
+                                    setResult(RESULT_OK, intent);
+                                    finish();
+                                /*builder.setTitle("VISA card Replacement");
+                                builder.setMessage("You have a VISA card in our system. Would you like to replace it?");
+                                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        creditCard_db.child(mCardNumber).updateChildren(newPost);
+                                        creditCard_db.child(cardNum).removeValue();
+                                        rider_db.child(cardNum).removeValue();
+                                        rider_db.child(mCardNumber).setValue(true);
+                                        setResult(RESULT_OK, intent);
+                                        finish();
+                                    }
+                                }).setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        finish();
+                                        return;
+                                    }
+                                });
+                                AlertDialog dialog=builder.create();
+                                dialog.show();*/
+                                } else if (CreditCardUtils.selectCardType(cardNum).toString() == "MASTER_CARD" && mCreditCardView.getCardType().toString().equals("MASTER_CARD")) {
+                                    creditCard_db.child(mCardNumber).updateChildren(newPost);
+                                    creditCard_db.child(cardNum).removeValue();
+                                    rider_db.child(cardNum).removeValue();
+                                    rider_db.child(mCardNumber).setValue(true);
+                                    setResult(RESULT_OK, intent);
+                                    finish();
+                                /*builder.setTitle("Mastercard Replacement");
+                                builder.setMessage("You have a Mastercard in our system. Would you like to replace it?");
+                                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        creditCard_db.child(mCardNumber).updateChildren(newPost);
+                                        creditCard_db.child(cardNum).removeValue();
+                                        rider_db.child(cardNum).removeValue();
+                                        rider_db.child(mCardNumber).setValue(true);
+                                        setResult(RESULT_OK, intent);
+                                        finish();
+                                    }
+                                }).setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        finish();
+                                        return;
+                                    }
+                                });
+                                AlertDialog dialog=builder.create();
+                                dialog.show();*/
+                                }
+                            }
+                        } else {
+                            creditCard_db.child(mCardNumber).updateChildren(newPost);
+                            rider_db.child(mCardNumber).setValue(true);
+                            setResult(RESULT_OK, intent);
+                            finish();
+                        }
+                    }
 
-        setResult(RESULT_OK, intent);
-        finish();
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+            }
+            /*creditCard_db.updateChildren(newPost);
+            rider_db.child(mCardNumber).setValue(true);
+            setResult(RESULT_OK, intent);
+            finish();*/
+            else {
+                Toast.makeText(getApplication(), "Please head previous to add in your details", Toast.LENGTH_SHORT).show();
+            }
+        }else {
+            Toast.makeText(getApplication(), "Please head previous to add in your details", Toast.LENGTH_SHORT).show();
+        }
     }
 
     // from the link above
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-
         // Checks whether a hardware keyboard is available
         if (newConfig.hardKeyboardHidden == Configuration.HARDKEYBOARDHIDDEN_NO) {
-
             RelativeLayout parent = findViewById(R.id.parent);
             RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) parent.getLayoutParams();
             layoutParams.addRule(RelativeLayout.CENTER_IN_PARENT, 0);
             parent.setLayoutParams(layoutParams);
-
         }
     }
 

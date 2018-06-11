@@ -4,8 +4,8 @@ package com.example.android.cabbysg;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.ListView;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -28,7 +29,6 @@ import java.util.ArrayList;
 public class nav_payment extends android.support.v4.app.Fragment {
     private String userId;
     private addCardAdapter adapter;
-    private ArrayList<cardDetailsContainer> arrayOfDetails;
     String cardTypeStr;
 
     public nav_payment() {
@@ -43,7 +43,6 @@ public class nav_payment extends android.support.v4.app.Fragment {
         View view =  inflater.inflate(R.layout.fragment_nav_payment, container, false);
 
         ListView listView= view.findViewById(R.id.cardList);
-        arrayOfDetails = new ArrayList<cardDetailsContainer>();
         adapter = new addCardAdapter(getContext(),getDataSetHistory());
         listView.setAdapter(adapter);
 
@@ -63,8 +62,40 @@ public class nav_payment extends android.support.v4.app.Fragment {
     }
 
     private void getUserCreditCard(){
-        DatabaseReference userCreditCardDatabase = FirebaseDatabase.getInstance().getReference().child("Rider").child(userId).child("creditCard");
-        userCreditCardDatabase.addValueEventListener(new ValueEventListener() {
+        DatabaseReference userCreditCard_db = FirebaseDatabase.getInstance().getReference().child("Rider").child(userId).child("creditCard");
+        userCreditCard_db.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                if(dataSnapshot.exists()){
+                    for(DataSnapshot creditCard : dataSnapshot.getChildren()){
+                        FetchCardInfo(creditCard.getKey());
+                    }
+                }
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+                arrayOfDetails.clear();
+                // FetchCardInfo(dataSnapshot.getKey());
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        /*DatabaseReference userCreditCard_db = FirebaseDatabase.getInstance().getReference().child("Rider").child(userId).child("creditCard");
+        userCreditCard_db.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists()){
@@ -78,7 +109,7 @@ public class nav_payment extends android.support.v4.app.Fragment {
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
-        });
+        });*/
     }
 
     private void FetchCardInfo(String cardKey){
@@ -95,10 +126,8 @@ public class nav_payment extends android.support.v4.app.Fragment {
                         }
                     }
                     cardDetailsContainer newDetails = new cardDetailsContainer(cardNum,cardTypeStr);
-                    adapter.add(newDetails);
+                    arrayOfDetails.add(newDetails);
                     adapter.notifyDataSetChanged();
-
-
                 }
             }
 
@@ -109,6 +138,7 @@ public class nav_payment extends android.support.v4.app.Fragment {
         });
 
     }
+    private ArrayList<cardDetailsContainer> arrayOfDetails = new ArrayList<cardDetailsContainer>();
     private ArrayList<cardDetailsContainer> getDataSetHistory(){
         return arrayOfDetails;
     }

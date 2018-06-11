@@ -15,20 +15,15 @@ public class historyDetails {
     public String rating;
     public String fare;
 
-    public historyDetails(String tripID, String driverID, String firstName, String lastName, String model, String regNum, String pickUpLocation, String destination, String tripDate, String tripTime, String selectedRoute, String fare, String rating){
+    public historyDetails(String tripID, String driverID, String pickUpLocation, String destination, String tripDate, String tripTime, String selectedRoute, String fare){
         this.tripID =tripID;
         this.driverID =driverID;
-        this.firstName=firstName;
-        this.lastName=lastName;
-        this.model=model;
-        this.regNum=regNum;
         this.pickUpLocation = pickUpLocation;
         this.destination=destination;
         this.tripDate=tripDate;
         this.tripTime=tripTime;
         this.selectedRoute=selectedRoute;
         this.fare=fare;
-        this.rating=rating;
     }
 
     public String getDriverID() {

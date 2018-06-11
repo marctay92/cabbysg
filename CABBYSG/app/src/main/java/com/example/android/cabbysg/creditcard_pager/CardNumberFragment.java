@@ -23,7 +23,7 @@ public class CardNumberFragment extends CreditCardFragment {
 
     public View onCreateView(LayoutInflater inflater, ViewGroup group, Bundle state) {
         View v = inflater.inflate(R.layout.c_lyt_card_number, group, false);
-        mCardNumberView = (EditText) v.findViewById(R.id.card_number_field);
+        mCardNumberView = v.findViewById(R.id.card_number_field);
 
         String number = "";
 
@@ -33,6 +33,9 @@ public class CardNumberFragment extends CreditCardFragment {
 
         if (number == null) {
             number = "";
+            mCardNumberView.setError("Please enter card number");
+        }else if (number.length()<=15 ){
+            mCardNumberView.setError("Please enter valid card number");
         }
 
         mCardNumberView.setText(number);

@@ -10,21 +10,23 @@
 
     <ImageView
         android:id="@+id/history2BlackBox"
-        android:layout_width="360dp"
-        android:layout_height="250dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_gravity="center_horizontal"
         android:src="@drawable/black_rectangle_box" />
 
-    <ImageView
+    <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/history2Profile"
-        android:layout_width="70dp"
-        android:layout_height="79dp"
+        android:layout_width="85dp"
+        android:layout_height="85dp"
         android:layout_alignParentStart="true"
-        android:layout_alignTop="@+id/history2Name"
-        android:layout_marginStart="20dp"
-        android:src="@drawable/yellowprofile" />
+        android:layout_centerVertical="true"
+        android:layout_marginStart="14dp"
+        android:src="@drawable/yellowprofile"
+        app:civ_border_color="#FF000000"
+        app:civ_border_width="2dp" />
 
     <ImageView
         android:id="@+id/star1"
@@ -40,6 +42,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
+        android:layout_marginTop="5dp"
         android:text=" 11 APRIL 18"
         android:textColor="#FFE446" />
 
@@ -50,6 +53,7 @@
         android:layout_alignParentTop="true"
         android:layout_toEndOf="@+id/history2Date"
         android:paddingLeft="10dp"
+        android:layout_marginTop="5dp"
         android:text=" 11:00"
         android:textColor="#FFE446" />
 
@@ -60,7 +64,7 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_marginStart="107dp"
-        android:layout_marginTop="41dp"
+        android:layout_marginTop="33dp"
         android:text="Jo Tan"
         android:textColor="#FFEE7C" />
 
@@ -68,25 +72,26 @@
         android:id="@+id/history2CarPlate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/history2CarModel"
         android:layout_alignStart="@+id/history2Name"
+        android:layout_below="@+id/history2Rating"
         android:text="SHG2634A"
         android:textColor="#FFEE7C" />
 
     <TextView
         android:id="@+id/history2CarModel"
-        android:layout_width="wrap_content"
+        android:layout_width="70dp"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/history2Profile"
         android:layout_alignEnd="@+id/star1"
+        android:layout_below="@+id/history2CarPlate"
         android:text="Hyundai i40"
-        android:textColor="#FFEE7C" />
+        android:textColor="#FFEE7C"
+        android:textSize="13sp" />
 
     <TextView
         android:id="@+id/history2Fare"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/history2CarPlate"
+        android:layout_alignTop="@+id/history2CarModel"
         android:layout_toStartOf="@+id/sgd1"
         android:text="$ 20.00"
         android:textColor="#FFFCB7" />
@@ -96,7 +101,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
-        android:layout_below="@+id/star1"
+        android:layout_below="@+id/history2CarPlate"
         android:paddingRight="15dp"
         android:text="SGD"
         android:textColor="#FFFCB7"
@@ -125,8 +130,8 @@
         android:id="@+id/line1"
         android:layout_width="161dp"
         android:layout_height="1dp"
+        android:layout_above="@+id/history2CarModel"
         android:layout_alignParentEnd="true"
-        android:layout_below="@+id/star1"
         android:layout_gravity="center"
         android:background="#FFE446" />
 
@@ -135,7 +140,7 @@
         android:layout_width="161dp"
         android:layout_height="1dp"
         android:layout_alignParentEnd="true"
-        android:layout_below="@+id/history2CarPlate"
+        android:layout_below="@+id/history2CarModel"
         android:layout_gravity="center"
         android:background="#FFE446" />
 
@@ -153,7 +158,7 @@
         android:id="@+id/history2Route"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/history2CarPlate"
+        android:layout_alignTop="@+id/history2CarModel"
         android:layout_alignStart="@+id/line1"
         android:text="Shortest"
         android:textColor="#FFEE7C"
@@ -173,14 +178,16 @@
         android:id="@+id/yellowcircle"
         android:layout_width="6dp"
         android:layout_height="190dp"
-        android:layout_alignStart="@+id/emptyyellowcircle"
+        android:layout_alignParentTop="true"
+        android:layout_alignStart="@+id/line1"
         android:src="@drawable/yellowcircle" />
 
     <View
         android:layout_width="2dp"
         android:layout_height="17dp"
-        android:layout_alignStart="@+id/emptyyellowcircle"
-        android:layout_below="@+id/history2From"
+        android:layout_above="@+id/star1"
+        android:layout_alignStart="@+id/line1"
+        android:layout_marginLeft="3dp"
         android:layout_gravity="center"
         android:background="#9D9D9D" />
 
@@ -189,24 +196,29 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/history2Profile"
-        android:layout_alignEnd="@+id/history2Fare"
+        android:layout_alignEnd="@+id/sgd1"
         android:layout_alignStart="@id/emptyyellowcircle"
+        android:layout_marginBottom="-6dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="10dp"
         android:paddingLeft="10dp"
         android:text="426 Bukit Timah"
         android:textColor="#FFEE7C"
-        android:textSize="14sp" />
+        android:textSize="13sp" />
 
     <TextView
         android:id="@+id/history2To"
-        android:layout_width="wrap_content"
+        android:layout_width="133dp"
         android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/history2Fare"
-        android:layout_centerVertical="true"
+        android:layout_alignEnd="@+id/sgd1"
         android:layout_alignStart="@id/emptyyellowcircle"
+        android:layout_marginRight="15dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="50dp"
         android:paddingLeft="10dp"
         android:text="Zouk Singapore"
         android:textColor="#FFEE7C"
-        android:textSize="14sp" />
+        android:textSize="13sp" />
 
 
 </RelativeLayout>
