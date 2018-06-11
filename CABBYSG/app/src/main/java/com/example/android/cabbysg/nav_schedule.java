@@ -3,7 +3,6 @@ package com.example.android.cabbysg;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
@@ -14,7 +13,6 @@ import android.widget.ListView;
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -24,7 +22,6 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
-import java.util.Map;
 
 
 /**
@@ -34,7 +31,7 @@ public class nav_schedule extends Fragment {
 
     FirebaseUser user;
     String userId;
-    String currentLocationStr,driverIdStr,destinationStr,selectedRouteStr,fareStr,driverFullNameStr,driverRatingStr,regNumStr,driverFirstNameStr,driverLastNameStr,scheduleID;
+    String startLocationStr,driverIdStr,destinationStr,selectedRouteStr,fareStr,driverFullNameStr,driverRatingStr,regNumStr,driverFirstNameStr,profilePicStr,driverLastNameStr,scheduleID;
     ArrayList<schedule_details>arrayOfSchedule=new ArrayList<schedule_details>();
     ListView listView;
     schedule_adaptor adapter;
@@ -51,6 +48,12 @@ public class nav_schedule extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_nav_schedule, container, false);
 
 //MARCUS CHANGE TO DATABASE
+        driverFirstNameStr = "";
+        driverLastNameStr = "";
+        regNumStr = "";
+        driverRatingStr = "";
+        profilePicStr = "";
+
         user = FirebaseAuth.getInstance().getCurrentUser();
         userId = user.getUid();
 
@@ -66,7 +69,7 @@ public class nav_schedule extends Fragment {
         return rootView;
     }
     private void getUserScheduledIds(){
-        DatabaseReference userScheduleDatabase = FirebaseDatabase.getInstance().getReference().child("Rider").child(userId).child("scheduleRides");
+        DatabaseReference userScheduleDatabase = FirebaseDatabase.getInstance().getReference().child("Rider").child(userId).child("scheduledRides");
         userScheduleDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -94,14 +97,17 @@ public class nav_schedule extends Fragment {
                 if(dataSnapshot.exists()){
                     Long timestamp = 0L;
                     for(DataSnapshot child: dataSnapshot.getChildren()){
+                        System.out.println(child.getKey()+":"+child.getValue());
                         if(child.getKey().equals("driverID")) {
+                            //System.out.println(child.getKey()+":"+child.getValue());
                             driverIdStr = child.getValue().toString();
                             DatabaseReference driver_db = FirebaseDatabase.getInstance().getReference().child("Drivers").child(driverIdStr);
-                            driver_db.addListenerForSingleValueEvent(new ValueEventListener() {
+                            driver_db.addValueEventListener(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                     if (dataSnapshot.exists()) {
                                         for (DataSnapshot child1 : dataSnapshot.getChildren()) {
+                                            System.out.println(child1.getKey()+":"+child1.getValue());
                                             if (child1.getKey().equals("firstName")) {
                                                 driverFirstNameStr = child1.getValue().toString();
                                             }
@@ -114,6 +120,9 @@ public class nav_schedule extends Fragment {
                                             if (child1.getKey().equals("rating")) {
                                                 driverRatingStr = child1.getValue().toString();
                                             }
+                                            if(child1.getKey().equals("profileImageUrl")){
+                                                profilePicStr = child1.getValue().toString();
+                                            }
                                         }
                                     }
                                 }
@@ -123,14 +132,9 @@ public class nav_schedule extends Fragment {
 
                                 }
                             });
-                        }else {
-                            driverFirstNameStr = "";
-                            driverLastNameStr = "";
-                            regNumStr = "";
-                            driverRatingStr = "";
                         }
-                        if(child.getKey().equals("currentLocation")){
-                            currentLocationStr = child.getValue().toString();
+                        if(child.getKey().equals("startLocation")){
+                            startLocationStr = child.getValue().toString();
                         }
                         if(child.getKey().equals("destination")){
                             destinationStr = child.getValue().toString();
@@ -147,15 +151,12 @@ public class nav_schedule extends Fragment {
                         if(child.getKey().equals("timestamp")){
                             timestamp = Long.valueOf(child.getValue().toString());
                         }
-
                     }
                     driverFullNameStr = driverFirstNameStr + " " + driverLastNameStr;
-                    schedule_details obj = new schedule_details(scheduleID,getDate(timestamp),getTime(timestamp),driverIdStr,driverFullNameStr,regNumStr,driverRatingStr,destinationStr,currentLocationStr,selectedRouteStr,fareStr);
+                    schedule_details obj = new schedule_details(scheduleID,getDate(timestamp),getTime(timestamp),driverIdStr,profilePicStr,driverFullNameStr,regNumStr,driverRatingStr,destinationStr, startLocationStr,selectedRouteStr,fareStr);
                     arrayOfSchedule.add(obj);
                     adapter.notifyDataSetChanged();
-
                 }
-
             }
 
             @Override

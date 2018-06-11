@@ -21,14 +21,16 @@
             android:layout_gravity="center_horizontal"
             android:src="@drawable/yellow_rectangle_box" />
 
-        <ImageView
-            android:id="@+id/profile"
+        <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/s_profile"
             android:layout_width="95dp"
             android:layout_height="104dp"
             android:layout_alignParentBottom="true"
             android:layout_alignParentStart="true"
             android:layout_marginStart="14dp"
-            android:src="@drawable/profile" />
+            android:src="@drawable/profile"
+            app:civ_border_color="#FF000000"
+            app:civ_border_width="2dp" />
 
         <ImageView
             android:id="@+id/star1"
@@ -167,6 +169,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/s_carplatenumber"
+            android:layout_toLeftOf="@+id/fare1"
             android:layout_toEndOf="@+id/s_name"
             android:text="Fastest"
             android:textColor="#2C2C2C"
@@ -186,6 +189,7 @@
             android:layout_height="13dp"
             android:layout_alignBottom="@+id/s_name"
             android:layout_alignParentEnd="true"
+            android:layout_toLeftOf="@+id/s_destination"
             android:layout_marginEnd="128dp"
             android:src="@drawable/blackcircle" />
 
@@ -200,7 +204,7 @@
 
         <TextView
             android:id="@+id/s_location"
-            android:layout_width="wrap_content"
+            android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:layout_alignTop="@+id/profile"
             android:layout_toEndOf="@+id/s_type"
