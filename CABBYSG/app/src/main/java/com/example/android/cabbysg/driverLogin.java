@@ -101,7 +101,7 @@ public class driverLogin extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (!task.isSuccessful()) {
-                                System.out.println("Driver Logged in");
+                                System.out.println("Driver not Logged in");
                                 Toast.makeText(driverLogin.this, "sign in error", Toast.LENGTH_SHORT).show();
                                 pd.dismiss();
                             }

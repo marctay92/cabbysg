@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -21,6 +22,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.Map;
+
 import static android.app.ProgressDialog.STYLE_SPINNER;
 
 
@@ -28,6 +31,8 @@ public class nav_driverprofile extends Fragment implements View.OnClickListener 
 
     Button dEditProfile, dChangePw, dLogOut;
     TextView dFirstNameView,dLastNameView,dMobileView,dEmailView, dCarPlateView, dCarModelView;
+    String firstNameStr, lastNameStr, mobileStr, emailStr,profileUrlStr ="";
+    de.hdodenhof.circleimageview.CircleImageView profilePic;
 
     DatabaseReference current_user_db;
 
@@ -45,12 +50,12 @@ public class nav_driverprofile extends Fragment implements View.OnClickListener 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_nav_driverprofile, container, false);
+        final View rootView = inflater.inflate(R.layout.fragment_nav_driverprofile, container, false);
 
         //User Authentication
         mAuth = FirebaseAuth.getInstance();
         user = FirebaseAuth.getInstance().getCurrentUser();
-        current_user_db = FirebaseDatabase.getInstance().getReference("Drivers");
+        current_user_db = FirebaseDatabase.getInstance().getReference("Drivers").child(user.getUid());
 
         //Init pd
         pd = new ProgressDialog(getActivity(), STYLE_SPINNER);
@@ -66,6 +71,7 @@ public class nav_driverprofile extends Fragment implements View.OnClickListener 
         dEmailView= rootView.findViewById(R.id.dEmail);
         dCarPlateView=rootView.findViewById(R.id.dCarPlate);
         dCarModelView=rootView.findViewById(R.id.dCarModel);
+        profilePic = rootView.findViewById(R.id.dprofile_image);
 
         //Buttons
         dEditProfile = rootView.findViewById(R.id.dEditProfileBtn);
@@ -80,23 +86,37 @@ public class nav_driverprofile extends Fragment implements View.OnClickListener 
         current_user_db.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot postSnapshot: dataSnapshot.getChildren()){
-                    if(user.getUid().equals(postSnapshot.getKey())) {
-                        DriverInfo dInfo = postSnapshot.getValue(DriverInfo.class);
-                        dFirstNameView.setText(dInfo.firstName);
-                        dLastNameView.setText(dInfo.lastName);
-                        dMobileView.setText(dInfo.mobileNum);
-                        dEmailView.setText(dInfo.email);
-                        dCarModelView.setText(dInfo.model);
-                        dCarPlateView.setText(dInfo.regNum);
+                if(dataSnapshot.exists() && dataSnapshot.getChildrenCount()>0) {
+                    Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
+                    if(map.get("firstName")!=null){
+                        firstNameStr = map.get("firstName").toString();
+                        dFirstNameView.setText(firstNameStr);
+                    }
+                    if(map.get("lastName")!=null){
+                        lastNameStr = map.get("lastName").toString();
+                        dLastNameView.setText(lastNameStr);
+                    }
+                    if(map.get("mobileNum")!=null){
+                        mobileStr = map.get("mobileNum").toString();
+                        dMobileView.setText(mobileStr);
+                    }
+                    if(map.get("email")!=null){
+                        emailStr = map.get("email").toString();
+                        dEmailView.setText(emailStr);
+                    }
+                    if(map.get("profileImageUrl")!=null){
+                        profileUrlStr = map.get("profileImageUrl").toString();
+                        Glide.with(getContext()).load(profileUrlStr).into(profilePic);
                     }
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
+
             }
         });
+
         return rootView;
     }
 
