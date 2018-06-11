@@ -67,21 +67,28 @@ public class nav_payment extends android.support.v4.app.Fragment {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 if(dataSnapshot.exists()){
-                    for(DataSnapshot creditCard : dataSnapshot.getChildren()){
-                        FetchCardInfo(creditCard.getKey());
-                    }
+                    //for(DataSnapshot creditCard : dataSnapshot.getChildren()){
+                        FetchCardInfo(dataSnapshot.getKey());
+                    //}
                 }
             }
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                if(dataSnapshot.exists()){
+                    //for(DataSnapshot creditCard : dataSnapshot.getChildren()){
+                        FetchCardInfo(dataSnapshot.getKey());
+                    //}
+                }
 
             }
 
             @Override
             public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-                arrayOfDetails.clear();
-                // FetchCardInfo(dataSnapshot.getKey());
+                if (dataSnapshot.exists()) {
+                    //arrayOfDetails.clear();
+                    FetchCardInfo(dataSnapshot.getKey());
+                }
             }
 
             @Override
