@@ -6,11 +6,59 @@
     android:background="@color/colorBackground"
     tools:context=".nav_driverhistory">
 
-    <com.github.mikephil.charting.charts.BarChart
-        android:layout_width="match_parent"
-        android:layout_height="400dp"
-        android:id="@+id/barChart">
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    </com.github.mikephil.charting.charts.BarChart>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        />
+
+    <TextView
+    android:layout_width="150dp"
+    android:layout_height="40dp"
+    android:id="@+id/thismonth"
+    />
+
+    <TextView
+        android:layout_width="150dp"
+        android:layout_height="40dp"
+        android:layout_below="@id/thismonth"
+        android:id="@+id/lastmonth"
+        />
+
+    <TextView
+        android:layout_width="150dp"
+        android:layout_height="40dp"
+        android:layout_below="@id/lastmonth"
+        android:id="@+id/monthbefore"
+        />
+
+    <TextView
+        android:layout_width="150dp"
+        android:layout_height="40dp"
+        android:layout_toEndOf="@id/thismonth"
+        android:id="@+id/firstvalue"
+        />
+
+    <TextView
+        android:layout_width="150dp"
+        android:layout_height="40dp"
+        android:layout_toEndOf="@id/lastmonth"
+        android:layout_below="@id/firstvalue"
+        android:id="@+id/secondvalue"
+        />
+
+    <TextView
+        android:layout_width="150dp"
+        android:layout_height="40dp"
+        android:layout_toEndOf="@id/monthbefore"
+        android:layout_below="@id/secondvalue"
+        android:id="@+id/thirdvalue"
+        />
+
+</RelativeLayout>
 
 </FrameLayout>

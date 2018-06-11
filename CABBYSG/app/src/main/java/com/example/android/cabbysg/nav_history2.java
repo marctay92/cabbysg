@@ -8,20 +8,28 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
+
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+
+import java.util.ArrayList;
 
 public class nav_history2 extends Fragment {
 
+    DatabaseReference history_db;
+    FirebaseUser user;
+    ArrayList<driverhistoryitem> arrayOfDetails=new ArrayList<driverhistoryitem>();
+    ListView listView;
     TextView fare;
     TextView tripDate;
     TextView tripTime;
     TextView startLocation;
     TextView finalLocation;
-    TextView driverName;
-    TextView driverVeh;
-    TextView carModel;
+    TextView riderName;
     TextView tripType;
-    TextView driverRating;
+    TextView riderRating;
     //ImageView driverProfilePic;
 
     public nav_history2() {
@@ -36,21 +44,13 @@ public class nav_history2 extends Fragment {
         View rootView=inflater.inflate(R.layout.fragment_nav_history2, container, false);
 
         //driverProfilePic=(ImageView)rootView.findViewById(R.id.history2Profile);
-        tripDate= rootView.findViewById(R.id.history2Date);
-        tripTime= rootView.findViewById(R.id.history2Time);
-        driverName= rootView.findViewById(R.id.history2Name);
-        driverVeh= rootView.findViewById(R.id.history2CarPlate);
-        carModel= rootView.findViewById(R.id.history2CarModel);
-        fare= rootView.findViewById(R.id.history2Fare);
-        driverRating= rootView.findViewById(R.id.history2Rating);
-        tripType= rootView.findViewById(R.id.history2Route);
-        startLocation= rootView.findViewById(R.id.history2From);
-        finalLocation= rootView.findViewById(R.id.history2To);
+        listView = rootView.findViewById(R.id.dList);
 
+        driverhistoryadapter adapter = new driverhistoryadapter (getActivity(),arrayOfDetails);
+        listView.setAdapter(adapter);
 
+        driverhistoryitem newdhistory = new driverhistoryitem("1234","Driver1","Joshua","Kwek","NLB","SIM","09 June 2018","12:29","Shortest","10.00","5");
+        adapter.add(newdhistory);
         return rootView;
-
     }
-
-
 }
