@@ -27,7 +27,7 @@
             android:layout_height="104dp"
             android:layout_alignParentBottom="true"
             android:layout_alignParentStart="true"
-            android:layout_marginStart="14dp"
+            android:layout_marginStart="5dp"
             android:src="@drawable/profile"
             app:civ_border_color="#FF000000"
             app:civ_border_width="2dp" />
@@ -36,9 +36,9 @@
             android:id="@+id/star1"
             android:layout_width="13dp"
             android:layout_height="18dp"
-            android:layout_below="@+id/s_carplatenumber"
-            android:layout_alignParentStart="true"
-            android:layout_marginStart="136dp"
+            android:layout_alignTop="@+id/s_price"
+            android:layout_toEndOf="@+id/s_profile"
+            android:layout_marginLeft="5dp"
             android:src="@drawable/star" />
 
 
@@ -70,10 +70,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_toEndOf="@+id/s_time"
+            android:layout_toEndOf="@+id/s_profile"
+            android:layout_marginLeft="5dp"
             android:text="John Tan"
             android:textColor="#2C2C2C"
-            android:textSize="18sp" />
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/s_price"
@@ -100,7 +101,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/s_name"
-            android:layout_toEndOf="@+id/s_time"
+            android:layout_toEndOf="@+id/s_profile"
+            android:layout_marginLeft="5dp"
             android:text="SGC6582Y"
             android:textColor="#2C2C2C" />
 
@@ -108,8 +110,8 @@
             android:id="@+id/s_rating"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/s_price"
-            android:layout_centerHorizontal="true"
+            android:layout_alignTop="@+id/star1"
+            android:layout_toEndOf="@+id/s_time"
             android:text="4.5  "
             android:textColor="#2C2C2C" />
 
@@ -168,9 +170,8 @@
             android:id="@+id/s_type"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/s_carplatenumber"
-            android:layout_toLeftOf="@+id/fare1"
-            android:layout_toEndOf="@+id/s_name"
+            android:layout_alignTop="@+id/star1"
+            android:layout_toStartOf="@+id/s_location"
             android:text="Fastest"
             android:textColor="#2C2C2C"
             android:textSize="12sp" />
@@ -180,7 +181,7 @@
             android:layout_width="5dp"
             android:layout_height="13dp"
             android:layout_alignStart="@+id/blackcircle1"
-            android:layout_alignTop="@+id/profile"
+            android:layout_alignTop="@+id/s_profile"
             android:src="@drawable/emptycircle" />
 
         <ImageView
@@ -190,7 +191,7 @@
             android:layout_alignBottom="@+id/s_name"
             android:layout_alignParentEnd="true"
             android:layout_toLeftOf="@+id/s_destination"
-            android:layout_marginEnd="128dp"
+            android:layout_marginEnd="150dp"
             android:src="@drawable/blackcircle" />
 
         <View
@@ -204,24 +205,24 @@
 
         <TextView
             android:id="@+id/s_location"
-            android:layout_width="120dp"
+            android:layout_width="140dp"
             android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/profile"
-            android:layout_toEndOf="@+id/s_type"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@+id/s_date"
             android:text="Ubi Mrt Station"
             android:textColor="#2C2C2C"
-            android:textSize="16sp" />
+            android:textSize="15sp" />
 
 
         <TextView
             android:id="@+id/s_destination"
-            android:layout_width="wrap_content"
+            android:layout_width="140dp"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
+            android:layout_marginTop="60dp"
             android:layout_toEndOf="@+id/s_type"
             android:text="Orchard Ion"
             android:textColor="#2C2C2C"
-            android:textSize="16sp" />
+            android:textSize="15sp" />
 
         <ImageView
             android:id="@+id/s_cancel"

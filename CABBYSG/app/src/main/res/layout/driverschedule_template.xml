@@ -21,14 +21,16 @@
             android:layout_gravity="center_horizontal"
             android:src="@drawable/yellow_rectangle_box" />
 
-        <ImageView
+        <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/ds_profile"
-            android:layout_width="100dp"
-            android:layout_height="92dp"
+            android:layout_width="95dp"
+            android:layout_height="104dp"
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
-            android:layout_marginStart="16dp"
-            android:src="@drawable/profile" />
+            android:layout_marginStart="12dp"
+            android:src="@drawable/profile"
+            app:civ_border_color="#FF000000"
+            app:civ_border_width="2dp" />
 
         <ImageView
             android:id="@+id/star1"
@@ -37,21 +39,6 @@
             android:layout_centerInParent="true"
             android:src="@drawable/star" />
 
-        <ImageView
-            android:id="@+id/phoneicon"
-            android:layout_width="17dp"
-            android:layout_height="33dp"
-            android:layout_alignStart="@+id/ds_rating"
-            android:layout_below="@+id/star1"
-            android:src="@drawable/phoneicon" />
-
-        <ImageView
-            android:id="@+id/messageicon"
-            android:layout_width="21dp"
-            android:layout_height="35dp"
-            android:layout_alignBottom="@+id/phoneicon"
-            android:layout_centerHorizontal="true"
-            android:src="@drawable/messageicon" />
 
         <ImageView
             android:id="@+id/noteicon"
@@ -59,20 +46,8 @@
             android:layout_height="28dp"
             android:layout_alignStart="@+id/emptycircle1"
             android:layout_below="@+id/ds_price"
-            android:src="@drawable/noteicon" />
-
-        <TextView
-            android:id="@+id/ds_note"
-            android:layout_width="wrap_content"
-            android:layout_height="23dp"
-            android:layout_below="@+id/phoneicon"
-            android:layout_marginTop="-7dp"
-            android:layout_toStartOf="@+id/sgd1"
-            android:hint="Addtional Notes"
-            android:paddingLeft="2dp"
-            android:text="Additional Note"
-            android:textColor="#2C2C2C"
-            android:textSize="12sp" />
+            android:src="@drawable/noteicon"
+            android:visibility="invisible"/>
 
 
         <TextView
@@ -110,7 +85,7 @@
 
         <TextView
             android:id="@+id/ds_price"
-            android:layout_width="57dp"
+            android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_below="@+id/sgd1"
@@ -180,8 +155,8 @@
             android:id="@+id/fare1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_above="@+id/noteicon"
             android:layout_alignStart="@+id/line1"
-            android:layout_alignTop="@+id/sgd1"
             android:paddingLeft="5dp"
             android:text="Fare: "
             android:textColor="#2C2C2C"
@@ -191,8 +166,7 @@
             android:id="@+id/dollarsign"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/sgd1"
-            android:layout_marginTop="0dp"
+            android:layout_above="@+id/noteicon"
             android:layout_toStartOf="@+id/ds_price"
             android:paddingLeft="5dp"
             android:text="$ "
@@ -204,7 +178,7 @@
             android:layout_width="46dp"
             android:layout_height="23dp"
             android:layout_below="@+id/star1"
-            android:layout_toStartOf="@+id/ds_note"
+            android:layout_toStartOf="@+id/line1"
             android:paddingLeft="2dp"
             android:text="Fastest"
             android:textColor="#2C2C2C"
@@ -213,9 +187,9 @@
         <ImageView
             android:id="@+id/emptycircle1"
             android:layout_width="5dp"
-            android:layout_height="61dp"
+            android:layout_height="5dp"
             android:layout_alignStart="@+id/blackcircle1"
-            android:layout_alignTop="@+id/profile"
+            android:layout_alignTop="@+id/ds_profile"
             android:src="@drawable/emptycircle" />
 
         <ImageView
@@ -240,7 +214,8 @@
             android:id="@+id/ds_location"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/ds_profile"
+            android:layout_above="@+id/ds_name"
+            android:layout_marginBottom="-47dp"
             android:layout_toEndOf="@+id/noteicon"
             android:text="Ubi Mrt Station"
             android:textColor="#2C2C2C"

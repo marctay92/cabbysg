@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/driverLostandFound"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorBackground"
@@ -51,7 +52,7 @@
 
 
         <EditText
-            android:id="@+id/description"
+            android:id="@+id/foundItemDescription"
             android:layout_width="339dp"
             android:layout_height="100dp"
             android:layout_alignParentTop="true"
@@ -72,12 +73,31 @@
             android:id="@+id/lostandfoundphoto"
             android:layout_width="100sp"
             android:layout_height="100sp"
-            android:layout_marginBottom="20sp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="168dp"
+            android:layout_alignStart="@id/foundItemDescription"
             android:src="@drawable/uploadicon" />
 
+        <ImageView
+            android:id="@+id/lostandfoundphoto2"
+            android:layout_width="100sp"
+            android:layout_height="100sp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="168dp"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/uploadicon" />
+
+        <ImageView
+            android:id="@+id/lostandfoundphoto3"
+            android:layout_width="100sp"
+            android:layout_height="100sp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="168dp"
+            android:layout_alignEnd="@+id/foundItemDescription"
+            android:src="@drawable/uploadicon" />
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/foundItemSubmit"
             android:layout_width="355dp"
             android:layout_height="38dp"
             android:layout_alignParentBottom="true"

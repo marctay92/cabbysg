@@ -48,7 +48,7 @@ public class nav_profile extends Fragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_nav_profile, container, false);
+        final View rootView = inflater.inflate(R.layout.fragment_nav_profile, container, false);
 
         //User Authentication
         mAuth = FirebaseAuth.getInstance();
@@ -105,7 +105,7 @@ public class nav_profile extends Fragment implements View.OnClickListener {
                     }
                     if(map.get("profileImageUrl")!=null){
                         profileUrlStr = map.get("profileImageUrl").toString();
-                        Glide.with(getContext()).load(profileUrlStr).into(profilePic);
+                        Glide.with(rootView.getContext()).load(profileUrlStr).into(profilePic);
                     }
                 }
             }
@@ -115,7 +115,7 @@ public class nav_profile extends Fragment implements View.OnClickListener {
 
             }
         });
-        current_user_db.addValueEventListener(new ValueEventListener() {
+        /*current_user_db.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot postSnapshot: dataSnapshot.getChildren()){
@@ -133,7 +133,7 @@ public class nav_profile extends Fragment implements View.OnClickListener {
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
-        });
+        });*/
 
         return rootView;
     }
