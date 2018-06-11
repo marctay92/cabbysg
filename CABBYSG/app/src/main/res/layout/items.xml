@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_gravity="center"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:paddingLeft="40sp"
+    android:paddingRight="40sp"
+    android:paddingTop="20sp"
+    android:paddingBottom="20sp"
+    android:outlineProvider="bounds"
+    android:clipToPadding="false">
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/cardView"
+        android:layout_width="wrap_content"
+        android:layout_height="221dp"
+        android:layout_gravity="center"
+        android:elevation="2dp"
+        app:cardCornerRadius="4dp">
+
+        <FrameLayout
+            android:id="@+id/frame"
+            android:layout_width="284dp"
+            android:layout_height="219dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="57dp"
+                android:background="@android:color/black">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:gravity="center"
+                    android:text="Request Found!"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="20dp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="85dp"
+                android:layout_marginTop="56dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginStart="14dp"
+                    android:layout_marginTop="14dp"
+                    android:text="Location: "
+                    android:textSize="8dp" />
+
+                <TextView
+                    android:id="@+id/location"
+                    android:layout_width="213dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="3dp"
+                    android:layout_marginTop="14dp"
+                    android:text="Eunos Crescent 400020"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="50dp"
+                    android:text="Destination: "
+                    android:textSize="8dp" />
+
+                <TextView
+                    android:id="@+id/destination"
+                    android:layout_width="212dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="68dp"
+                    android:layout_marginTop="50dp"
+                    android:text="Eunos Crescent 400020"
+                    android:textSize="16sp" />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginTop="141dp">
+
+                <TextView
+                    android:id="@+id/dateTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15sp"
+                    android:layout_weight="1"
+                    android:text="Now"
+                    android:textAlignment="center"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/fare"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15sp"
+                    android:layout_weight="1"
+                    android:text="$13.00"
+                    android:textAlignment="center"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/fareType"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15sp"
+                    android:layout_weight="1"
+                    android:text="Metered"
+                    android:textAlignment="center"
+                    android:textSize="12sp" />
+
+
+                <TextView
+                    android:id="@+id/routeSelected"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15sp"
+                    android:layout_weight="1"
+                    android:text="Fastest"
+                    android:textAlignment="center"
+                    android:textSize="12sp" />
+
+            </LinearLayout>
+
+
+        </FrameLayout>
+
+    </android.support.v7.widget.CardView>
+
+</LinearLayout>

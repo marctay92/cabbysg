@@ -2,6 +2,7 @@ package com.example.android.cabbysg;
 
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -27,7 +28,7 @@ public class MenuBar extends AppCompatActivity
         //setSupportActionBar(toolbar);
 
 
- /*      getSupportActionBar().setHomeButtonEnabled(true);
+ /*     getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setIcon(R.drawable.app_logo); //also displays wide logo
         getSupportActionBar().setDisplayShowTitleEnabled(false); //optional
@@ -109,7 +110,6 @@ public class MenuBar extends AppCompatActivity
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.content_frame, fragment,"Help");
             fragmentTransaction.commit();
-
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

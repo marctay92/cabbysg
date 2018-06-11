@@ -8,29 +8,37 @@ import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.text.format.DateFormat;
+import android.text.method.SingleLineTransformationMethod;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -38,11 +46,14 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RatingBar;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
 import com.firebase.geofire.GeoQuery;
@@ -72,6 +83,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.example.android.cabbysg.models.PlaceInfo;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -87,6 +99,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -95,6 +108,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+
+import de.hdodenhof.circleimageview.CircleImageView;
+import es.dmoral.toasty.Toasty;
 
 
 /**
@@ -114,15 +130,19 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
             new LatLng(-40, -168), new LatLng(71, 136));
     //widgets
     private AutoCompleteTextView mDestination, mCurrentLocation;
-    private ImageView mGps, mSubmit, mCancelRequest;
-    private Spinner mServiceType, mRouteOptions, mFareType;
-    private TextView mDisTextView, mDuraTextView, mFareTextView;
-    private TextView mRequestLocation, mRequestDestination, mRequestName, mRequestCarPlate, mRequestModel, mRequestFare;
+    private ImageView mGps, mSubmit, mCancelRequest, mCallDriver, mTextDriver, mPaymentMethodImage, mRatingDriverImage;
+    private Spinner mServiceType, mRouteOptions, mFareType, mPaymentMethod;
+    private TextView mDisTextView, mDuraTextView, mFareTextView, mStartingLocation, mEndingDestination, mFinalFare, mTollFees, mTotalFare, mTripDateTime;
+    private float driverRating;
+    private TextView mRequestLocation, mRequestDestination, mRequestName, mRequestCarPlate, mRequestModel, mRequestFare, mRatingDriverName, mRatingDriverModel;
     private static EditText mBookingTime;
     private String fare;
+    private RatingBar mRatingBar;
+    private RelativeLayout mRelativeLayout;
 
     //vars
-    private Boolean mLocationPermissionsGranted = false;
+    private Button mConfirmReceipt, mSubmitRating;
+    private Boolean mLocationPermissionsGranted = false, customerEnd = false;
     private GoogleMap mMap;
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private PlaceAutocompleteAdapter mPlaceAutocompleteAdapter, mPlaceAutocompleteAdapter1;
@@ -130,13 +150,16 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
     private PlaceInfo mPlace;
     private LatLng driverLatLng;
     private Boolean requestBol = false;
+    private int mLastSpinnerPosition = 0;
+    private final ArrayList<String> paymentMethods = new ArrayList<String>();
 
-    private String url;
-    private int mLastSpinnerPosition;
+    private Boolean routeSpinnerTouched = false, fareSpinnerTouched = false, onTrip = false;
+    private String url, phoneNo, driverPhotoUrl;
     private LatLng locLatLng = null;
     private LatLng desLatLng = null;
     private ProgressBar mProgressBar;
-    private LinearLayout mLinearLayout1, mLinearLayout2;
+    private CircleImageView mDriverPhoto;
+    private LinearLayout mLinearLayout1, mLinearLayout2, mLinearLayout3, mLinearLayout4;
     private String userID = "ywO5uyDNM0eQ0aOpLSQD0qj9zxO2";
 
 
@@ -278,6 +301,8 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
         // Inflate the layout for this fragment
         View v =  inflater.inflate(R.layout.fragment_nav_home, container, false);
 
+
+        Toasty.Config.getInstance().setSuccessColor(getResources().getColor(R.color.colorAccent)).setTextColor(Color.BLACK).apply();
         mDestination = v.findViewById(R.id.input_search1);
         mCurrentLocation = v.findViewById(R.id.input_search);
 
@@ -294,9 +319,11 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
 
         mGps = v.findViewById(R.id.ic_gps);
         mSubmit = v.findViewById(R.id.submitBtn);
-        mProgressBar = v.findViewById(R.id.progressBar);
+        mProgressBar = v.findViewById(R.id.progressBar1);
         mLinearLayout1 = v.findViewById(R.id.linearLayout1);
         mLinearLayout2 = v.findViewById(R.id.linearLayout2);
+        mLinearLayout3 = v.findViewById(R.id.linearLayout3);
+        mLinearLayout4 = v.findViewById(R.id.linearLayout4);
 
         mRequestLocation = v.findViewById(R.id.reqLocation);
         mRequestDestination = v.findViewById(R.id.reqDestination);
@@ -305,10 +332,94 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
         mRequestModel = v.findViewById(R.id.reqModel);
         mRequestFare = v.findViewById(R.id.reqFare);
         mCancelRequest = v.findViewById(R.id.cancelRequest);
+        mCallDriver = v.findViewById(R.id.callDriver);
+        mTextDriver = v.findViewById(R.id.textDriver);
+        mPaymentMethod = v.findViewById(R.id.mPaymentMethod);
+        mDriverPhoto = v.findViewById(R.id.driverPhoto);
+        mStartingLocation = v.findViewById(R.id.startingLocation);
+        mEndingDestination = v.findViewById(R.id.endingDestination);
+        mPaymentMethodImage = v.findViewById(R.id.paymentMethodImageView);
+        mFinalFare = v.findViewById(R.id.finalFare);
+        mTollFees = v.findViewById(R.id.tollFees);
+        mTotalFare = v.findViewById(R.id.totalFare);
+        mTripDateTime = v.findViewById(R.id.tripDateTime);
+        mRatingDriverName = v.findViewById(R.id.ratingDriverName);
+        mRatingDriverModel = v.findViewById(R.id.ratingDriverModel);
+        mRatingDriverImage = v.findViewById(R.id.ratingDriverImage);
+        mConfirmReceipt = v.findViewById(R.id.confirmReceipt);
+        mRatingBar = v.findViewById(R.id.ratingBar);
+        mSubmitRating = v.findViewById(R.id.submitRating);
+        mRelativeLayout = v.findViewById(R.id.relativeLayout);
 
+
+        mProgressBar.getIndeterminateDrawable().setColorFilter(getResources().getColor(R.color.colorAccent), PorterDuff.Mode.SRC_IN);
+        mRatingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+            @Override
+            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+                driverRating = rating;
+            }
+        });
+        paymentMethods.add("Cash");
+        getPaymentMethods();
         getLocationPermission();
         return v;
 
+    }
+
+    private void getPaymentMethods() {
+        DatabaseReference creditCardRef = FirebaseDatabase.getInstance().getReference().child("Rider").child(userID).child("creditCard");
+        creditCardRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()){
+                    for (DataSnapshot creditCard: dataSnapshot.getChildren()){
+                        Log.d(TAG,"Fetching CC details "+dataSnapshot.getChildrenCount());
+                        fetchCardInfo(creditCard.getKey().toString());
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void fetchCardInfo(final String cardKey) {
+        Log.d(TAG,"Running fetch CC info!");
+        DatabaseReference creditCard_db = FirebaseDatabase.getInstance().getReference().child("creditCard").child(cardKey);
+        creditCard_db.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    for(DataSnapshot child: dataSnapshot.getChildren()){
+                        String cardTypeStr = "";
+                        if(child.getKey().equals("cardType")){
+                            if(child.getValue().toString().equals("MASTER_CARD")){
+                                cardTypeStr = "Mastercard";
+                            } else{
+                                cardTypeStr = "Visa";
+                            }
+                            Log.d(TAG,cardKey + " Credit Card Type: "+cardTypeStr);
+                            paymentMethods.add(cardTypeStr);
+                        }
+                        if (getActivity()!=null){
+                            ArrayAdapter paymentMethodsAdapter = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_spinner_item, paymentMethods);
+                            paymentMethodsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                            mPaymentMethod.setAdapter(paymentMethodsAdapter);
+                        }
+
+                    }
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     @Override
@@ -387,12 +498,17 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
             }
         });
 
+       mRouteOptions.setOnTouchListener(new View.OnTouchListener() {
+           @Override
+           public boolean onTouch(View v, MotionEvent event) {
+               routeSpinnerTouched = true;
+               return false;
+           }
+       });
         mRouteOptions.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (mLastSpinnerPosition == position) {
-                    return;
-                } else {
+                if (routeSpinnerTouched) {
                     String locSearchString = mCurrentLocation.getText().toString();
                     String desSearchString = mDestination.getText().toString();
                     if ((mDestination.getText().toString().length() > 0) && (mCurrentLocation.getText().toString().length() > 0)) {
@@ -407,13 +523,18 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
             }
         });
         //change fare type/amt
+        mFareType.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                fareSpinnerTouched = true;
+                return false;
+            }
+        });
         mFareType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String selectedItem = parent.getItemAtPosition(position).toString();
-                if (mLastSpinnerPosition == position) {
-
-                } else {
+                if (fareSpinnerTouched) {
                     calculateFare(mDisTextView.getText().toString(), mDuraTextView.getText().toString());
                 }
             }
@@ -434,20 +555,29 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
         mSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mRelativeLayout.setBackgroundColor(getResources().getColor(R.color.grey));
+                mRelativeLayout.bringToFront();
+                mProgressBar.setVisibility(View.VISIBLE);
+                mProgressBar.bringToFront();
+                getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                 requestBol = true;
                 //String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
+                String currentLocation = null;
+                String destination = null;
                 DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("customerRequest");
                 DatabaseReference reqRef = FirebaseDatabase.getInstance().getReference().child("customerRequest").child(userID).child("Details");
                 GeoFire geoFire = new GeoFire(ref);
+                if (mDestination.getText().length()>0 && mCurrentLocation.getText().length()>0){
+                     destination = mDestination.getText().toString();
+                     currentLocation = mCurrentLocation.getText().toString();
+                } else{
+                    Toast.makeText(getActivity(), "Please enter a valid location/destination!", Toast.LENGTH_SHORT).show();
+                }
 
-                String destination = mDestination.getText().toString();
-                String currentLocation = mCurrentLocation.getText().toString();
                 String selectedRoute = mRouteOptions.getSelectedItem().toString();
                 String serviceType = mServiceType.getSelectedItem().toString();
                 String fare = mFareTextView.getText().toString();
-                String originLatLng = "origin=" + locLatLng.latitude + "," + locLatLng.longitude;
-                String destinationLatLng = "destination=" + desLatLng.latitude + "," + desLatLng.longitude;
 
                 System.out.println("GeoFire Location LatLng " + locLatLng.toString());
 
@@ -478,17 +608,21 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
                     //save 6-seater
                     newRequest.put("serviceType",serviceType);
                 }
-                if (mBookingTime.toString().equals("Now")) {
+                if (mBookingTime.toString().equals("")) {
                     //get current time and save
-
+                    newRequest.put("timestamp","now");
                 } else {
-                    //get selected time
+                    newRequest.put("timestamp", mBookingTime.getText().toString());
                 }
                 newRequest.put("fare",fare);
                 newRequest.put("driverFound", "false");
+                newRequest.put("ongoingTrip", "false");
+                newRequest.put("destinationLat", desLatLng.latitude);
+                newRequest.put("destinationLng", desLatLng.longitude);
+                newRequest.put("paymentMethod", mPaymentMethod.getSelectedItem().toString());
+                newRequest.put("fareType", mFareType.getSelectedItem().toString());
                 reqRef.setValue(newRequest);
 
-                mProgressBar.setVisibility(View.VISIBLE);
                 getClosestDriver();
 
             }
@@ -502,35 +636,156 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
                         .setIcon(android.R.drawable.ic_dialog_alert)
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
-                                requestBol = false;
-                                geoQuery.removeAllListeners();
-                                driverLocationRef.removeEventListener(driverLocationRefListener);
-
-                                if (driverFoundID != null){
-                                    DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverFoundID);
-                                    driverRef.setValue(true);
-                                    driverFoundID = null;
-                                    driverRef.child("customerRiderId").removeValue();
-                                }
-                                driverFound = false;
-                                radius = 1;
-                                //String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
-                                DatabaseReference ref = FirebaseDatabase.getInstance().getReference("customerRequest");
-                                ref.child(userID).removeValue();
-                                mMap.clear();
-                                mLinearLayout1.setVisibility(View.VISIBLE);
-                                mLinearLayout2.setVisibility(View.INVISIBLE);
-
-
+                                customerEnd = true;
+                                endTrip();
                             }})
                         .setNegativeButton(android.R.string.no, null).show();
             }
         });
+        mCallDriver.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Drivers").child(driverFoundID).child("mobileNum");
+                ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.exists()){
+                            phoneNo = dataSnapshot.getValue().toString();
+                            String callDriverStr = String.format("tel: %s",phoneNo);
+                            Intent dialIntent = new Intent(Intent.ACTION_DIAL);
+                            dialIntent.setData(Uri.parse(callDriverStr));
+                            if (dialIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+                                startActivity(dialIntent);
+                            } else {
+                                Log.e(TAG, "Can't resolve app for ACTION_DIAL Intent.");
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+            }
+        });
+        mTextDriver.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String smsNumber = String.format("smsto: %s", phoneNo);
+                Intent smsIntent = new Intent(Intent.ACTION_SENDTO);
+                smsIntent.setData(Uri.parse(smsNumber));
+                if (smsIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+                    startActivity(smsIntent);
+                } else {
+                    Log.e(TAG, "Can't resolve app for ACTION_SENDTO Intent.");
+                }
+            }
+        });
+        mConfirmReceipt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mLinearLayout3.setVisibility(View.INVISIBLE);
+                mLinearLayout4.setVisibility(View.VISIBLE);
+                mRatingDriverName.setText(mRequestName.getText());
+                mRatingDriverModel.setText(mRequestModel.getText());
+                Glide.with(getActivity()).load(driverPhotoUrl).into(mRatingDriverImage);
+            }
+        });
+
+        mSubmitRating.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final DatabaseReference driverRatingRef = FirebaseDatabase.getInstance().getReference().child("Drivers").child(driverFoundID);
+                driverRatingRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.exists()){
+                            long count = 0;
+                            for (DataSnapshot snap: dataSnapshot.getChildren()){
+                                long child = snap.getChildrenCount();
+                                 count = count + child;
+                            }
+                            Double previousRating = Double.parseDouble(dataSnapshot.child("rating").getValue().toString());
+                            double finalRating = ((previousRating*count)+driverRating)/(count+1);
+                            DecimalFormat df = new DecimalFormat("#.00");
+                            String ratingFormatted = df.format(finalRating);
+                            driverRatingRef.child("rating").setValue(ratingFormatted);
+                            endTrip();
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+            }
+        });
+
 
         hideSoftKeyboard();
     }
-    private int radius = 1;
+
+    private void endTrip() {
+        Log.d(TAG,"customerEnd: "+customerEnd);
+        onTrip = false;
+        requestBol = false;
+        geoQuery.removeAllListeners();
+        driverLocationRef.removeEventListener(driverLocationRefListener);
+        if (customerEnd){
+            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("customerRequest");
+            ref.child(userID).removeValue();
+        } else if(driverFoundID != null) {
+                Log.d(TAG, "Check driverFoundID != null");
+                DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Drivers").child(driverFoundID);
+                driverFoundID = null;
+                driverRef.child("customerRiderId").removeValue();
+            }
+
+
+        if (getArrivalRefListener!=null){
+            getArrivalRef.removeEventListener(getArrivalRefListener);
+        }
+        if (getHasTripStartedListener!=null) {
+            getHasTripStartedRef.removeEventListener(getHasTripStartedListener);
+        }
+        if (getHasTripEndedRefListener!=null){
+            getHasTripEndedRef.removeEventListener(getHasTripEndedRefListener);
+        }
+        driverFound = false;
+        radius = 1;
+        mRatingBar.setRating(0f);
+        //String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        mMap.clear();
+        if (mLinearLayout2.isShown()){
+            mLinearLayout1.setVisibility(View.VISIBLE);
+            mLinearLayout2.setVisibility(View.INVISIBLE);
+        }
+        if (mLinearLayout4.isShown()){
+            mLinearLayout4.setVisibility(View.INVISIBLE);
+            mLinearLayout1.setVisibility(View.VISIBLE);
+        }
+        if(!mGps.isInLayout()){
+            mGps.setVisibility(View.VISIBLE);
+        }
+
+        if(!getDriversAroundStarted) {
+            getDriversAround(locLatLng.latitude, locLatLng.longitude);
+        }
+        mDestination.setText("");
+        mDisTextView.setText("");
+        mDuraTextView.setText("");
+        mFareTextView.setText("");
+        getDeviceLocation();
+    }
+
+    private Long getCurrentTimestamp() {
+        Long timestamp = System.currentTimeMillis()/1000;
+        return timestamp;
+    }
+    private double radius = 1;
     private boolean driverFound = false;
     private String driverFoundID;
 
@@ -546,43 +801,58 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
             @Override
             public void onKeyEntered(final String key, GeoLocation location) {
                 if (!driverFound && requestBol) {
-                    driverFoundID = key;
-                    DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Drivers").child(driverFoundID);
-                    //String customerId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                    HashMap map = new HashMap();
-                    map.put("customerRiderId", userID);
-                    driverRef.updateChildren(map);
+                    DatabaseReference mDriverRequestType = FirebaseDatabase.getInstance().getReference().child("Drivers").child(key).child("type");
+                    mDriverRequestType.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            if (dataSnapshot.exists()){
+                                String driverType = dataSnapshot.getValue().toString();
+                                Log.d(TAG,"Request Type: "+driverType);
+                                if (driverFound){
+                                    return;
+                                }
+                                if (driverType.equals(mServiceType.getSelectedItem().toString())){
+                                    driverFoundID = key;
+                                    DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Drivers").child(driverFoundID);
+                                    //String customerId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                                    HashMap map = new HashMap();
+                                    map.put("customerRiderId", userID);
+                                    driverRef.updateChildren(map);
 
-                    DatabaseReference driverFoundRef = FirebaseDatabase.getInstance().getReference().child("customerRequest").child(userID).child("Details").child("driverFound");
-                    driverFoundRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                      @Override
-                      public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                          Log.d(TAG,"DRIVERFOUND VALUE: "+dataSnapshot.getValue());
-                          if (dataSnapshot.exists()) {
-                              if (dataSnapshot.getValue().equals("true")) {
-                                  driverFound = true;
-                                  /*driverFoundID = key;
-                                  DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Drivers").child(driverFoundID);
-                                  //String customerId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                                  HashMap map = new HashMap();
-                                  map.put("customerRiderId", userID);
-                                  driverRef.updateChildren(map); */
-                                  System.out.println("Final radius is " + radius);
-                                  getDriverLocation();
-                              }
-                          }
-                      }
+                                    DatabaseReference driverFoundRef = FirebaseDatabase.getInstance().getReference().child("customerRequest").child(userID).child("Details").child("driverFound");
+                                    driverFoundRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                            Log.d(TAG,"DRIVERFOUND VALUE: "+dataSnapshot.getValue());
+                                            if (dataSnapshot.exists()) {
+                                                if (dataSnapshot.getValue().equals("true")) {
 
-                      @Override
-                      public void onCancelled(@NonNull DatabaseError databaseError) {
+                                                    driverFound = true;
+                                                    driverFoundID = key;
+                                                    DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Drivers").child(driverFoundID);
+                                                    //String customerId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                                                    HashMap map = new HashMap();
+                                                    map.put("customerRiderId", userID);
+                                                    driverRef.updateChildren(map);
+                                                    System.out.println("Final radius is " + radius);
+                                                    getDriverLocation();
+                                                }
+                                            }
+                                        }
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                                        }
+                                    });
+                                }
+                            }
+                        }
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                      }
-                  });
-
-
+                        }
+                    });
                 }
             }
-
             @Override
             public void onKeyExited(String key) {
 
@@ -595,11 +865,66 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
 
             @Override
             public void onGeoQueryReady() {
-                if (!driverFound) {
-                    radius++;
+                if (!driverFound && radius <100) {
                     System.out.println("Radius is " + radius);
-
+                    radius = radius+0.5;
                     getClosestDriver();
+                    } else {
+
+                    //display request info
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(),AlertDialog.THEME_HOLO_LIGHT);
+
+                    TextView msg = new TextView(getActivity());
+
+                    msg.setText("Sorry, no cabby found!");
+                    msg.setGravity(Gravity.CENTER_HORIZONTAL);
+                    msg.setTextSize(20);
+                    msg.setPadding(50,100,50,100);
+                    msg.setTextColor(Color.BLACK);
+                    builder.setView(msg);
+
+                    // Set Button
+                    // you can more buttons
+                    builder.setPositiveButton("Try Again", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            radius = 1;
+                            driverFoundID = "";
+                            getClosestDriver();
+                        }
+                    });
+
+                    builder.setNegativeButton("Back", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            // Perform Action on Button
+                            getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                            mProgressBar.setVisibility(View.GONE);
+                            mRelativeLayout.setBackgroundColor(View.INVISIBLE);
+                            requestBol = false;
+                            geoQuery.removeAllListeners();
+
+                            if (driverFoundID != null){
+                                Log.d(TAG,"Check driverFoundID != null");
+                                DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Drivers").child(driverFoundID);
+                                driverFoundID = null;
+                                driverRef.child("customerRiderId").removeValue();
+                            }
+                            driverFound = false;
+                            radius = 1;
+                            //String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+                            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("customerRequest");
+                            ref.child(userID).removeValue();
+                            mMap.clear();
+                            if(!getDriversAroundStarted) {
+                                getDriversAround(locLatLng.latitude, locLatLng.longitude);
+                            }
+                        }
+                    });
+                    AlertDialog mAlertDialog = builder.create();
+
+                    if (!mAlertDialog.isShowing() && !driverFound){
+                        mAlertDialog.show();
+                    }
                 }
             }
             @Override
@@ -616,7 +941,9 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
         Log.d(TAG,"Getting Driver's location!");
         mProgressBar.setVisibility(View.INVISIBLE);
         mLinearLayout1.setVisibility(View.INVISIBLE);
+        mGps.setVisibility(View.GONE);
         mLinearLayout2.setVisibility(View.VISIBLE);
+        getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
 
         driverLocationRef = FirebaseDatabase.getInstance().getReference().child("driversWorking").child(driverFoundID).child("l");
         driverLocationRefListener = driverLocationRef.addValueEventListener(new ValueEventListener() {
@@ -650,11 +977,7 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
                     TaskRequestDirections taskRequestDirections = new TaskRequestDirections();
                     taskRequestDirections.execute(url1);
                     displayRequestDetails();
-                    if (distance<100){
-                        Toast toast = Toast.makeText(getActivity(),"Driver has arrived!", Toast.LENGTH_LONG);
-                        toast.setGravity(Gravity.CENTER, 0, 0);
-                        toast.show();
-                    }
+                    getArrivalStatus();
 
                 }
             }
@@ -666,9 +989,177 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
         });
     }
 
+    DatabaseReference getArrivalRef;
+    ValueEventListener getArrivalRefListener;
+    private void getArrivalStatus() {
+        Log.d(TAG,"running getArrivalStatus");
+        getArrivalRef = FirebaseDatabase.getInstance().getReference().child("customerRequest").child(userID).child("Details");
+        getArrivalRefListener = getArrivalRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()){
+                    Log.d(TAG,"ARRIVAL: DATASNAPSHOT.EXISTS "+dataSnapshot.getValue().toString());
+                    if (dataSnapshot.child("ongoingTrip").getValue().toString().equals("true")){
+                        Log.d(TAG,"ARRIVAL: DATA SNAPSHOT EXISTS ONGOINGTRIP " +dataSnapshot.child("ongoingTrip").getValue().toString());
+                        getHasTripStarted();
+                    }
+                } else{
+                    endTrip();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    DatabaseReference getHasTripStartedRef;
+    ValueEventListener getHasTripStartedListener;
+
+    private void getHasTripStarted() {
+        Toasty.success(getActivity(),"Your driver has arrived!", Toast.LENGTH_LONG, true).show();
+        Log.d(TAG,"Getting ongoingtrip variable!");
+        getArrivalRef.removeEventListener(getArrivalRefListener);
+        getHasTripStartedRef = FirebaseDatabase.getInstance().getReference().child("customerRequest").child(userID).child("Details").child("ongoingTrip");
+        getHasTripStartedListener = getHasTripStartedRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()){
+                    Log.d(TAG,"Ongoingtrip variable = "+ dataSnapshot.getValue().toString());
+                    if (dataSnapshot.getValue().toString().equals("started")){
+                        onTrip = true;
+                        DatabaseReference getDriverLocationUpdatesRef = FirebaseDatabase.getInstance().getReference().child("driversWorking").child(driverFoundID).child("l");
+                        getDriverLocationUpdatesRef.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                if(dataSnapshot.exists()){
+                                    List<Object> map = (List<Object>) dataSnapshot.getValue();
+                                    double locationLat = 0;
+                                    double locationLng = 0;
+                                    if(map.get(0)!=null){
+                                        locationLat = Double.parseDouble(map.get(0).toString());
+                                    }
+                                    if(map.get(1) != null){
+                                        locationLng = Double.parseDouble(map.get(1).toString());
+                                    }
+                                    driverLatLng = new LatLng(locationLat,locationLng);
+                                    if(mDriverMarker!=null){
+                                        mDriverMarker.remove();
+                                    }
+                                    Location loc1 = new Location("");
+                                    loc1.setLatitude(driverLatLng.latitude);
+                                    loc1.setLongitude(driverLatLng.longitude);
+
+                                    Location loc2 = new Location("");
+                                    loc2.setLatitude(desLatLng.latitude);
+                                    loc2.setLongitude(desLatLng.longitude);
+
+                                    mMap.clear();
+                                    String url1 = getRequestUrl(driverLatLng, desLatLng);
+                                    TaskRequestDirections taskRequestDirections = new TaskRequestDirections();
+                                    taskRequestDirections.execute(url1);
+                                    mCancelRequest.setVisibility(View.INVISIBLE);
+                                    getHasTripEnded();
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+    DatabaseReference getHasTripEndedRef;
+    ValueEventListener getHasTripEndedRefListener;
+    private void getHasTripEnded() {
+        Toasty.success(getActivity(),"Trip has begun!",Toast.LENGTH_LONG,true).show();
+        Log.d(TAG,"Getting hasTripEnded variable!");
+        getHasTripEndedRef = FirebaseDatabase.getInstance().getReference().child("customerRequest").child(userID).child("Details").child("ongoingTrip");
+        getHasTripEndedRefListener = getHasTripEndedRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()){
+                    if (dataSnapshot.getValue().toString().equals("ended")){
+                        displayEndTripDetails();
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void displayEndTripDetails() {
+        Log.d(TAG,"Display End Trip Details!");
+        getHasTripEndedRef.removeEventListener(getHasTripEndedRefListener);
+        mLinearLayout2.setVisibility(View.INVISIBLE);
+        mLinearLayout3.setVisibility(View.VISIBLE);
+        mStartingLocation.setText(mRequestLocation.getText().toString());
+        mEndingDestination.setText(mRequestDestination.getText().toString());
+
+        DatabaseReference getEndTripRef = FirebaseDatabase.getInstance().getReference().child("customerRequest").child(userID).child("Details");
+        getEndTripRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    String totalFare = dataSnapshot.child("fare").getValue().toString();
+                    String finalFare = totalFare.replaceAll("\\$","");
+                    String tollFees = "";
+                    if (dataSnapshot.child("tollFees").getValue()!=null){
+                        tollFees = dataSnapshot.child("tollFees").getValue().toString();
+                    }
+                    mTotalFare.setText(finalFare);
+                    mTollFees.setText(tollFees);
+                    Double douTotalFare = Double.parseDouble(finalFare);
+                    Double douFees;
+                    if (!tollFees.equals("")){
+                        douFees = Double.parseDouble(tollFees);
+                    } else{
+                        douFees = 0.0;
+                    }
+                    Double finalDouFare = douTotalFare - douFees;
+                    mFinalFare.setText(finalDouFare.toString());
+
+                    if (dataSnapshot.child("paymentMethod").getValue().toString().equals("Cash")){
+                        mPaymentMethodImage.setImageResource(R.drawable.cash_payment);
+                    } else if (dataSnapshot.child("paymentMethod").getValue().toString().equals("Mastercard")){
+                        mPaymentMethodImage.setImageResource(R.drawable.ic_billing_mastercard_logo);
+                    }else{
+                        mPaymentMethodImage.setImageResource(R.drawable.ic_billing_visa_logo);
+                    }
+                    //Insert code to authorize payment if paying via Mastercard/VISA
+                    //Insert method to record rating
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
+
+    }
+
+
     private void displayRequestDetails() {
-        DatabaseReference driverLocationRef = FirebaseDatabase.getInstance().getReference().child("customerRequest").child(userID).child("Details");
-        driverLocationRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        DatabaseReference requestDetailsRef = FirebaseDatabase.getInstance().getReference().child("customerRequest").child(userID).child("Details");
+        requestDetailsRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists()){
@@ -693,9 +1184,13 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
                 if(dataSnapshot.exists()){
                     String driverFirstName = dataSnapshot.child("firstName").getValue().toString();
                     String driverLastName = dataSnapshot.child("lastName").getValue().toString();
-                    String driverCarPlate = dataSnapshot.child("Vehicle").child("regNum").getValue().toString();
-                    String driverCarModel = dataSnapshot.child("Vehicle").child("model").getValue().toString();
+                    String driverCarPlate = dataSnapshot.child("regNum").getValue().toString();
+                    String driverCarModel = dataSnapshot.child("model").getValue().toString();
 
+                    if (dataSnapshot.child("profileImageUrl").getValue()!=null){
+                        driverPhotoUrl = dataSnapshot.child("profileImageUrl").getValue().toString();
+                        Glide.with(getActivity()).load(driverPhotoUrl).into(mDriverPhoto);
+                    }
                     mRequestName.setText(driverFirstName+" "+driverLastName);
                     mRequestCarPlate.setText(driverCarPlate);
                     mRequestModel.setText(driverCarModel);
@@ -708,8 +1203,6 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
 
             }
         });
-
-
     }
 
     @Override
@@ -764,11 +1257,12 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
                         if (task.isSuccessful()) {
                             Log.d(TAG, "onComplete: found location!");
                             Location currentLocation = (Location) task.getResult();
-
-                            moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()),
-                                    DEFAULT_ZOOM,
-                                    "My Location");
-                            setEditText(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()));
+                            if (currentLocation!=null){
+                                moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()),
+                                        DEFAULT_ZOOM,
+                                        "My Location");
+                                setEditText(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()));
+                            }
                         } else {
                             Log.d(TAG, "onComplete: current location is null");
                             Toast.makeText(getActivity(), "unable to get current location", Toast.LENGTH_SHORT).show();
@@ -846,9 +1340,14 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
                 .position(locLatLng);
         MarkerOptions desMarker = new MarkerOptions()
                 .position(desLatLng);
+
         if (mLinearLayout2.isShown()){
+            mMap.addMarker(locMarker);
             mMap.addMarker(new MarkerOptions().position(driverLatLng).title("Your Driver").icon(BitmapDescriptorFactory.fromResource(R.mipmap.working_taxi)));
-        }else {
+        }else if (onTrip){
+            mMap.addMarker(new MarkerOptions().position(driverLatLng).title("Your Driver").icon(BitmapDescriptorFactory.fromResource(R.mipmap.working_taxi)));
+            mMap.addMarker(desMarker);
+        } else{
             mMap.addMarker(locMarker);
             mMap.addMarker(desMarker);
         }
@@ -862,7 +1361,7 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
         try {
             list = geocoder.getFromLocationName(locSearchString, 1);
         } catch (IOException e) {
-            Log.e(TAG, "geoLocate: IOException: " + e.getMessage());
+            Log.e(TAG, "geoLocate Location: IOException: " + e.getMessage());
         }
 
         if (list.size() > 0) {
@@ -880,7 +1379,7 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
             //Log.d(TAG,"des search string is "+desSearchString );
             list1 = geocoder1.getFromLocationName(desSearchString, 1);
         } catch (IOException e) {
-            Log.e(TAG, "geoLocate: IOException: " + e.getMessage());
+            Log.e(TAG, "geoLocate Destination: IOException: " + e.getMessage());
         }
 
         if (list1.size() > 0) {
@@ -902,31 +1401,34 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
     }
 
     private String getRequestUrl(LatLng origin, LatLng destination) {
-        //value of origin
-        String str_org = "origin=" + origin.latitude + "," + origin.longitude;
-        //Value of destination
-        String str_dest = "destination=" + destination.latitude + "," + destination.longitude;
-        //Set value enable the sensor
-        String sensor = "sensor=false";
-        //Mode for find direction
-        String mode = "mode-driving";
-        //Alternate routes
-        String alternatives = "alternatives=true";
-        //Build full param
-        String param = str_org + "&" + str_dest + "&" + sensor + "&" + mode + "&" + alternatives;
-        //Output format
-        String output = "json";
-        //avoid tolls
+        String reqUrl = null;
+        if(origin!=null&&destination!=null){
+            //value of origin
+            String str_org = "origin=" + origin.latitude + "," + origin.longitude;
+            //Value of destination
+            String str_dest = "destination=" + destination.latitude + "," + destination.longitude;
+            //Set value enable the sensor
+            String sensor = "sensor=false";
+            //Mode for find direction
+            String mode = "mode-driving";
+            //Alternate routes
+            String alternatives = "alternatives=true";
+            //Build full param
+            String param = str_org + "&" + str_dest + "&" + sensor + "&" + mode + "&" + alternatives;
+            //Output format
+            String output = "json";
+            //avoid tolls
 
-        if (mRouteOptions.getSelectedItem().toString().equals("Avoid Tolls")) {
-            String avoidTolls = "avoid=tolls";
-            param = param + "&" + avoidTolls;
+            if (mRouteOptions.getSelectedItem().toString().equals("Avoid Tolls")) {
+                String avoidTolls = "avoid=tolls";
+                param = param + "&" + avoidTolls;
 
+            }
+            Log.d(TAG, "wtheck is this" + param);
+            //Create url to request
+            reqUrl = "https://maps.googleapis.com/maps/api/directions/" + output + "?" + param;
         }
-        Log.d(TAG, "wtheck is this" + param);
-        //Create url to request
-        String url = "https://maps.googleapis.com/maps/api/directions/" + output + "?" + param;
-        return url;
+        return reqUrl;
     }
 
 
@@ -953,15 +1455,22 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
             }
 
             data = sb.toString();
+            if (br!=null){
+                br.close();
 
-            br.close();
+            }
 
         } catch (Exception e) {
             Log.d("Exception", e.toString());
         } finally {
-            iStream.close();
-            urlConnection.disconnect();
-        }
+            if (iStream!=null){
+                iStream.close();
+            }
+            if(urlConnection!=null){
+                urlConnection.disconnect();
+
+                }
+            }
         return data;
     }
 
@@ -1010,20 +1519,20 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
     boolean getDriversAroundStarted = false;
     List<Marker> availableMarkerList = new ArrayList<Marker>();
     List<Marker> workingMarkerList = new ArrayList<Marker>();
+    
     private void getDriversAround(double lat, double lng){
         getDriversAroundStarted = true;
         DatabaseReference availableDriversLocation = FirebaseDatabase.getInstance().getReference().child("driversAvailable");
-
+        
         GeoFire geoFire = new GeoFire(availableDriversLocation);
-        GeoQuery geoQuery = geoFire.queryAtLocation(new GeoLocation(lat,lng), 10000);
+        GeoQuery geoQuery = geoFire.queryAtLocation(new GeoLocation(lat,lng), 1000);
         geoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
             @Override
             public void onKeyEntered(String key, GeoLocation location) {
                 for (Marker markerIt : availableMarkerList){
-                    if(markerIt.getTag().equals(key))
-                        return;
-                }
-
+                        if (markerIt.getTag()==key)
+                            return; 
+                    }
                 LatLng driverLocation = new LatLng(location.latitude,location.longitude);
                 Marker mDriverMarker = mMap.addMarker(new MarkerOptions().position(driverLocation).title(key).icon(BitmapDescriptorFactory.fromResource(R.mipmap.available_taxi)));
                 mDriverMarker.setTag(key);
@@ -1033,24 +1542,24 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
             @Override
             public void onKeyExited(String key) {
                 for (Marker markerIt : availableMarkerList){
-                        if (Objects.equals(markerIt.getTag(), key)) {
-                                markerIt.remove();
-                                availableMarkerList.remove(markerIt);
-                                return;
+                    Log.d(TAG,"available marker list size "+availableMarkerList.size());
+                        if (markerIt.getTag()==key) {
+                            markerIt.remove();
+                            availableMarkerList.remove(markerIt);
+                            return;
                             }
                         }
-                }
+                    }
 
 
             @Override
             public void onKeyMoved(String key, GeoLocation location) {
                 for (Marker markerIt : availableMarkerList) {
-                    if (markerIt.getTag().equals(key)){
-                        markerIt.setPosition(new LatLng(location.latitude,location.longitude));
+                        if (markerIt.getTag()==key) {
+                            markerIt.setPosition(new LatLng(location.latitude, location.longitude));
+                        }
                     }
-
                 }
-            }
 
             @Override
             public void onGeoQueryReady() {
@@ -1059,21 +1568,21 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
 
             @Override
             public void onGeoQueryError(DatabaseError error) {
-
+                Toast.makeText(getActivity(), "Error displaying available drivers!", Toast.LENGTH_SHORT).show();
             }
         });
-        DatabaseReference workingDriversLocation = FirebaseDatabase.getInstance().getReference().child("driversWorking");
+            DatabaseReference workingDriversLocation = FirebaseDatabase.getInstance().getReference().child("driversWorking");
 
-        GeoFire geoFire1 = new GeoFire(workingDriversLocation);
-        GeoQuery geoQuery1 = geoFire1.queryAtLocation(new GeoLocation(lat,lng), 10000);
-        geoQuery1.addGeoQueryEventListener(new GeoQueryEventListener() {
-            @Override
-            public void onKeyEntered(String key, GeoLocation location) {
-                for (Marker markerIt : workingMarkerList){
-                    if(markerIt.getTag().equals(key))
-                        return;
-                }
-
+            GeoFire geoFire1 = new GeoFire(workingDriversLocation);
+            GeoQuery geoQuery1 = geoFire1.queryAtLocation(new GeoLocation(lat,lng), 1000);
+            geoQuery1.addGeoQueryEventListener(new GeoQueryEventListener() {
+                @Override
+                public void onKeyEntered(String key, GeoLocation location) {
+                        for (Marker markerIt : workingMarkerList) {
+                             if (markerIt.getTag()==key)
+                                return;
+                        }
+                    
                 LatLng workingDriverLocation = new LatLng(location.latitude,location.longitude);
                 Marker mWorkingDriverMarker = mMap.addMarker(new MarkerOptions().position(workingDriverLocation).title(key).icon(BitmapDescriptorFactory.fromResource(R.mipmap.working_taxi)));
                 mWorkingDriverMarker.setTag(key);
@@ -1082,24 +1591,22 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
 
             @Override
             public void onKeyExited(String key) {
-                for (Marker markerIt : workingMarkerList){
-                    if(markerIt.getTag().equals(key)) {
-                        markerIt.remove();
-                        workingMarkerList.remove(markerIt);
-                        return;
+                for (Marker markerIt : workingMarkerList) {
+                        if (markerIt.getTag()==key) {
+                            markerIt.remove();
+                            workingMarkerList.remove(markerIt);
+                            return;
+                        }
                     }
                 }
-            }
-
             @Override
             public void onKeyMoved(String key, GeoLocation location) {
                 for (Marker markerIt : workingMarkerList) {
-                    if (markerIt.getTag().equals(key)){
-                        markerIt.setPosition(new LatLng(location.latitude,location.longitude));
+                        if (markerIt.getTag()==key) {
+                            markerIt.setPosition(new LatLng(location.latitude, location.longitude));
+                        }
                     }
-
                 }
-            }
 
             @Override
             public void onGeoQueryReady() {
@@ -1108,7 +1615,7 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
 
             @Override
             public void onGeoQueryError(DatabaseError error) {
-
+                Toast.makeText(getActivity(), "Error displaying working drivers!", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -1203,102 +1710,103 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
             Float shortestDis, shortestDura;
 
             // use for loop to run through List/List/HashMap to compare distance and duration
-            for (int i = 1; i <= lists.size() - 1; i++) {
-                //run through all available routes to compare distance and duration
-                List<HashMap<String, String>> test = lists.get(count);
-                List<HashMap<String, String>> test1 = lists.get(i);
+            if (lists!=null){
+                for (int i = 1; i <= lists.size() - 1; i++) {
+                    //run through all available routes to compare distance and duration
+                    List<HashMap<String, String>> test = lists.get(count);
+                    List<HashMap<String, String>> test1 = lists.get(i);
 
-                String firstDist = (test.get(0).get("distance")).replaceAll("km", "");
-                String secondDist = (test1.get(0).get("distance")).replaceAll("km", "");
-                String firstDura = (test.get(1).get("duration")).replaceAll("mins", "");
-                String secondDura = (test1.get(1).get("duration")).replaceAll("mins", "");
-                Log.d(TAG, "Route 1 Distance: " + firstDist + " Route 2 Distance: " + secondDist);
-                Float testDou = Float.parseFloat(firstDist);
-                Float test1Dou = Float.parseFloat(secondDist);
-                Float testDura = Float.parseFloat(firstDura);
-                Float test1Dura = Float.parseFloat(secondDura);
-                Log.d(TAG, "Route 1 Duration: " + testDura + " Route 2 Duration: " + test1Dura);
-                if (testDou > test1Dou) {
-                    shortestDis = test1Dou;
-                    shortestRouteDis = count;
-                } else {
-                    shortestDis = testDou;
+                    String firstDist = (test.get(0).get("distance")).replaceAll("km", "");
+                    String secondDist = (test1.get(0).get("distance")).replaceAll("km", "");
+                    String firstDura = (test.get(1).get("duration")).replaceAll("mins", "");
+                    String secondDura = (test1.get(1).get("duration")).replaceAll("mins", "");
+                    Log.d(TAG, "Route 1 Distance: " + firstDist + " Route 2 Distance: " + secondDist);
+                    Float testDou = Float.parseFloat(firstDist);
+                    Float test1Dou = Float.parseFloat(secondDist);
+                    Float testDura = Float.parseFloat(firstDura);
+                    Float test1Dura = Float.parseFloat(secondDura);
+                    Log.d(TAG, "Route 1 Duration: " + testDura + " Route 2 Duration: " + test1Dura);
+                    if (testDou > test1Dou) {
+                        shortestDis = test1Dou;
+                        shortestRouteDis = count;
+                    } else {
+                        shortestDis = testDou;
+                    }
+                    if (testDura > test1Dura) {
+                        shortestDura = test1Dura;
+                        shortestRouteDura = count;
+                    } else {
+                        shortestDura = testDura;
+                    }
+                    Log.d(TAG, "Shortest route and Distance: " + shortestRouteDis + " " + shortestDis);
+                    count++;
+                    Log.d(TAG, "Shortest route and duration: " + shortestRouteDura + " " + shortestDura);
                 }
-                if (testDura > test1Dura) {
-                    shortestDura = test1Dura;
-                    shortestRouteDura = count;
-                } else {
-                    shortestDura = testDura;
-                }
-                Log.d(TAG, "Shortest route and Distance: " + shortestRouteDis + " " + shortestDis);
-                count++;
-                Log.d(TAG, "Shortest route and duration: " + shortestRouteDura + " " + shortestDura);
-            }
 
 
-            for (int i = 0; i < lists.size(); i++) {
-                points = new ArrayList();
-                polylineOptions = new PolylineOptions();
-                List<HashMap<String, String>> path;
+                for (int i = 0; i < lists.size(); i++) {
+                    points = new ArrayList();
+                    polylineOptions = new PolylineOptions();
+                    List<HashMap<String, String>> path;
 
-                if (mRouteOptions.getSelectedItem().toString().equals("Shortest")) {
-                    path = lists.get(shortestRouteDis);
+                    if (mRouteOptions.getSelectedItem().toString().equals("Shortest")) {
+                        path = lists.get(shortestRouteDis);
 
-                } else if (mRouteOptions.getSelectedItem().toString().equals("Fastest")) {
-                    path = lists.get(shortestRouteDura);
-                } else {
-                    path = lists.get(i);
-                }
-                for (int j = 0; j < path.size(); j++) {
-                    HashMap<String, String> point = path.get(j);
+                    } else if (mRouteOptions.getSelectedItem().toString().equals("Fastest")) {
+                        path = lists.get(shortestRouteDura);
+                    } else {
+                        path = lists.get(i);
+                    }
+                    for (int j = 0; j < path.size(); j++) {
+                        HashMap<String, String> point = path.get(j);
 
-                    if (j == 0) { // Get distance from the list
-                        Log.d(TAG, "Distance [0]: " + path.get(0).get("distance"));
-                        distance = point.get("distance");
-                        continue;
-                    } else if (j == 1) { // Get duration from the list
-                        Log.d(TAG, "Duration [1]: " + path.get(1).get("duration"));
-                        duration = point.get("duration");
-                        continue;
+                        if (j == 0) { // Get distance from the list
+                            Log.d(TAG, "Distance [0]: " + path.get(0).get("distance"));
+                            distance = point.get("distance");
+                            continue;
+                        } else if (j == 1) { // Get duration from the list
+                            Log.d(TAG, "Duration [1]: " + path.get(1).get("duration"));
+                            duration = point.get("duration");
+                            continue;
+                        }
+
+                        double lat = Double.parseDouble(point.get("lat"));
+                        double lng = Double.parseDouble(point.get("lng"));
+                        LatLng position = new LatLng(lat, lng);
+                        points.add(position);
+                        boundsBuilder.include(position);
                     }
 
-                    double lat = Double.parseDouble(point.get("lat"));
-                    double lng = Double.parseDouble(point.get("lng"));
-                    LatLng position = new LatLng(lat, lng);
-                    points.add(position);
-                    boundsBuilder.include(position);
+                    polylineOptions.addAll(points);
+                    polylineOptions.width(12);
+                    polylineOptions.color(Color.RED);
+                    polylineOptions.geodesic(true);
                 }
 
-                polylineOptions.addAll(points);
-                polylineOptions.width(12);
-                polylineOptions.color(Color.RED);
-                polylineOptions.geodesic(true);
-            }
+                if (polylineOptions != null) {
+                    mMap.clear();
+                    mMap.addPolyline(polylineOptions);
+                    LatLngBounds routeBounds = boundsBuilder.build();
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(routeBounds, 12));
+                    addMarker(mCurrentLocation, mDestination);
+                    mDisTextView.setText(distance);
+                    mDuraTextView.setText(duration);
+                    calculateFare(distance, duration);
 
-            if (polylineOptions != null) {
-                mMap.clear();
-                mMap.addPolyline(polylineOptions);
-                addMarker(mCurrentLocation, mDestination);
-                LatLngBounds routeBounds = boundsBuilder.build();
-                mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(routeBounds, 12));
-                mDisTextView.setText(distance);
-                mDuraTextView.setText(duration);
-                calculateFare(distance, duration);
-
-            } else {
-                Log.e(TAG,"Directions not found!");
-                //Toast.makeText(getActivity(), "Directions not found!", Toast.LENGTH_SHORT).show();
+                } else {
+                    Log.e(TAG,"Directions not found!");
+                    //Toast.makeText(getActivity(), "Directions not found!", Toast.LENGTH_SHORT).show();
+                }
             }
         }
-
     }
 
     private void calculateFare(String distance, String duration) {
         double baseFare = 3;
         double perKmFare = 0.45;
         double perMinFare = 0.22;
-        String stringDura = duration.replaceAll("mins", "");
-        String stringDist = distance.replaceAll("km", "");
+        String stringDura = duration.replaceAll("[mins]", "");
+        String stringDist = distance.replaceAll("[km]", "");
         double douDist = Double.parseDouble(stringDist);
         double douDura = Double.parseDouble(stringDura);
         double finalFare = baseFare + douDist * perKmFare + douDura * perMinFare;
@@ -1331,7 +1839,9 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
 
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
             // Do something with the time chosen by the user
-            mBookingTime.setText(mBookingTime.getText() + ", " + hourOfDay + ":" + minute);
+            String hour = String.format(" %02d", hourOfDay);
+            String min = String.format(" %02d", minute);
+            mBookingTime.setText(mBookingTime.getText() + " " + hour + ":" + min);
         }
     }
 
@@ -1366,7 +1876,11 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
 
         public void onDateSet(DatePicker view, int year, int month, int day) {
             // Do something with the date chosen by the user
-            mBookingTime.setText(day + "/" + (month + 1));
+            String monthString = String.valueOf(month);
+            if (monthString.length() == 1) {
+                monthString = "0" + monthString;
+            }
+            mBookingTime.setText(day + "-" + (monthString + 1));
         }
     }
 }

@@ -9,6 +9,7 @@
     <color name="text_color_secondary">#fffef8</color>
     <color name="colorBackground">#fffef8</color>
     <color name="secondary_text_material_dark">#b5b4b1</color>
+    <color name="grey">#80FFFFFF</color>
 
     <color name="green_continue">#1fc055</color>
     <color name="chip_color">#d4edfa</color>
