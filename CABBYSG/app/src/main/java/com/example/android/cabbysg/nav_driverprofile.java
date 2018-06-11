@@ -104,7 +104,9 @@ public class nav_driverprofile extends Fragment implements View.OnClickListener 
                         emailStr = map.get("email").toString();
                         dEmailView.setText(emailStr);
                     }
-                    if(map.get("profileImageUrl")!=null){
+                    if (getActivity()==null){
+                        return;
+                    }else if(map.get("profileImageUrl")!=null){
                         profileUrlStr = map.get("profileImageUrl").toString();
                         Glide.with(getContext()).load(profileUrlStr).into(profilePic);
                     }

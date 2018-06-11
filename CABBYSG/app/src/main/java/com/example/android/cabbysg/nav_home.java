@@ -161,7 +161,7 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
     private ProgressBar mProgressBar;
     private CircleImageView mDriverPhoto;
     private LinearLayout mLinearLayout1, mLinearLayout2, mLinearLayout3, mLinearLayout4;
-    private String userID = "ywO5uyDNM0eQ0aOpLSQD0qj9zxO2";
+    private String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
 
 

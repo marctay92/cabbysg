@@ -55,6 +55,7 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -122,7 +123,7 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
     private String riderPhotoUrl = "";
     private Boolean onTrip = false, routingToCustomer = false;
     private String destination, location, fare, selectedRoute, phoneNo, fareType, dateTime, endTripDateTime;
-    private String userID = "S7qswgzCNadNN7z3vn8FfKutdTB3";
+    private String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
     private Switch location_switch;
     private float riderRating;
     private RatingBar mRatingBar;
@@ -346,8 +347,8 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
         }
 
         mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-        Log.d("Location: ",mLastLocation.toString());
         if (mLastLocation != null){
+            Log.d("Location: ",mLastLocation.toString());
             if (location_switch.isChecked()){
                 final double latitude = mLastLocation.getLatitude();
                 final double longitude = mLastLocation.getLongitude();
