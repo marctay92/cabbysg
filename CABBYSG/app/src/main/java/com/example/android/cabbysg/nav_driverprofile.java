@@ -31,7 +31,7 @@ public class nav_driverprofile extends Fragment implements View.OnClickListener 
 
     Button dEditProfile, dChangePw, dLogOut;
     TextView dFirstNameView,dLastNameView,dMobileView,dEmailView, dCarPlateView, dCarModelView;
-    String firstNameStr, lastNameStr, mobileStr, emailStr,profileUrlStr ="";
+    String firstNameStr, lastNameStr, mobileStr, emailStr,profileUrlStr ="",carPlateStr,carModelStr;
     de.hdodenhof.circleimageview.CircleImageView profilePic;
 
     DatabaseReference current_user_db;
@@ -103,6 +103,14 @@ public class nav_driverprofile extends Fragment implements View.OnClickListener 
                     if(map.get("email")!=null){
                         emailStr = map.get("email").toString();
                         dEmailView.setText(emailStr);
+                    }
+                    if(map.get("regNum")!=null){
+                        carPlateStr = map.get("regNum").toString();
+                        dCarPlateView.setText(carPlateStr);
+                    }
+                    if(map.get("model")!=null){
+                        carModelStr = map.get("model").toString();
+                        dCarModelView.setText(carModelStr);
                     }
                     if (getActivity()==null){
                         return;
