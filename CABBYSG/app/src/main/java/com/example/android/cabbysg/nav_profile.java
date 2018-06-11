@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -20,6 +21,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.Map;
+
 import static android.app.ProgressDialog.STYLE_SPINNER;
 
 
@@ -27,6 +30,7 @@ public class nav_profile extends Fragment implements View.OnClickListener {
 
     Button editProfile, changePw, logOut;
     TextView firstNameView,lastNameView,mobileView,emailView;
+    String firstNameStr, lastNameStr, mobileStr, emailStr,profileUrlStr;
     de.hdodenhof.circleimageview.CircleImageView profilePic;
 
     DatabaseReference current_user_db;
@@ -49,7 +53,7 @@ public class nav_profile extends Fragment implements View.OnClickListener {
         //User Authentication
         mAuth = FirebaseAuth.getInstance();
         user = FirebaseAuth.getInstance().getCurrentUser();
-        current_user_db = FirebaseDatabase.getInstance().getReference("Rider");
+        current_user_db = FirebaseDatabase.getInstance().getReference("Rider").child(user.getUid());
 
         //Init pd
         pd = new ProgressDialog(getActivity(), STYLE_SPINNER);
@@ -78,6 +82,39 @@ public class nav_profile extends Fragment implements View.OnClickListener {
         logOut.setOnClickListener(this);
 
         //extract TextViews from database MARCUS
+        current_user_db.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists() && dataSnapshot.getChildrenCount()>0) {
+                    Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
+                    if(map.get("firstName")!=null){
+                        firstNameStr = map.get("firstName").toString();
+                        firstNameView.setText(firstNameStr);
+                    }
+                    if(map.get("lastName")!=null){
+                        lastNameStr = map.get("lastName").toString();
+                        lastNameView.setText(lastNameStr);
+                    }
+                    if(map.get("mobileNum")!=null){
+                        mobileStr = map.get("mobileNum").toString();
+                        mobileView.setText(mobileStr);
+                    }
+                    if(map.get("email")!=null){
+                        emailStr = map.get("email").toString();
+                        emailView.setText(emailStr);
+                    }
+                    if(map.get("profileImageUrl")!=null){
+                        profileUrlStr = map.get("profileImageUrl").toString();
+                        Glide.with(getContext()).load(profileUrlStr).into(profilePic);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
         current_user_db.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

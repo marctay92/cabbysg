@@ -20,6 +20,17 @@
             android:textColor="@android:color/black"
             android:textSize="30sp" />
 
+        <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/editDriverProfileImage"
+            android:layout_width="96dp"
+            android:layout_height="96dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="97dp"
+            android:src="@drawable/profile"
+            app:civ_border_color="#FF000000"
+            app:civ_border_width="2dp" />
+
         <EditText
             android:id="@+id/dFirstNameEdit"
             android:layout_width="300dp"
@@ -29,7 +40,7 @@
             android:layout_marginTop="220dp"
             android:background="#fdffaf"
             android:inputType="text"
-            android:text="first"
+            android:hint="first"
             android:textAlignment="center" />
 
         <EditText
@@ -41,7 +52,7 @@
             android:layout_marginTop="260dp"
             android:background="#fdffaf"
             android:inputType="text"
-            android:text="last"
+            android:hint="last"
             android:textAlignment="center" />
 
         <EditText
@@ -53,7 +64,7 @@
             android:layout_marginTop="300dp"
             android:background="#fdffaf"
             android:inputType="number"
-            android:text="mobile"
+            android:hint="mobile"
             android:textAlignment="center" />
 
         <EditText
@@ -65,7 +76,7 @@
             android:layout_marginTop="340dp"
             android:background="#fdffaf"
             android:inputType="textEmailAddress"
-            android:text="email"
+            android:hint="email"
             android:textAlignment="center" />
 
         <TextView
@@ -76,7 +87,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="380dp"
             android:background="#fdffaf"
-            android:text="Car Registration Number"
+            android:hint="Car Registration Number"
             android:textAlignment="center" />
 
         <TextView
@@ -87,7 +98,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="420dp"
             android:background="#fdffaf"
-            android:text="Car Model"
+            android:hint="Car Model"
             android:textAlignment="center" />
 
         <Button

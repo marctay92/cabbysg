@@ -63,14 +63,16 @@ public class startpage extends AppCompatActivity {
 
         if(user!=null){
             pd.show();
-            rider_db.child(user.getUid()).addValueEventListener(new ValueEventListener() {
+            rider_db.child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    Intent intent = new Intent(startpage.this, MenuBar.class);
-                    startActivity(intent);
-                    pd.dismiss();
-                    finish();
-                    return;
+                    if(dataSnapshot.exists()) {
+                        Intent intent = new Intent(startpage.this, MenuBar.class);
+                        startActivity(intent);
+                        pd.dismiss();
+                        finish();
+                        return;
+                    }
                 }
 
                 @Override
@@ -79,14 +81,16 @@ public class startpage extends AppCompatActivity {
                 }
             });
 
-            driver_db.child(user.getUid()).addValueEventListener(new ValueEventListener() {
+            driver_db.child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    Intent intent = new Intent(startpage.this, driver_menubar.class);
-                    startActivity(intent);
-                    pd.dismiss();
-                    finish();
-                    return;
+                    if(dataSnapshot.exists()) {
+                        Intent intent = new Intent(startpage.this, driver_menubar.class);
+                        startActivity(intent);
+                        pd.dismiss();
+                        finish();
+                        return;
+                    }
                 }
 
                 @Override

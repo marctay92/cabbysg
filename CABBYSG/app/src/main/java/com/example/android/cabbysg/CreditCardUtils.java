@@ -57,6 +57,7 @@ public class CreditCardUtils {
         if(pCardType.matcher(cardNumber).matches())
             return CardType.DISCOVER_CARD;
         return CardType.UNKNOWN_CARD;
+
     }
 
     public static int selectCardLength(CardType cardType) {

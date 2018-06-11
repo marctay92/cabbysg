@@ -21,14 +21,16 @@
         android:textColor="@android:color/black"
         android:textSize="30sp" />
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+    <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/editProfile_image"
         android:layout_width="96dp"
         android:layout_height="96dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="97dp"
         android:src="@drawable/profile"
-        app:civ_border_width="2dp"
-        app:civ_border_color="#FF000000"/>
+        app:civ_border_color="#FF000000"
+        app:civ_border_width="2dp" />
 
     <EditText
         android:id="@+id/firstNameEdit"
@@ -39,7 +41,7 @@
         android:layout_marginTop="220dp"
         android:background="#fdffaf"
         android:inputType="text"
-        android:text="first"
+        android:hint="First Name"
         android:textAlignment="center" />
 
     <EditText
@@ -51,7 +53,7 @@
         android:layout_marginTop="260dp"
         android:background="#fdffaf"
         android:inputType="text"
-        android:text="last"
+        android:hint="Last Name"
         android:textAlignment="center" />
 
     <EditText
@@ -63,7 +65,7 @@
         android:layout_marginTop="300dp"
         android:background="#fdffaf"
         android:inputType="number"
-        android:text="mobile"
+        android:hint="mobile"
         android:textAlignment="center" />
 
     <EditText
@@ -75,7 +77,7 @@
         android:layout_marginTop="340dp"
         android:background="#fdffaf"
         android:inputType="textEmailAddress"
-        android:text="email"
+        android:hint="email"
         android:textAlignment="center" />
 
     <Button

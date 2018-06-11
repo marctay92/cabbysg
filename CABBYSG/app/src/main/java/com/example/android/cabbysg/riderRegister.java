@@ -1,45 +1,49 @@
 package com.example.android.cabbysg;
 
-import android.app.DatePickerDialog;
-import android.app.Dialog;
-import android.content.Context;
+import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
-import java.util.Calendar;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.example.android.cabbysg.nav_lostandfound.isEmailValid;
+import static com.example.android.cabbysg.nav_lostandfound.isNameValid;
+
 
 public class riderRegister extends AppCompatActivity {
     EditText firstName, lastName, email, mobileNb, password, rePassword;
-    ImageView profilePic;
+    de.hdodenhof.circleimageview.CircleImageView registerProfile_image;
+    private Uri resultUri;
     Button registerButton;
+    Map<String, Object> newPost = new HashMap<String, Object>();
 
     FirebaseAuth mAuth;
     FirebaseAuth.AuthStateListener firebaseAuthListener;
@@ -69,9 +73,18 @@ public class riderRegister extends AppCompatActivity {
         mobileNb = findViewById(R.id.mobileNb);
         password = findViewById(R.id.password);
         rePassword = findViewById(R.id.rePassword);
-        profilePic = findViewById(R.id.profilePic);
+        registerProfile_image = findViewById(R.id.registerProfile_image);
 
         registerButton = findViewById(R.id.registerButton);
+
+        registerProfile_image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_PICK);
+                intent.setType("image/*");
+                startActivityForResult(intent,1);
+            }
+        });
 
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,21 +105,29 @@ public class riderRegister extends AppCompatActivity {
 
                 if(TextUtils.isEmpty(str_firstName)) {
                     firstName.setError("Please enter your first name");
-                } else validFirstName = true;
+                } else if(!isNameValid(str_firstName)){
+                    firstName.setError("Invalid First Name");
+                }else validFirstName = true;
 
                 if (TextUtils.isEmpty(str_lastName)) {
                     lastName.setError("Please enter your last name");
+                } else if(!isNameValid(str_lastName)){
+                    lastName.setError("Invalid Last Name");
                 } else validLastName = true;
 
                 if (TextUtils.isEmpty(str_email)) {
                     email.setError("Please enter your email");
-                    //} else if (){
-
+                } else if(!isEmailValid(str_email)){
+                    email.setError("Please enter a valid email");
                 } else validEmail = true;
 
                 if (TextUtils.isEmpty(str_mobileNb)) {
-                    mobileNb.setError("Please enter your mobile number");
-                } else validNum = true;
+                    mobileNb.setError("Please enter your phone number");
+                }else if (!TextUtils.isDigitsOnly(str_mobileNb)){
+                    mobileNb.setError("Please enter only numbers");
+                }else if(str_mobileNb.length() > 8 || str_mobileNb.length()<8){
+                    mobileNb.setError("Please enter only 8 digits");
+                }else validNum = true;
 
                 if (TextUtils.isEmpty(str_password)) {
                     password.setError("Please enter your password");
@@ -129,16 +150,52 @@ public class riderRegister extends AppCompatActivity {
                                 Toast.makeText(riderRegister.this, "sign up error", Toast.LENGTH_SHORT).show();
                             }else{
                                 String user_id = mAuth.getCurrentUser().getUid();
-                                DatabaseReference current_user_db = FirebaseDatabase.getInstance().getReference().child("Rider").child(user_id);
+                                final DatabaseReference current_user_db = FirebaseDatabase.getInstance().getReference().child("Rider").child(user_id);
 
-                                Map newPost = new HashMap();
                                 //newPost.put("email",str_email);
                                 newPost.put("firstName",str_firstName);
                                 newPost.put("lastName",str_lastName);
                                 newPost.put("mobileNum",str_mobileNb);
                                 newPost.put("email",mAuth.getCurrentUser().getEmail());
 
-                                current_user_db.setValue(newPost).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                if(resultUri!=null){
+                                    StorageReference filePath = FirebaseStorage.getInstance().getReference().child("profile_images").child(user_id);
+                                    Bitmap bitmap = null;
+
+                                    try {
+                                        bitmap = MediaStore.Images.Media.getBitmap(getApplication().getContentResolver(),resultUri);
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+
+                                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                                    bitmap.compress(Bitmap.CompressFormat.JPEG,20,baos);
+                                    byte[] data = baos.toByteArray();
+                                    UploadTask uploadTask = filePath.putBytes(data);
+                                    uploadTask.addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            return;
+                                        }
+                                    });
+                                    uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                        @Override
+                                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                            Task<Uri> downloadUrl = taskSnapshot.getMetadata().getReference().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                                @Override
+                                                public void onSuccess(Uri uri) {
+                                                    Uri profileImageUrl = uri;
+                                                    newPost.put("profileImageUrl",profileImageUrl.toString());
+                                                    System.out.println(newPost.get("profileImageUrl"));
+                                                    current_user_db.updateChildren(newPost);
+                                                }
+                                            });
+                                            return;
+                                        }
+                                    });
+                                }
+
+                                current_user_db.updateChildren(newPost).addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
                                         if(task.isSuccessful()){
@@ -179,7 +236,14 @@ public class riderRegister extends AppCompatActivity {
         matcher = pattern.matcher(password);
 
         return matcher.matches();
-
     }
-    
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 1 && resultCode == Activity.RESULT_OK){
+            final Uri imageUri = data.getData();
+            resultUri = imageUri;
+            registerProfile_image.setImageURI(resultUri);
+        }
+    }
 }
