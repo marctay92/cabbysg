@@ -14,7 +14,8 @@ import com.example.android.cabbysg.R;
 import static com.example.android.cabbysg.CreditCardUtils.EXTRA_CARD_CVV;
 
 
-public class CardCVVFragment extends CreditCardFragment {
+public class
+CardCVVFragment extends CreditCardFragment {
 
     private EditText mCardCVVView;
     private int mMaxCVV = CardSelector.CVV_LENGHT_DEFAULT;
@@ -24,7 +25,7 @@ public class CardCVVFragment extends CreditCardFragment {
 
     public View onCreateView(LayoutInflater inflater, ViewGroup group, Bundle state) {
         View v = inflater.inflate(R.layout.c_lyt_card_cvv, group, false);
-        mCardCVVView = (EditText) v.findViewById(R.id.card_cvv);
+        mCardCVVView = v.findViewById(R.id.card_cvv);
 
         String cvv = null;
         if (getArguments() != null && getArguments().containsKey(EXTRA_CARD_CVV)) {
@@ -33,6 +34,7 @@ public class CardCVVFragment extends CreditCardFragment {
 
         if (cvv == null) {
             cvv = "";
+            mCardCVVView.setError("Please enter card CVV number");
         }
 
         mCardCVVView.setText(cvv);

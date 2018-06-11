@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/riderLostandFound"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".nav_lostandfound">
@@ -50,7 +51,7 @@
 
 
         <EditText
-            android:id="@+id/description"
+            android:id="@+id/itemDescription"
             android:layout_width="339dp"
             android:layout_height="100dp"
             android:layout_alignParentTop="true"
@@ -69,7 +70,7 @@
 
 
         <EditText
-            android:id="@+id/textView4"
+            android:id="@+id/lostPhoneNumber"
             android:layout_width="340dp"
             android:layout_height="26dp"
             android:layout_alignParentBottom="true"
@@ -84,7 +85,7 @@
             android:textSize="14sp" />
 
         <EditText
-            android:id="@+id/email"
+            android:id="@+id/lostEmail"
             android:layout_width="340dp"
             android:layout_height="26dp"
             android:layout_alignParentBottom="true"
@@ -101,7 +102,7 @@
 
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/lostItemSubmit"
             android:layout_width="355dp"
             android:layout_height="38dp"
             android:layout_alignParentBottom="true"

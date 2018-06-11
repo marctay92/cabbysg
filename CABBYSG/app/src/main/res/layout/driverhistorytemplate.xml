@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/relLayout1"
+        android:layout_width="360dp"
+        android:layout_height="130dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="30dp">
+
+        <ImageView
+            android:id="@+id/history2BlackBox"
+            android:layout_width="360dp"
+            android:layout_height="250dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/black_rectangle_box" />
+
+        <ImageView
+            android:id="@+id/history2Profile"
+            android:layout_width="70dp"
+            android:layout_height="79dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignTop="@+id/history2Name"
+            android:layout_marginStart="20dp"
+            android:src="@drawable/yellowprofile" />
+
+        <ImageView
+            android:id="@+id/star1"
+            android:layout_width="13dp"
+            android:layout_height="18dp"
+            android:layout_alignEnd="@+id/history2CarPlate"
+            android:layout_alignTop="@+id/history2Rating"
+            android:src="@drawable/yellowstar" />
+
+        <TextView
+            android:id="@+id/history2Date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:text=" 11 APRIL 18"
+            android:textColor="#FFE446" />
+
+        <TextView
+            android:id="@+id/history2Time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_toEndOf="@+id/history2Date"
+            android:paddingLeft="10dp"
+            android:text=" 11:00"
+            android:textColor="#FFE446" />
+
+        <TextView
+            android:id="@+id/history2Name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="107dp"
+            android:layout_marginTop="41dp"
+            android:text="Jo Tan"
+            android:textColor="#FFEE7C" />
+
+
+
+
+        <TextView
+            android:id="@+id/history2Fare"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/line1"
+            android:layout_toStartOf="@+id/sgd1"
+            android:text="$ 20.00"
+            android:textColor="#FFFCB7" />
+
+        <TextView
+            android:id="@+id/sgd1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@+id/star1"
+            android:paddingRight="15dp"
+            android:text="SGD"
+            android:textColor="#FFFCB7"
+            android:textSize="8sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/history2Rating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/history2Name"
+            android:layout_below="@+id/history2Name"
+            android:text="3.9  "
+            android:textColor="#FFE446" />
+
+        <View
+            android:id="@+id/line2"
+            android:layout_width="1dp"
+            android:layout_height="22dp"
+            android:layout_alignEnd="@+id/sampletext1"
+            android:layout_below="@+id/star1"
+            android:layout_gravity="center"
+            android:background="#FFE446" />
+
+        <View
+            android:id="@+id/line1"
+            android:layout_width="161dp"
+            android:layout_height="1dp"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@+id/star1"
+            android:layout_gravity="center"
+            android:background="#FFE446" />
+
+        <View
+            android:id="@+id/line3"
+            android:layout_width="161dp"
+            android:layout_height="1dp"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@+id/history2CarPlate"
+            android:layout_gravity="center"
+            android:background="#FFE446" />
+
+        <TextView
+            android:id="@+id/wordFare"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/history2Fare"
+            android:layout_toStartOf="@+id/history2Fare"
+            android:text="Fare: "
+            android:textColor="#FFEE7C"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/history2Route"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/line1"
+            android:layout_alignStart="@+id/line1"
+            android:text="Shortest"
+            android:textColor="#FFEE7C"
+            android:textSize="12sp" />
+
+        <ImageView
+            android:id="@+id/emptyyellowcircle"
+            android:layout_width="5dp"
+            android:layout_height="23dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignTop="@+id/history2From"
+
+            android:layout_marginEnd="153dp"
+            android:src="@drawable/emptyyellowcircle" />
+
+        <ImageView
+            android:id="@+id/yellowcircle"
+            android:layout_width="6dp"
+            android:layout_height="190dp"
+            android:layout_alignStart="@+id/emptyyellowcircle"
+            android:src="@drawable/yellowcircle" />
+
+        <View
+            android:layout_width="2dp"
+            android:layout_height="17dp"
+            android:layout_alignStart="@+id/emptyyellowcircle"
+            android:layout_below="@+id/history2From"
+            android:layout_gravity="center"
+            android:background="#9D9D9D" />
+
+        <TextView
+            android:id="@+id/history2From"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/history2Profile"
+            android:layout_alignEnd="@+id/history2Fare"
+            android:layout_alignStart="@id/emptyyellowcircle"
+            android:paddingLeft="10dp"
+            android:text="426 Bukit Timah"
+            android:textColor="#FFEE7C"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/history2To"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/history2Fare"
+            android:layout_centerVertical="true"
+            android:layout_alignStart="@id/emptyyellowcircle"
+            android:paddingLeft="10dp"
+            android:text="Zouk Singapore"
+            android:textColor="#FFEE7C"
+            android:textSize="14sp" />
+
+
+    </RelativeLayout>

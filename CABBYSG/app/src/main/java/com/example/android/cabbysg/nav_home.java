@@ -148,6 +148,7 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
     private PlaceAutocompleteAdapter mPlaceAutocompleteAdapter, mPlaceAutocompleteAdapter1;
     private GoogleApiClient mGoogleApiClient;
     private PlaceInfo mPlace;
+<<<<<<< HEAD
     private LatLng driverLatLng;
     private Boolean requestBol = false;
     private int mLastSpinnerPosition = 0;
@@ -161,6 +162,14 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
     private CircleImageView mDriverPhoto;
     private LinearLayout mLinearLayout1, mLinearLayout2, mLinearLayout3, mLinearLayout4;
     private String userID = "ywO5uyDNM0eQ0aOpLSQD0qj9zxO2";
+=======
+
+    private String url;
+
+    private int mLastSpinnerPosition;
+    private LatLng locLatLng = null;
+    private LatLng desLatLng = null;
+>>>>>>> profile
 
 
     public nav_home() {

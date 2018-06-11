@@ -28,7 +28,7 @@ public class CardExpiryFragment extends CreditCardFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup group, Bundle state) {
 
         View v = inflater.inflate(R.layout.c_lyt_card_expiry, group, false);
-        cardExpiryView = (EditText) v.findViewById(R.id.card_expiry);
+        cardExpiryView = v.findViewById(R.id.card_expiry);
 
         String expiry = "";
 
@@ -45,6 +45,7 @@ public class CardExpiryFragment extends CreditCardFragment {
 
         if(expiry == null) {
             expiry = "";
+            cardExpiryView.setError("Please enter card expiry date");
         }
 
         cardExpiryView.setText(expiry);

@@ -1,14 +1,128 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/driverProfile"
+    android:background="@color/colorBackground"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".nav_driverprofile">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:id="@+id/navProfile">
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="40dp"
+            android:text="PROFILE"
+            android:textColor="@android:color/black"
+            android:textSize="30sp" />
+
+        <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/dprofile_image"
+            android:layout_width="96dp"
+            android:layout_height="96dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="101dp"
+            android:src="@drawable/profile"
+            app:civ_border_color="#FF000000"
+            app:civ_border_width="2dp" />
+
+        <TextView
+            android:id="@+id/dFirstName"
+            android:layout_width="300dp"
+            android:layout_height="30dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="220dp"
+            android:background="#fdffaf"
+            android:text="first"
+            android:textAlignment="center" />
+
+        <TextView
+            android:id="@+id/dLastName"
+            android:layout_width="300dp"
+            android:layout_height="30dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="260dp"
+            android:background="#fdffaf"
+            android:text="last"
+            android:textAlignment="center" />
+
+        <TextView
+            android:id="@+id/dMobileNb"
+            android:layout_width="300dp"
+            android:layout_height="30dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="300dp"
+            android:background="#fdffaf"
+            android:text="mobile"
+            android:textAlignment="center" />
+
+        <TextView
+            android:id="@+id/dEmail"
+            android:layout_width="300dp"
+            android:layout_height="30dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="340dp"
+            android:background="#fdffaf"
+            android:text="email"
+            android:textAlignment="center" />
+
+        <TextView
+            android:id="@+id/dCarPlate"
+            android:layout_width="300dp"
+            android:layout_height="30dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="380dp"
+            android:background="#fdffaf"
+            android:text="carplate"
+            android:textAlignment="center" />
+
+        <TextView
+            android:id="@+id/dCarModel"
+            android:layout_width="300dp"
+            android:layout_height="30dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="420dp"
+            android:background="#fdffaf"
+            android:text="model"
+            android:textAlignment="center" />
+
+        <Button
+            android:id="@+id/dChangePwBtn"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/dFirstName"
+            android:layout_below="@+id/dEditProfileBtn"
+            android:text="CHANGE PASSWORD"
+            android:textSize="13sp" />
+
+        <Button
+            android:id="@+id/dEditProfileBtn"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:layout_below="@+id/dCarModel"
+            android:text="Edit Profile" />
+
+        <Button
+            android:id="@+id/dLogOutBtn"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/dFirstName"
+            android:layout_alignTop="@+id/dChangePwBtn"
+            android:text="LOG OUT" />
+    </RelativeLayout>
 </FrameLayout>

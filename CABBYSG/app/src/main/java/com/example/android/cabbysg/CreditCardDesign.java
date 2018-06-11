@@ -3,6 +3,7 @@ package com.example.android.cabbysg;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -26,12 +27,14 @@ public class CreditCardDesign extends AppCompatActivity {
 
         initialize();
         listeners();
+
+
     }
 
     private void initialize() {
         addCardButton = (Button) findViewById(R.id.add_card);
         cardContainer = (LinearLayout) findViewById(R.id.card_container);
-//        getSupportActionBar().setTitle("Payment");
+        getSupportActionBar().setTitle("PAYMENT METHOD");
         populate();
     }
 
@@ -40,8 +43,8 @@ public class CreditCardDesign extends AppCompatActivity {
 
         String name = "Glarence Zhao";
         String cvv = "420";
-        String expiry = "01/18";
-        String cardNumber = "4242424242424242";
+        String expiry = "01/20";
+        String cardNumber = "4111 1111 1111 1111";
 
         sampleCreditCardView.setCVV(cvv);
         sampleCreditCardView.setCardHolderName(name);

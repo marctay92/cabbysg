@@ -3,12 +3,150 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorBackground"
     tools:context=".nav_driverhistory">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="match_parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="52dp"
+            android:layout_above="@+id/history2BlackBox"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="-110dp"
+            android:layout_weight="0"
+            android:gravity="center"
+            android:text="HISTORY"
+            android:textColor="#2C2C2C"
+            android:textSize="30sp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/history2BlackBox"
+            android:layout_width="310dp"
+            android:layout_height="160dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="110dp"
+            android:src="@drawable/black_rectangle_box" />
+
+
+        <TextView
+            android:id="@+id/month"
+            android:layout_width="150dp"
+            android:layout_height="42dp"
+            android:layout_alignTop="@+id/history2BlackBox"
+            android:layout_toStartOf="@+id/earning"
+            android:paddingLeft="35dp"
+            android:paddingTop="10dp"
+            android:text="MONTH"
+            android:textColor="#FFEE7C"
+            android:textSize="18dp" />
+
+        <TextView
+            android:id="@+id/earning"
+            android:layout_width="150dp"
+            android:layout_height="40dp"
+            android:layout_above="@+id/thismonth"
+            android:layout_alignStart="@+id/firstvalue"
+            android:paddingTop="10dp"
+            android:paddingLeft="5dp"
+            android:text="TOTAL EARNING"
+            android:textColor="#FFEE7C"
+            android:textSize="18dp" />
+
+        <View
+            android:layout_width="306dp"
+            android:layout_height="1dp"
+            android:layout_below="@+id/lastmonth"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center"
+            android:background="#FFEE7C" />
+
+        <View
+            android:layout_width="306dp"
+            android:layout_height="1dp"
+            android:layout_alignStart="@+id/month"
+            android:layout_below="@+id/month"
+            android:layout_gravity="center"
+            android:layout_marginStart="-10dp"
+            android:background="#FFEE7C" />
+
+        <View
+            android:layout_width="306dp"
+            android:layout_height="1dp"
+            android:layout_below="@+id/thismonth"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center"
+            android:background="#FFEE7C" />
+
+        <View
+            android:id="@+id/line1"
+            android:layout_width="2dp"
+            android:layout_height="156dp"
+            android:layout_alignTop="@+id/earning"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center"
+            android:background="#FFEE7C" />
+
+        <TextView
+            android:id="@+id/thismonth"
+            android:layout_width="150dp"
+            android:layout_height="40dp"
+            android:layout_alignStart="@+id/month"
+            android:layout_below="@+id/month"
+            android:textColor="#FFEE7C" />
+
+        <TextView
+            android:id="@+id/lastmonth"
+            android:layout_width="150dp"
+            android:layout_height="40dp"
+            android:layout_alignStart="@+id/month"
+            android:layout_below="@+id/thismonth"
+            android:textColor="#FFEE7C" />
+
+        <TextView
+            android:id="@+id/monthbefore"
+            android:layout_width="150dp"
+            android:layout_height="40dp"
+            android:layout_alignStart="@+id/month"
+            android:layout_below="@+id/lastmonth"
+            android:textColor="#FFEE7C" />
+
+        <TextView
+            android:id="@+id/firstvalue"
+            android:layout_width="150dp"
+            android:layout_height="40dp"
+            android:layout_alignEnd="@+id/history2BlackBox"
+            android:layout_below="@+id/month"
+            android:textColor="#FFEE7C" />
+
+        <TextView
+            android:id="@+id/secondvalue"
+            android:layout_width="150dp"
+            android:layout_height="40dp"
+            android:layout_alignEnd="@+id/history2BlackBox"
+            android:layout_below="@+id/thismonth"
+            android:textColor="#FFEE7C" />
+
+        <TextView
+            android:id="@+id/thirdvalue"
+            android:layout_width="150dp"
+            android:layout_height="40dp"
+            android:layout_alignBottom="@+id/history2BlackBox"
+            android:layout_alignEnd="@+id/history2BlackBox"
+            android:textColor="#FFEE7C" />
+
+    </RelativeLayout>
 
 </FrameLayout>

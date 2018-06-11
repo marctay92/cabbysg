@@ -10,6 +10,7 @@ import android.widget.EditText;
 import com.example.android.cabbysg.R;
 
 import static com.example.android.cabbysg.CreditCardUtils.EXTRA_CARD_HOLDER_NAME;
+import static com.example.android.cabbysg.nav_lostandfound.isNameValid;
 
 public class CardNameFragment extends CreditCardFragment {
 
@@ -23,7 +24,7 @@ public class CardNameFragment extends CreditCardFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup group, Bundle state) {
 
         View v = inflater.inflate(R.layout.c_lyt_card_holder_name, group,false);
-        mCardNameView = (EditText) v.findViewById(R.id.card_name);
+        mCardNameView = v.findViewById(R.id.card_name);
 
         String name = "";
         if(getArguments() != null && getArguments().containsKey(EXTRA_CARD_HOLDER_NAME)) {
@@ -33,6 +34,9 @@ public class CardNameFragment extends CreditCardFragment {
 
         if(name == null) {
             name = "";
+            mCardNameView.setError("Please enter name");
+        }else if (!isNameValid(name)){
+            mCardNameView.setError("Please enter valid name");
         }
 
         mCardNameView.setText(name);

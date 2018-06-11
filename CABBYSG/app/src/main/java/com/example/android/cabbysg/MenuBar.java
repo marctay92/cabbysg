@@ -1,5 +1,6 @@
 package com.example.android.cabbysg;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -45,7 +46,7 @@ public class MenuBar extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         setTitle("Home");
@@ -55,6 +56,16 @@ public class MenuBar extends AppCompatActivity
         fragmentTransaction.commit();
     }
 
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            //NOTICE FOR LATER
+            super.onBackPressed();
+        }
+    }
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -82,6 +93,9 @@ public class MenuBar extends AppCompatActivity
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.content_frame, fragment,"Payment");
             fragmentTransaction.commit();
+            //Intent intent=new Intent(this,CreditCardDesign.class);
+            //startActivity(intent);
+
 
         } else if (id == R.id.nav_schedule) {
             setTitle("Schedule");
@@ -106,7 +120,11 @@ public class MenuBar extends AppCompatActivity
 
         } else if (id == R.id.nav_help) {
             setTitle("Help");
+<<<<<<< HEAD
             nav_driverhome fragment = new nav_driverhome();
+=======
+            nav_driverhistory fragment = new nav_driverhistory();
+>>>>>>> profile
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.content_frame, fragment,"Help");
             fragmentTransaction.commit();
@@ -116,5 +134,32 @@ public class MenuBar extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
 }
+
+/*
+   public class addPaymentMethod extends Activity {
+        protected void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+
+            setContentView(R.layout.add_creditcard);
+
+            final Button button = findViewById(R.id.addpaymentmethod);
+            button.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    startActivity(new Intent(MenuBar.this,add_creditcard.class));
+                }
+            });
+        }
+    }
+ /*
+    private void addPaymentMethod(){
+        Button addPaymentMethod = findViewById(R.id.addpaymentmethod);
+        addPaymentMethod.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View view){
+                startActivity(new Intent(MenuBar.this,add_creditcard.class));
+            }
+        });
+    }
+*/
+/*}*/
+

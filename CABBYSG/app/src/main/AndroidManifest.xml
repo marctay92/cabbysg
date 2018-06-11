@@ -2,10 +2,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.android.cabbysg">
 
+    <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -14,6 +17,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity
+            android:name=".startpage">
+                <intent-filter>
+                    <action android:name="android.intent.action.MAIN" />
+                    <category android:name="android.intent.category.LAUNCHER" />
+                </intent-filter>
+        </activity>
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyA8BOs4vOO2km8_VTq8CymhQ2z-23Hg_1w" />
@@ -22,10 +33,13 @@
             android:name=".MenuBar"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
+<<<<<<< HEAD
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+=======
+>>>>>>> profile
         </activity>
         <activity
             android:name=".driver_menubar"
@@ -36,23 +50,36 @@
         <activity
             android:name=".CardEditActivity"
             android:label="@string/app_name"
-            android:windowSoftInputMode="adjustResize"></activity>
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".CreditCardDesign"
             android:label="@string/creditcarddesign"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize">
-            <intent-filter>
+            <!--<intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            </intent-filter>-->
         </activity>
+
+        <activity android:name=".riderLogin" />
+        <activity android:name=".driverLogin" />
+        <activity android:name=".riderRegister" />
+
 
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
 
+<<<<<<< HEAD
+=======
+        <activity
+            android:name=".driver_menubar"
+            android:label="@string/title_activity_driver_menubar"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+>>>>>>> profile
     </application>
 
 </manifest>

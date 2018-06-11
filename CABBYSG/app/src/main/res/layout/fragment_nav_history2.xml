@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/nav_history2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/colorBackground"
         tools:context=".nav_history">
 
         <LinearLayout
@@ -26,238 +28,21 @@
 
             <RelativeLayout
                 android:id="@+id/relLayout1"
-                android:layout_width="360dp"
-                android:layout_height="250dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="30dp">
 
-                <ImageView
-                    android:id="@+id/black_rectangle_box1"
-                    android:layout_width="360dp"
-                    android:layout_height="250dp"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentTop="true"
-                    android:layout_gravity="center_horizontal"
-                    android:src="@drawable/black_rectangle_box" />
 
-                <ImageView
-                    android:id="@+id/sample1"
-                    android:layout_width="334dp"
-                    android:layout_height="84dp"
-                    android:layout_below="@+id/date1"
-                    android:layout_centerHorizontal="true"
-                    android:layout_gravity="center_horizontal"
-                    android:src="@drawable/yellow_rectangle_box" />
-
-                <ImageView
-                    android:id="@+id/profile1"
-                    android:layout_width="57dp"
-                    android:layout_height="57dp"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignTop="@+id/name1"
-                    android:layout_marginStart="34dp"
-                    android:src="@drawable/yellowprofile" />
-
-                <ImageView
-                    android:id="@+id/star1"
-                    android:layout_width="13dp"
-                    android:layout_height="18dp"
-                    android:layout_alignTop="@+id/profile1"
-                    android:layout_toEndOf="@+id/carplateno1"
-                    android:src="@drawable/yellowstar" />
-
-                <TextView
-                    android:id="@+id/sampletext1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentTop="true"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="47dp"
-                    android:text="MAP TRIP HISTORY"
-                    android:textColor="#2C2C2C"
-                    android:textSize="18sp" />
-
-                <TextView
-                    android:id="@+id/date1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentTop="true"
-                    android:text=" 11 APRIL 18 | 15:20"
-                    android:textColor="#FFE446" />
-
-                <TextView
-                    android:id="@+id/name1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_marginBottom="59dp"
-                    android:layout_toEndOf="@+id/date1"
-                    android:text="Jo Tan"
-                    android:textColor="#FFEE7C" />
-
-                <TextView
-                    android:id="@+id/carplateno1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignStart="@+id/emptyyellowcircle"
-                    android:layout_below="@+id/name1"
-                    android:layout_marginTop="-59dp"
-                    android:text="SHG2634A"
-                    android:textColor="#FFEE7C" />
-
-                <TextView
-                    android:id="@+id/carbrand"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignBottom="@+id/profile1"
-                    android:layout_toStartOf="@+id/star1"
-                    android:text="Hyundai i40"
-                    android:textColor="#FFEE7C" />
-
-                <TextView
-                    android:id="@+id/tripfare1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_below="@+id/name1"
-                    android:layout_marginEnd="23dp"
-                    android:layout_marginTop="-59dp"
-                    android:text="$ 20.00"
-                    android:textColor="#FFFCB7" />
-
-                <TextView
-                    android:id="@+id/sgd1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_below="@+id/name1"
-                    android:layout_marginTop="-59dp"
-                    android:text="SGD"
-                    android:textColor="#FFFCB7"
-                    android:textSize="8sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/textView1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignStart="@+id/routeselection1"
-                    android:layout_alignTop="@+id/name1"
-                    android:text="3.9  "
-                    android:textColor="#FFE446" />
-
-                <View
-                    android:id="@+id/line1"
-                    android:layout_width="1dp"
-                    android:layout_height="22dp"
-                    android:layout_alignEnd="@+id/sampletext1"
-                    android:layout_below="@+id/star1"
-                    android:layout_gravity="center"
-                    android:background="#FFE446" />
-
-                <View
-                    android:layout_width="161dp"
-                    android:layout_height="1dp"
-                    android:layout_alignParentEnd="true"
-                    android:layout_below="@+id/name1"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="-59dp"
-                    android:background="#FFE446" />
-
-                <View
-                    android:id="@+id/line2"
-                    android:layout_width="161dp"
-                    android:layout_height="1dp"
-                    android:layout_alignParentEnd="true"
-                    android:layout_below="@+id/line1"
-                    android:layout_gravity="center"
-                    android:background="#FFE446" />
-
-                <TextView
-                    android:id="@+id/fare1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/star1"
-                    android:layout_marginEnd="0dp"
-                    android:layout_toStartOf="@+id/tripfare1"
-                    android:text="Fare: "
-                    android:textColor="#FFEE7C"
-                    android:textSize="12sp" />
-
-                <TextView
-                    android:id="@+id/routeselection1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/star1"
-                    android:layout_toEndOf="@+id/star1"
-                    android:text="Shortest"
-                    android:textColor="#FFEE7C"
-                    android:textSize="12sp" />
-
-                <ImageView
-                    android:id="@+id/emptyyellowcircle"
-                    android:layout_width="5dp"
-                    android:layout_height="13dp"
-                    android:layout_alignEnd="@+id/date1"
-                    android:layout_centerVertical="true"
-                    android:src="@drawable/emptyyellowcircle" />
-
-                <ImageView
-                    android:id="@+id/yellowcircle"
-                    android:layout_width="6dp"
-                    android:layout_height="25dp"
-                    android:layout_alignEnd="@+id/date1"
-                    android:layout_alignTop="@+id/location2"
-                    android:src="@drawable/yellowcircle" />
-
-                <View
-                    android:layout_width="2dp"
-                    android:layout_height="17dp"
-                    android:layout_alignEnd="@+id/date1"
-                    android:layout_below="@+id/emptyyellowcircle"
-                    android:layout_gravity="center"
-                    android:background="#9D9D9D" />
-
-                <TextView
-                    android:id="@+id/location1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:text="426 Bukit Timah"
-                    android:textColor="#FFEE7C"
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:id="@+id/location2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="31dp"
-                    android:layout_above="@+id/profile1"
-                    android:layout_centerHorizontal="true"
-                    android:text="Zouk Singapore"
-                    android:textColor="#FFEE7C"
-                    android:textSize="14sp" />
+                <ListView
+                    android:id="@+id/dList"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0" />
 
             </RelativeLayout>
-
-            <android.support.v7.widget.AppCompatSpinner
-                android:layout_width="match_parent"
-                android:layout_height="20dp"
-                android:layout_marginTop="10dp"
-                android:entries="@array/reportissue">
-
-            </android.support.v7.widget.AppCompatSpinner>
-
-            <Button
-                android:id="@+id/button2"
-                android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:layout_weight="0"
-                android:layout_marginTop="10dp"
-                android:background="#FFE446"
-                android:text="Submit" />
 
 
         </LinearLayout>
 
-    </FrameLayout>
+    </LinearLayout>
