@@ -36,8 +36,7 @@ public class nav_driverhistory extends Fragment {
 
     FirebaseDatabase database;
     DatabaseReference reference;
-    DatabaseReference driverRef, driverRef2, driverRef3;
-    ValueEventListener driverRef2Listener, driverRef3Listener;
+    DatabaseReference driverRef;
     FirebaseUser user;
     String userID,thisMonth;
     String startLocationStr,riderIdStr,destinationStr,selectedRouteStr,fareStr, historyID;

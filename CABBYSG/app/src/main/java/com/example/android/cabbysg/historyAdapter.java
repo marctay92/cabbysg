@@ -46,7 +46,6 @@ public class historyAdapter extends ArrayAdapter<historyDetails> {
         TextView to1=convertView.findViewById(R.id.history2To);
         ImageView blackBox= convertView.findViewById(R.id.history2BlackBox);
         final de.hdodenhof.circleimageview.CircleImageView history2Profile = convertView.findViewById(R.id.history2Profile);
-        //history2Profile (profile picture of driver)
 
         DatabaseReference driver_db = FirebaseDatabase.getInstance().getReference().child("Drivers").child(historydetails.driverID);
         driver_db.addValueEventListener(new ValueEventListener() {
@@ -73,29 +72,6 @@ public class historyAdapter extends ArrayAdapter<historyDetails> {
         route1.setText(historydetails.selectedRoute);
         from1.setText(historydetails.pickUpLocation);
         to1.setText(historydetails.destination);
-/*
-        //setOnclickListener(new View.OnClickListener)
-        blackBox.setOnClickListener(new View.OnClickListener(){
-
-            @Override
-            public void onClick (View view){
-                //int position=(Integer)view.getTag();
-                //historyDetails historydetails=getItem(position);
-
-                /*Intent intent=new Intent(getActivity(),nav_history2.class);
-                startActivity(intent);
-                nav_history fragment=null;
-                fragment=new nav_history();
-                nav_history2 someFragment= null;
-                someFragment=new nav_history2();
-                //FragmentTransaction transaction=((Activity)context).getFragmentManager().beginTransaction();
-                android.support.v4.app.FragmentManager manager = ((AppCompatActivity)appContext).getSupportFragmentManager();
-                android.support.v4.app.FragmentTransaction transaction=manager.beginTransaction();
-                transaction.replace(R.id.nav_history, someFragment);
-                transaction.addToBackStack(null);
-                transaction.commit();
-            }
-        }); */
 
         return convertView;
     }
