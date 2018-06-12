@@ -66,7 +66,10 @@ import com.lorentzos.flingswipe.SwipeFlingAdapterView;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.sql.Timestamp;
 import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Calendar;
@@ -239,7 +242,6 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
                     }
                 }else{
                     //do scheduled ride
-<<<<<<< HEAD
                     DatabaseReference scheduledRideRef = FirebaseDatabase.getInstance().getReference().child("scheduledRides");
                     String scheduledRideID = scheduledRideRef.push().getKey();
                     HashMap map = new HashMap();
@@ -249,19 +251,7 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
                     map.put("riderID", customerId);
                     map.put("fare", fare);
                     map.put("selectedRoute", selectedRoute);
-
-                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-dd-MM HH:mm");
-                    Date date = null;
-                    Timestamp timestamp1 = null;
-                    long time = 0;
-                    try {
-                        date = (Date)sdf.parse("2018-"+timeOfReq);
-                         timestamp1 = new java.sql.Timestamp(date.getTime());
-                          time = (long)timestamp1.getTime();
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                    map.put("timestamp", Long.toString(time));
+                    map.put("timestamp", dateTime);
                     scheduledRideRef.child(scheduledRideID).updateChildren(map);
 
                     DatabaseReference riderScheduledRef = FirebaseDatabase.getInstance().getReference().child("Rider").child(customerId);
@@ -269,8 +259,6 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
                     riderScheduledRef.child("scheduledRides").child(scheduledRideID).setValue(true);
                     driverScheduledRef.child("scheduledRides").child(scheduledRideID).setValue(true);
                     endTrip();
-=======
->>>>>>> parent of 032bb68... working
                 }
             }
 
@@ -522,36 +510,26 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
     }
     DatabaseReference historyRef;
     ValueEventListener historyRefListener;
-
+    double count = 0.0;
+    double noOfTrip = 0.0;
     private void init() {
         Log.d(TAG,"init: Initialing!");
 
-<<<<<<< HEAD
-=======
-        DatabaseReference initialRef = FirebaseDatabase.getInstance().getReference().child("Drivers").child(userID).child("History");
+        DatabaseReference initialRef = FirebaseDatabase.getInstance().getReference().child("Drivers").child(userID);
         initialRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists()){
-                    for (DataSnapshot snap: dataSnapshot.getChildren()){
-                        Log.d(TAG,"No of Trips: "+count);
-                        long child = snap.getChildrenCount();
-                        count = count + child;
-                        mNoOfTrips.setText(Long.toString(count));
-                    }
                     Double douRating = Double.parseDouble(dataSnapshot.child("rating").getValue().toString());
                     DecimalFormat df = new DecimalFormat("#.00");
                     String ratingFormatted = df.format(douRating);
                     mRating.setText(ratingFormatted);
-                    if (dataSnapshot.child("cancellation").getValue().toString()!=null){
-                        Double cancellationNum = Double.parseDouble(dataSnapshot.child("cancellation").getValue().toString());
-                        Double cancellationRate = (cancellationNum/(cancellationNum+count))*100;
-                        String cancellationRateFormatted = df.format(cancellationRate);
-                        mCancellation.setText(cancellationRateFormatted+"%");
-                    } else{
-                        mCancellation.setText("0%");
+                    for (DataSnapshot snap: dataSnapshot.child("History").getChildren()){
+                        Log.d(TAG,"No of Trips: "+count);
+                        long child = snap.getChildrenCount();
+                        count = count + child;
+                        mNoOfTrips.setText(Double.toString(count));
                     }
-
                 }
             }
 
@@ -560,8 +538,33 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
 
             }
         });
+         DatabaseReference cancellationRef = FirebaseDatabase.getInstance().getReference().child("Drivers").child(userID);
+         cancellationRef.addValueEventListener(new ValueEventListener() {
+             @Override
+             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                 if(dataSnapshot.exists()){
+                     for (DataSnapshot snap: dataSnapshot.child("History").getChildren()){
+                         long child = snap.getChildrenCount();
+                         noOfTrip = noOfTrip+ child;
+                     }
+                     if (dataSnapshot.child("cancellation").getValue().toString()!=null){
+                         DecimalFormat df = new DecimalFormat("#.00");
+                         Double cancellationNum = Double.parseDouble(dataSnapshot.child("cancellation").getValue().toString());
+                         Double cancellationRate = (cancellationNum/(cancellationNum+noOfTrip))*100;
+                         String cancellationRateFormatted = df.format(cancellationRate);
+                         mCancellation.setText(cancellationRateFormatted+"%");
+                     } else{
+                         mCancellation.setText("0%");
+                     }
+                 }
+             }
 
->>>>>>> parent of 032bb68... working
+             @Override
+             public void onCancelled(@NonNull DatabaseError databaseError) {
+
+             }
+         });
+
         location_switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -774,38 +777,6 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
             }
         });
 
-        DatabaseReference initialRef = FirebaseDatabase.getInstance().getReference().child("Drivers").child(userID);
-        initialRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    long count = 0;
-                    Double douRating = Double.parseDouble(dataSnapshot.child("rating").getValue().toString());
-                    DecimalFormat df = new DecimalFormat("#.00");
-                    String ratingFormatted = df.format(douRating);
-                    mRating.setText(ratingFormatted);
-                    if (dataSnapshot.child("cancellation").getValue().toString() != null) {
-                        for (DataSnapshot ds : dataSnapshot.child("History").getChildren()){
-                            Long snap = ds.getChildrenCount();
-                            count = count + snap;
-                        }
-                        Double cancellationNum = Double.parseDouble(dataSnapshot.child("cancellation").getValue().toString());
-                        Double cancellationRate = (cancellationNum / (cancellationNum + count)) * 100;
-                        String cancellationRateFormatted = df.format(cancellationRate);
-                        Log.d(TAG,"No of Trips: "+count+" cancelled number: "+cancellationNum+" final rate: "+cancellationRateFormatted);
-                        mCancellation.setText(cancellationRateFormatted + "%");
-                    } else {
-                        mCancellation.setText("0%");
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
         getAssignedCustomer();
     }
 
@@ -848,34 +819,32 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
                        public void onDataChange(@NonNull final DataSnapshot dataSnapshot) {
                            if (dataSnapshot.exists()) {
                                if (dataSnapshot.child("driverFound").getValue().equals("false") && !driverAccepted) {
-                                   Log.d(TAG,"driverFound: "+dataSnapshot.child("driverFound").getValue() +" "+ driverAccepted);
+                                   Log.d(TAG, "driverFound: " + dataSnapshot.child("driverFound").getValue() + " " + driverAccepted);
                                    location = dataSnapshot.child("currentLocation").getValue().toString();
                                    destination = dataSnapshot.child("destination").getValue().toString();
                                    fare = dataSnapshot.child("fare").getValue().toString();
                                    selectedRoute = dataSnapshot.child("selectedRoute").getValue().toString();
                                    fareType = dataSnapshot.child("fareType").getValue().toString();
-<<<<<<< HEAD
-                                   if(dataSnapshot.child("timestamp").getValue().toString().equals("now")){
-=======
-                                   String timeOfReq = "";
-                                   if(dataSnapshot.child("timestamp").getValue().toString().equals("")){
->>>>>>> parent of 032bb68... working
-                                       timeOfReq = "Now";
-                                   } else {
-                                       timeOfReq = dataSnapshot.child("timestamp").getValue().toString();
-                                       scheduledRide = true;
-                                   }
-                                   Double destinationLat = Double.parseDouble(dataSnapshot.child("destinationLat").getValue().toString());
-                                   Double destinationLng = Double.parseDouble(dataSnapshot.child("destinationLng").getValue().toString());
-                                   destinationLatLng = new LatLng(destinationLat,destinationLng);
 
-                                   cards item = new cards(location, destination, fare, selectedRoute, fareType, timeOfReq);
-                                   if (rowItems.size()==0){
-                                       rowItems.add(item);
-                                       arrayAdapter.notifyDataSetChanged();
-                                   }
-                                   Log.d(TAG,"Row item size: "+ rowItems.size());
+                                   if (dataSnapshot.child("timestamp").getValue().toString().equals("now")) {
+                                       if (dataSnapshot.child("timestamp").getValue().toString().equals("")) {
+                                           dateTime = "Now";
+                                       } else {
+                                           dateTime = dataSnapshot.child("timestamp").getValue().toString();
+                                           scheduledRide = true;
+                                       }
+                                       Double destinationLat = Double.parseDouble(dataSnapshot.child("destinationLat").getValue().toString());
+                                       Double destinationLng = Double.parseDouble(dataSnapshot.child("destinationLng").getValue().toString());
+                                       destinationLatLng = new LatLng(destinationLat, destinationLng);
 
+                                       cards item = new cards(location, destination, fare, selectedRoute, fareType, dateTime);
+                                       if (rowItems.size() == 0) {
+                                           rowItems.add(item);
+                                           arrayAdapter.notifyDataSetChanged();
+                                       }
+                                       Log.d(TAG, "Row item size: " + rowItems.size());
+
+                                   }
                                }
                            }
                        }

@@ -142,11 +142,8 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
 
     //vars
     private Button mConfirmReceipt, mSubmitRating;
-<<<<<<< HEAD
+
     private Boolean mLocationPermissionsGranted = false, customerEnd = false, scheduledRide = false, hasRiderRated = false;
-=======
-    private Boolean mLocationPermissionsGranted = false, customerEnd = false;
->>>>>>> parent of 032bb68... working
     private GoogleMap mMap;
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private PlaceAutocompleteAdapter mPlaceAutocompleteAdapter, mPlaceAutocompleteAdapter1;
@@ -569,9 +566,7 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
                         WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                 requestBol = true;
                 //String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-<<<<<<< HEAD
                 submitRequest();
-=======
                 String currentLocation = null;
                 String destination = null;
                 DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("customerRequest");
@@ -617,7 +612,7 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
                     //save 6-seater
                     newRequest.put("serviceType",serviceType);
                 }
-                if (mBookingTime.toString().equals("")) {
+                if (mBookingTime.getText().toString().equals("")) {
                     //get current time and save
                     newRequest.put("timestamp","now");
                 } else {
@@ -631,8 +626,6 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
                 newRequest.put("paymentMethod", mPaymentMethod.getSelectedItem().toString());
                 newRequest.put("fareType", mFareType.getSelectedItem().toString());
                 reqRef.setValue(newRequest);
-
->>>>>>> parent of 032bb68... working
                 getClosestDriver();
 
             }
@@ -817,7 +810,6 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
     }
 
     private void endTrip() {
-<<<<<<< HEAD
         Log.d(TAG,"customerEnd: "+customerEnd + " hasriderrated "+hasRiderRated);
         getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
 
@@ -833,17 +825,7 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
                 DatabaseReference ref = FirebaseDatabase.getInstance().getReference("customerRequest");
                 ref.child(userID).removeValue();
             } else if(driverFoundID != null) {
-=======
-        Log.d(TAG,"customerEnd: "+customerEnd);
-        onTrip = false;
-        requestBol = false;
-        geoQuery.removeAllListeners();
-        driverLocationRef.removeEventListener(driverLocationRefListener);
-        if (customerEnd){
-            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("customerRequest");
-            ref.child(userID).removeValue();
-        } else if(driverFoundID != null) {
->>>>>>> parent of 032bb68... working
+
                 Log.d(TAG, "Check driverFoundID != null");
                 DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Drivers").child(driverFoundID);
                 driverFoundID = null;
@@ -864,8 +846,6 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
             radius = 1;
             mRatingBar.setRating(0f);
             //String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
-<<<<<<< HEAD
             mMap.clear();
 
             if (mLinearLayout2.isShown()){
@@ -893,30 +873,6 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
             mDuraTextView.setText("");
             mFareTextView.setText("");
             getDeviceLocation();
-
-=======
-        mMap.clear();
-        if (mLinearLayout2.isShown()){
-            mLinearLayout1.setVisibility(View.VISIBLE);
-            mLinearLayout2.setVisibility(View.INVISIBLE);
-        }
-        if (mLinearLayout4.isShown()){
-            mLinearLayout4.setVisibility(View.INVISIBLE);
-            mLinearLayout1.setVisibility(View.VISIBLE);
-        }
-        if(!mGps.isInLayout()){
-            mGps.setVisibility(View.VISIBLE);
-        }
-
-        if(!getDriversAroundStarted) {
-            getDriversAround(locLatLng.latitude, locLatLng.longitude);
-        }
-        mDestination.setText("");
-        mDisTextView.setText("");
-        mDuraTextView.setText("");
-        mFareTextView.setText("");
-        getDeviceLocation();
->>>>>>> parent of 032bb68... working
     }
 
     private Long getCurrentTimestamp() {
@@ -1007,15 +963,11 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
                     System.out.println("Radius is " + radius);
                     radius = radius+0.5;
                     getClosestDriver();
-<<<<<<< HEAD
                     } else if(!scheduledRide){
                     Log.d(TAG,"scheduledride" + scheduledRide + "driverfound?? "+driverFound);
                     getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                     mProgressBar.setVisibility(View.GONE);
-=======
-                    } else {
 
->>>>>>> parent of 032bb68... working
                     //display request info
                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(),AlertDialog.THEME_HOLO_LIGHT);
 

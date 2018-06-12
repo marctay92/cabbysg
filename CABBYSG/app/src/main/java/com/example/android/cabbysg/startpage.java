@@ -63,7 +63,7 @@ public class startpage extends AppCompatActivity {
 
         if(user!=null){
             pd.show();
-            rider_db.child(user.getUid()).addValueEventListener(new ValueEventListener() {
+            rider_db.child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     if(dataSnapshot.exists()) {
@@ -81,7 +81,7 @@ public class startpage extends AppCompatActivity {
                 }
             });
 
-            driver_db.child(user.getUid()).addValueEventListener(new ValueEventListener() {
+            driver_db.child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     if(dataSnapshot.exists()) {
@@ -111,10 +111,11 @@ public class startpage extends AppCompatActivity {
             }*/
         }
     }
-
+/*
     @Override
     protected void onResume() {
         super.onResume();
+
         if(user!=null) {
             pd.show();
             rider_db.child(user.getUid()).addValueEventListener(new ValueEventListener() {
@@ -152,9 +153,9 @@ public class startpage extends AppCompatActivity {
 
                 }
             });
-        }
+        }*/
 
-    }
+
     /* @Override
     protected void onStart() {
         super.onStart();
