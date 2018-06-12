@@ -21,6 +21,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class schedule_adaptor extends ArrayAdapter<schedule_details> {
@@ -43,7 +44,6 @@ public class schedule_adaptor extends ArrayAdapter<schedule_details> {
         }
 
         TextView s_date = convertView.findViewById(R.id.s_date);
-        TextView s_time = convertView.findViewById(R.id.s_time);
         final TextView s_name = convertView.findViewById(R.id.s_name);
         final TextView s_carplatenumber = convertView.findViewById(R.id.s_carplatenumber);
         final TextView s_rating = convertView.findViewById(R.id.s_rating);
@@ -55,7 +55,6 @@ public class schedule_adaptor extends ArrayAdapter<schedule_details> {
         ImageView s_cancel= convertView.findViewById(R.id.s_cancel);
 
         s_date.setText(scheduleDetails.schedule_date);
-        s_time.setText(scheduleDetails.schedule_time);
 
         DatabaseReference driver_db = FirebaseDatabase.getInstance().getReference().child("Drivers").child(scheduleDetails.schedule_driverID);
         driver_db.addValueEventListener(new ValueEventListener() {
@@ -63,7 +62,9 @@ public class schedule_adaptor extends ArrayAdapter<schedule_details> {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 s_name.setText(dataSnapshot.child("firstName").getValue().toString() + " " + dataSnapshot.child("lastName").getValue().toString());
                 s_carplatenumber.setText(dataSnapshot.child("regNum").getValue().toString());
-                s_rating.setText(dataSnapshot.child("rating").getValue().toString());
+                Double driverRating = Double.parseDouble(dataSnapshot.child("rating").getValue().toString());
+                DecimalFormat df2 = new DecimalFormat(".#");
+                s_rating.setText(df2.format(driverRating));
                 if(dataSnapshot.child("profileImageUrl").exists()){
                     Glide.with(getContext()).load(dataSnapshot.child("profileImageUrl").getValue().toString()).into(profilePic);
                 }

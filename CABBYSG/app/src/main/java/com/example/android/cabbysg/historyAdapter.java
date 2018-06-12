@@ -19,6 +19,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class historyAdapter extends ArrayAdapter<historyDetails> {
@@ -54,7 +56,9 @@ public class historyAdapter extends ArrayAdapter<historyDetails> {
                 name1.setText(dataSnapshot.child("firstName").getValue().toString() + " " + dataSnapshot.child("lastName").getValue().toString());
                 vehNb1.setText(dataSnapshot.child("regNum").getValue().toString());
                 vehModel1.setText(dataSnapshot.child("model").getValue().toString());
-                driverRating1.setText(dataSnapshot.child("rating").getValue().toString());
+                Double driverRating = Double.parseDouble(dataSnapshot.child("rating").getValue().toString());
+                DecimalFormat df2 = new DecimalFormat(".#");
+                driverRating1.setText(df2.format(driverRating));
                 if(dataSnapshot.child("profileImageUrl").exists()){
                     Glide.with(getContext()).load(dataSnapshot.child("profileImageUrl").getValue().toString()).into(history2Profile);
                 }

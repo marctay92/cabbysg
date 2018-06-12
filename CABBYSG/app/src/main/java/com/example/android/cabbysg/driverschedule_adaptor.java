@@ -21,6 +21,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class driverschedule_adaptor extends ArrayAdapter<driverschedule_details> {
@@ -42,7 +43,7 @@ public class driverschedule_adaptor extends ArrayAdapter<driverschedule_details>
         }
 
         TextView ds_date = convertView.findViewById(R.id.ds_date);
-        TextView ds_time = convertView.findViewById(R.id.ds_time);
+        //TextView ds_time = convertView.findViewById(R.id.ds_time);
         final TextView ds_name = convertView.findViewById(R.id.ds_name);
         final TextView ds_rating = convertView.findViewById(R.id.ds_rating);
         TextView ds_destination = convertView.findViewById(R.id.ds_destination);
@@ -57,7 +58,9 @@ public class driverschedule_adaptor extends ArrayAdapter<driverschedule_details>
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 ds_name.setText(dataSnapshot.child("firstName").getValue().toString() + " " + dataSnapshot.child("lastName").getValue().toString());
-                ds_rating.setText(dataSnapshot.child("rating").getValue().toString());
+                Double driverRating = Double.parseDouble(dataSnapshot.child("rating").getValue().toString());
+                DecimalFormat df2 = new DecimalFormat(".#");
+                ds_rating.setText(df2.format(driverRating));
                 if(dataSnapshot.child("profileImageUrl").exists()){
                     Glide.with(getContext()).load(dataSnapshot.child("profileImageUrl").getValue().toString()).into(profilePic);
                 }
@@ -71,7 +74,6 @@ public class driverschedule_adaptor extends ArrayAdapter<driverschedule_details>
 
 
         ds_date.setText(driverschedule_details.driverschedule_date);
-        ds_time.setText(driverschedule_details.driverschedule_time);
         ds_destination.setText(driverschedule_details.driverschedule_destination);
         ds_location.setText(driverschedule_details.driverschedule_location);
         ds_type.setText(driverschedule_details.driverschedule_type);

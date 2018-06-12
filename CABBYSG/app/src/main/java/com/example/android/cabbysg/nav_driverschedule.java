@@ -64,14 +64,14 @@ public class nav_driverschedule extends Fragment {
     }
     private void getUserScheduledIds(){
         DatabaseReference userScheduleDatabase = FirebaseDatabase.getInstance().getReference().child("Drivers").child(userId).child("scheduledRides");
-        userScheduleDatabase.addValueEventListener(new ValueEventListener() {
+        userScheduleDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists()){
                     for(DataSnapshot scheduledRide : dataSnapshot.getChildren()){
                         scheduleID = scheduledRide.getKey();
-                        FetchScheduledInfo(scheduledRide.getKey());
                     }
+                    FetchScheduledInfo(scheduleID);
                 }
             }
             @Override
@@ -83,10 +83,10 @@ public class nav_driverschedule extends Fragment {
     private void FetchScheduledInfo(String rideKey){
         DatabaseReference scheduledRidesDatabase = FirebaseDatabase.getInstance().getReference().child("scheduledRides").child(rideKey);
         arrayOfSchedule.clear();
-        scheduledRidesDatabase.addValueEventListener(new ValueEventListener() {
+        scheduledRidesDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Long timestamp = 0L;
+                String timestamp = "";
                 if(dataSnapshot.exists()){
                     for(DataSnapshot child: dataSnapshot.getChildren()) {
                         if (child.getKey().equals("riderID")) {
@@ -106,10 +106,10 @@ public class nav_driverschedule extends Fragment {
                             fareStr = dataSnapshot.child("fare").getValue().toString();
                         }
                         if (child.getKey().equals("timestamp")) {
-                            timestamp = Long.valueOf(dataSnapshot.child("timestamp").getValue().toString());
+                            timestamp = dataSnapshot.child("timestamp").getValue().toString();
                         }
                     }
-                    driverschedule_details obj = new driverschedule_details(scheduleID,getDate(timestamp),getTime(timestamp), riderIdStr,destinationStr, startLocationStr,selectedRouteStr,fareStr);
+                    driverschedule_details obj = new driverschedule_details(scheduleID,timestamp, riderIdStr,destinationStr, startLocationStr,selectedRouteStr,fareStr);
                     arrayOfSchedule.add(obj);
                     adapter.notifyDataSetChanged();
                 }

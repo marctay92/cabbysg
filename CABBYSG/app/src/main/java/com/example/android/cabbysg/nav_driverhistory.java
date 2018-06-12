@@ -5,11 +5,14 @@ import android.os.Bundle;
 import android.renderscript.Sampler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.text.Layout;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -33,7 +36,7 @@ public class nav_driverhistory extends Fragment {
 
     public nav_driverhistory() {
     }
-
+    View lay1;
     FirebaseDatabase database;
     DatabaseReference reference;
     DatabaseReference driverRef;
@@ -47,6 +50,7 @@ public class nav_driverhistory extends Fragment {
     String stoday,spast,spast2;
     LinearLayout dHistoryList;
     RelativeLayout monthlyList;
+    ImageView back;
 
 
     @Override
@@ -68,6 +72,9 @@ public class nav_driverhistory extends Fragment {
         sumfare3= v.findViewById(R.id.thirdvalue);
         monthlyList = v.findViewById(R.id.monthlyHistory);
         dHistoryList = v.findViewById(R.id.detailedHistory);
+        back = v.findViewById(R.id.historyBack);
+
+        back.setVisibility(View.GONE);
 
         listView = v.findViewById(R.id.dList);
         adapter = new driverhistoryadapter (getActivity(),getDataSetHistory());
@@ -176,7 +183,8 @@ public class nav_driverhistory extends Fragment {
                 public void onClick(View v) {
                     monthlyList.setVisibility(View.INVISIBLE);
                     dHistoryList.setVisibility(View.VISIBLE);
-                    //arrayOfDetails.clear();
+                    back.setVisibility(View.VISIBLE);
+                    arrayOfDetails.clear();
                     int x=arrayOfDetails.size();
                     String y= Integer.toString(x);
                     Log.d("array number", y );
@@ -193,7 +201,8 @@ public class nav_driverhistory extends Fragment {
                 public void onClick(View v) {
                     monthlyList.setVisibility(View.INVISIBLE);
                     dHistoryList.setVisibility(View.VISIBLE);
-                    //arrayOfDetails.clear();
+                    back.setVisibility(View.VISIBLE);
+                    arrayOfDetails.clear();
                     getUserMonthlyHistoryIds(spast);
                 }
             });
@@ -204,11 +213,20 @@ public class nav_driverhistory extends Fragment {
                 public void onClick(View v) {
                     monthlyList.setVisibility(View.INVISIBLE);
                     dHistoryList.setVisibility(View.VISIBLE);
-                    //arrayOfDetails.clear();
+                    back.setVisibility(View.VISIBLE);
+                    arrayOfDetails.clear();
                     getUserMonthlyHistoryIds(spast2);
                 }
             });
         }
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                monthlyList.setVisibility(View.VISIBLE);
+                dHistoryList.setVisibility(View.INVISIBLE);
+                back.setVisibility(View.GONE);
+            }
+        });
         return v;
     }
     private void getUserMonthlyHistoryIds(String month){

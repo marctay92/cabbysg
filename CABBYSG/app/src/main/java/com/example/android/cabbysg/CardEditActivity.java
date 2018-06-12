@@ -289,8 +289,8 @@ public class CardEditActivity extends AppCompatActivity {
         //put database
         final Map newPost = new HashMap();
         //newPost.put("email",str_email);
-        if(!mCVV.equals("") && mCVV.length()==3 && mCardHolderName!="" && mCardNumber.length()==16 && !mExpiry.equals("")) {
-            if ((CreditCardUtils.selectCardType(mCardNumber).toString() == "VISA_CARD" || CreditCardUtils.selectCardType(mCardNumber).toString() == "MASTER_CARD")&& isNameValid(mCardHolderName)) {
+        if(mCVV!="" && mCardHolderName!="" && mExpiry!="" && mCardNumber!=""&& mCVV!=null&&mCardNumber!=null&&mCardHolderName!=null&&mExpiry!=null) {
+            if ((CreditCardUtils.selectCardType(mCardNumber).toString() == "VISA_CARD" || CreditCardUtils.selectCardType(mCardNumber).toString() == "MASTER_CARD")&& mCardNumber.length()==16 && mCVV.length()==3 && isNameValid(mCardHolderName)) {
                 newPost.put("cvv", mCVV);
                 newPost.put("cardHolderName", mCardHolderName);
                 newPost.put("expiry", mExpiry);
@@ -359,7 +359,7 @@ public class CardEditActivity extends AppCompatActivity {
                                 dialog.show();*/
                                 }
                             }
-                        } else {
+                        }else {
                             creditCard_db.child(mCardNumber).updateChildren(newPost);
                             rider_db.child(mCardNumber).setValue(true);
                             setResult(RESULT_OK, intent);

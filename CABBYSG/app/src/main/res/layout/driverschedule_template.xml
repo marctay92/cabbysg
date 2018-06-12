@@ -36,8 +36,9 @@
             android:id="@+id/star1"
             android:layout_width="13dp"
             android:layout_height="18dp"
-            android:layout_above="@+id/sgd1"
-            android:layout_toEndOf="@+id/ds_time"
+            android:layout_below="@+id/ds_name"
+            android:layout_toEndOf="@+id/ds_profile"
+            android:layout_marginLeft="10dp"
             android:src="@drawable/star" />
 
 
@@ -62,7 +63,7 @@
             android:textColor="#2C2C2C"
             android:textStyle="bold" />
 
-        <TextView
+        <!--<TextView
             android:id="@+id/ds_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -72,15 +73,15 @@
             android:paddingLeft="3dp"
             android:text="13:40"
             android:textColor="#2C2C2C"
-            android:textStyle="bold" />
+            android:textStyle="bold" />-->
 
         <TextView
             android:id="@+id/ds_name"
             android:layout_width="wrap_content"
             android:layout_height="17dp"
-            android:layout_alignStart="@+id/star1"
+            android:layout_marginLeft="10dp"
             android:layout_centerVertical="true"
-            android:layout_marginStart="0dp"
+            android:layout_toEndOf="@+id/ds_profile"
             android:text="John Tan"
             android:textColor="#2C2C2C" />
 
@@ -108,9 +109,8 @@
             android:id="@+id/ds_rating"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/ds_name"
             android:layout_alignTop="@+id/star1"
-            android:layout_toEndOf="@+id/star1"
-            android:layout_marginLeft="6dp"
             android:text="4.5  "
             android:textColor="#2C2C2C" />
 
@@ -203,7 +203,7 @@
 
         <TextView
             android:id="@+id/ds_location"
-            android:layout_width="wrap_content"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:layout_toEndOf="@+id/noteicon"
@@ -213,7 +213,7 @@
 
         <TextView
             android:id="@+id/ds_destination"
-            android:layout_width="wrap_content"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_toEndOf="@+id/noteicon"
