@@ -481,20 +481,21 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
     }
     DatabaseReference historyRef;
     ValueEventListener historyRefListener;
+    long count = 0;
     private void init() {
         Log.d(TAG,"init: Initialing!");
 
-        DatabaseReference initialRef = FirebaseDatabase.getInstance().getReference().child("Drivers").child(userID);
+        DatabaseReference initialRef = FirebaseDatabase.getInstance().getReference().child("Drivers").child(userID).child("History");
         initialRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists()){
-                    long count = 0;
                     for (DataSnapshot snap: dataSnapshot.getChildren()){
+                        Log.d(TAG,"No of Trips: "+count);
                         long child = snap.getChildrenCount();
                         count = count + child;
+                        mNoOfTrips.setText(Long.toString(count));
                     }
-                    mNoOfTrips.setText(Long.toString(count));
                     Double douRating = Double.parseDouble(dataSnapshot.child("rating").getValue().toString());
                     DecimalFormat df = new DecimalFormat("#.00");
                     String ratingFormatted = df.format(douRating);
@@ -606,14 +607,28 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
         mTextDriver.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String smsNumber = String.format("smsto: %s", phoneNo);
-                Intent dialIntent = new Intent(Intent.ACTION_SENDTO);
-                dialIntent.setData(Uri.parse(smsNumber));
-                if (dialIntent.resolveActivity(getActivity().getPackageManager()) != null) {
-                    startActivity(dialIntent);
-                } else {
-                    Log.e(TAG, "Can't resolve app for ACTION_SENDTO Intent.");
-                }
+                DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Rider").child(customerId).child("mobileNum");
+                ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.exists()){
+                            phoneNo = dataSnapshot.getValue().toString();
+                            String smsNumber = String.format("smsto: %s", phoneNo);
+                            Intent dialIntent = new Intent(Intent.ACTION_SENDTO);
+                            dialIntent.setData(Uri.parse(smsNumber));
+                            if (dialIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+                                startActivity(dialIntent);
+                            } else {
+                                Log.e(TAG, "Can't resolve app for ACTION_SENDTO Intent.");
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
             }
         });
 

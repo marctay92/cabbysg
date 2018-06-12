@@ -674,14 +674,28 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
         mTextDriver.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String smsNumber = String.format("smsto: %s", phoneNo);
-                Intent smsIntent = new Intent(Intent.ACTION_SENDTO);
-                smsIntent.setData(Uri.parse(smsNumber));
-                if (smsIntent.resolveActivity(getActivity().getPackageManager()) != null) {
-                    startActivity(smsIntent);
-                } else {
-                    Log.e(TAG, "Can't resolve app for ACTION_SENDTO Intent.");
-                }
+                DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Rider").child(driverFoundID).child("mobileNum");
+                ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.exists()){
+                            phoneNo = dataSnapshot.getValue().toString();
+                            String smsNumber = String.format("smsto: %s", phoneNo);
+                            Intent dialIntent = new Intent(Intent.ACTION_SENDTO);
+                            dialIntent.setData(Uri.parse(smsNumber));
+                            if (dialIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+                                startActivity(dialIntent);
+                            } else {
+                                Log.e(TAG, "Can't resolve app for ACTION_SENDTO Intent.");
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
             }
         });
         mConfirmReceipt.setOnClickListener(new View.OnClickListener() {
@@ -1021,7 +1035,7 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
     ValueEventListener getHasTripStartedListener;
 
     private void getHasTripStarted() {
-        Toasty.success(getActivity(),"Your driver has arrived!", Toast.LENGTH_LONG, true).show();
+        //Toasty.success(getActivity(),"Your driver has arrived!", Toast.LENGTH_LONG, true).show();
         Log.d(TAG,"Getting ongoingtrip variable!");
         getArrivalRef.removeEventListener(getArrivalRefListener);
         getHasTripStartedRef = FirebaseDatabase.getInstance().getReference().child("customerRequest").child(userID).child("Details").child("ongoingTrip");
