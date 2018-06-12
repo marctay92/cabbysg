@@ -142,7 +142,7 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
 
     //vars
     private Button mConfirmReceipt, mSubmitRating;
-    private Boolean mLocationPermissionsGranted = false, customerEnd = false;
+    private Boolean mLocationPermissionsGranted = false, customerEnd = false, scheduledRide = false;
     private GoogleMap mMap;
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private PlaceAutocompleteAdapter mPlaceAutocompleteAdapter, mPlaceAutocompleteAdapter1;
@@ -615,6 +615,7 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
                     newRequest.put("timestamp","now");
                 } else {
                     newRequest.put("timestamp", mBookingTime.getText().toString());
+                    scheduledRide = true;
                 }
                 newRequest.put("fare",fare);
                 newRequest.put("driverFound", "false");
@@ -623,8 +624,8 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
                 newRequest.put("destinationLng", desLatLng.longitude);
                 newRequest.put("paymentMethod", mPaymentMethod.getSelectedItem().toString());
                 newRequest.put("fareType", mFareType.getSelectedItem().toString());
-                reqRef.setValue(newRequest);
 
+                reqRef.setValue(newRequest);
                 getClosestDriver();
 
             }
@@ -745,10 +746,15 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
 
     private void endTrip() {
         Log.d(TAG,"customerEnd: "+customerEnd);
+        getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
         onTrip = false;
         requestBol = false;
         geoQuery.removeAllListeners();
-        driverLocationRef.removeEventListener(driverLocationRefListener);
+
+        if (driverLocationRefListener!=null){
+            driverLocationRef.removeEventListener(driverLocationRefListener);
+
+        }
         if (customerEnd){
             DatabaseReference ref = FirebaseDatabase.getInstance().getReference("customerRequest");
             ref.child(userID).removeValue();
@@ -786,10 +792,15 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
         if(!mGps.isInLayout()){
             mGps.setVisibility(View.VISIBLE);
         }
+        if (mProgressBar.isInLayout()){
+            mProgressBar.setVisibility(View.GONE);
+        }
 
         if(!getDriversAroundStarted) {
             getDriversAround(locLatLng.latitude, locLatLng.longitude);
         }
+        customerEnd = false;
+        scheduledRide = false;
         mDestination.setText("");
         mDisTextView.setText("");
         mDuraTextView.setText("");
@@ -853,6 +864,9 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
                                                     System.out.println("Final radius is " + radius);
                                                     getDriverLocation();
                                                 }
+                                            } else if(scheduledRide){
+                                                endTrip();
+
                                             }
                                         }
                                         @Override
@@ -885,7 +899,7 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
                     System.out.println("Radius is " + radius);
                     radius = radius+0.5;
                     getClosestDriver();
-                    } else {
+                    } else if(!scheduledRide){
 
                     //display request info
                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(),AlertDialog.THEME_HOLO_LIGHT);
@@ -1892,11 +1906,12 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
 
         public void onDateSet(DatePicker view, int year, int month, int day) {
             // Do something with the date chosen by the user
-            String monthString = String.valueOf(month);
+             int newMonth = month + 1;
+            String monthString = String.valueOf(newMonth);
             if (monthString.length() == 1) {
                 monthString = "0" + monthString;
             }
-            mBookingTime.setText(day + "-" + (monthString + 1));
+            mBookingTime.setText(day + "-" + (monthString));
         }
     }
 }
