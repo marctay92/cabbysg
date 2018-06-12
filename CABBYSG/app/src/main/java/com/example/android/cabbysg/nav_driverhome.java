@@ -208,7 +208,8 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
 
         arrayAdapter = new arrayAdapter(getActivity(), R.layout.items, rowItems);
         flingContainer = (SwipeFlingAdapterView) v.findViewById(R.id.frame);
-
+        flingContainer.setAdapter(arrayAdapter);
+        flingContainer.bringToFront();
         flingContainer.setFlingListener(new SwipeFlingAdapterView.onFlingListener() {
             @Override
             public void removeFirstObjectInAdapter() {
@@ -220,20 +221,25 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
 
             @Override
             public void onLeftCardExit(Object dataObject) {
-                rowItems.clear();
                 assignedCustomerRef.removeValue();
                 driverAccepted=false;
             }
 
             @Override
             public void onRightCardExit(Object dataObject) {
+                Log.d(TAG,"scheduled ride: "+scheduledRide);
                 if (!scheduledRide) {
                     reqRef.child("driverFound").setValue("true");
                     driverAccepted = true;
-                    Toast.makeText(getActivity(), "Rider Found!", Toast.LENGTH_SHORT).show();
+                    if(getActivity()!= null) {
+                        Toast.makeText(getActivity(), "Rider Found!", Toast.LENGTH_SHORT).show();
+                    }
                     getAssignedCustomerPickupLocation();
                     changeDriverStatus();
-                    Toasty.success(getActivity(), "You've accepted the ride! Routing to your rider now..", Toast.LENGTH_SHORT, true).show();
+
+                    if(getActivity()!= null){
+                        Toasty.success(getActivity(), "You've accepted the ride! Routing to your rider now..", Toast.LENGTH_SHORT, true).show();
+                    }
                 }else{
                     //do scheduled ride
                     DatabaseReference scheduledRideRef = FirebaseDatabase.getInstance().getReference().child("scheduledRides");
@@ -265,8 +271,6 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
                     riderScheduledRef.child("scheduledRides").child(scheduledRideID).setValue(true);
                     driverScheduledRef.child("scheduledRides").child(scheduledRideID).setValue(true);
                     endTrip();
-
-
                 }
             }
 
@@ -499,7 +503,10 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        Toast.makeText(getActivity(), "Map is ready!", Toast.LENGTH_SHORT).show();
+        Log.d(TAG,"MAP IS READY");
+        if(getActivity()!= null){
+            Toast.makeText(getActivity(), "Map is ready!", Toast.LENGTH_SHORT).show();
+        }
         mMap = googleMap;
         if (mLocationPermissionsGranted) {
 
@@ -515,54 +522,9 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
     }
     DatabaseReference historyRef;
     ValueEventListener historyRefListener;
-    long count = 0;
+
     private void init() {
         Log.d(TAG,"init: Initialing!");
-
-        DatabaseReference initialRef = FirebaseDatabase.getInstance().getReference().child("Drivers").child(userID);
-        initialRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    Double douRating = Double.parseDouble(dataSnapshot.child("rating").getValue().toString());
-                    DecimalFormat df = new DecimalFormat("#.00");
-                    String ratingFormatted = df.format(douRating);
-                    mRating.setText(ratingFormatted);
-                    if (dataSnapshot.child("cancellation").getValue().toString() != null) {
-                        Double cancellationNum = Double.parseDouble(dataSnapshot.child("cancellation").getValue().toString());
-                        Double cancellationRate = (cancellationNum / (cancellationNum + count)) * 100;
-                        String cancellationRateFormatted = df.format(cancellationRate);
-                        mCancellation.setText(cancellationRateFormatted + "%");
-                    } else {
-                        mCancellation.setText("0%");
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-        DatabaseReference noOfTripsRef = FirebaseDatabase.getInstance().getReference().child("Drivers").child(userID).child("History");
-        noOfTripsRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists()){
-                    for (DataSnapshot ds : dataSnapshot.getChildren()){
-                        Long snap = ds.getChildrenCount();
-                        count = count + snap;
-                        mNoOfTrips.setText(Long.toString(count));
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
 
         location_switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -570,11 +532,16 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
                 if (isChecked){
                     startLocationUpdates();
                     displayLocation();
-                    Toast.makeText(getActivity(), "You are online!", Toast.LENGTH_SHORT).show();
+                    if(getActivity()!=null){
+                        Toast.makeText(getActivity(), "You are online!", Toast.LENGTH_SHORT).show();
+                    }
                 } else{
                     stopLocationUpdates();
                     mCurrent.remove();
-                    Toast.makeText(getActivity(), "You are offline!", Toast.LENGTH_SHORT).show();
+                    if(getActivity()!=null){
+                        Toast.makeText(getActivity(), "You are offline!", Toast.LENGTH_SHORT).show();
+
+                    }
                 }
             }
         });
@@ -594,11 +561,14 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
                  if (distance<5000){
                      DatabaseReference arrivalRef = FirebaseDatabase.getInstance().getReference().child("customerRequest").child(customerId).child("Details").child("ongoingTrip");
                      arrivalRef.setValue("true");
-                     Toast toast = Toast.makeText(getActivity(),"Informing your Rider!", Toast.LENGTH_LONG);
-                     toast.setGravity(Gravity.CENTER, 0, 0);
-                     toast.show();
-                 } else{
-                     Toast.makeText(getActivity(), "You are too far from the pick up location! Please drive nearer in order to indicate arrival.", Toast.LENGTH_SHORT).show();
+                     if (getActivity()!=null){
+                         Toast toast = Toast.makeText(getActivity(),"Informing your Rider!", Toast.LENGTH_LONG);
+                         toast.setGravity(Gravity.CENTER, 0, 0);
+                         toast.show();
+                     }
+                 } else if(getActivity()!= null) {
+                         Toast.makeText(getActivity(), "You are too far from the pick up location! Please drive nearer in order to indicate arrival.", Toast.LENGTH_SHORT).show();
+
                  }
             }
         });
@@ -606,7 +576,9 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
             @Override
             public void onClick(View v) {
                 onTrip = true;
-                Toasty.success(getActivity(),"Trip has begun!",Toast.LENGTH_LONG, true).show();
+                if(getActivity()!= null) {
+                    //Toasty.success(getActivity(), "Trip has begun!", Toast.LENGTH_LONG, true).show();
+                }
                 DatabaseReference setOngoingTripRef = FirebaseDatabase.getInstance().getReference().child("customerRequest").child(customerId).child("Details").child("ongoingTrip");
                 setOngoingTripRef.setValue("started");
                 mLinearLayout2.setVisibility(View.INVISIBLE);
@@ -746,6 +718,58 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
                 });
             }
         });
+        DatabaseReference noOfTripsRef = FirebaseDatabase.getInstance().getReference().child("Drivers").child(userID).child("History");
+        noOfTripsRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    long noOfTrips = 0;
+                    for (DataSnapshot ds : dataSnapshot.getChildren()){
+                        Long snap = ds.getChildrenCount();
+                        noOfTrips = noOfTrips + snap;
+                        mNoOfTrips.setText(Long.toString(noOfTrips));
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        DatabaseReference initialRef = FirebaseDatabase.getInstance().getReference().child("Drivers").child(userID);
+        initialRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    long count = 0;
+                    Double douRating = Double.parseDouble(dataSnapshot.child("rating").getValue().toString());
+                    DecimalFormat df = new DecimalFormat("#.00");
+                    String ratingFormatted = df.format(douRating);
+                    mRating.setText(ratingFormatted);
+                    if (dataSnapshot.child("cancellation").getValue().toString() != null) {
+                        for (DataSnapshot ds : dataSnapshot.child("History").getChildren()){
+                            Long snap = ds.getChildrenCount();
+                            count = count + snap;
+                        }
+                        Double cancellationNum = Double.parseDouble(dataSnapshot.child("cancellation").getValue().toString());
+                        Double cancellationRate = (cancellationNum / (cancellationNum + count)) * 100;
+                        String cancellationRateFormatted = df.format(cancellationRate);
+                        Log.d(TAG,"No of Trips: "+count+" cancelled number: "+cancellationNum+" final rate: "+cancellationRateFormatted);
+                        mCancellation.setText(cancellationRateFormatted + "%");
+                    } else {
+                        mCancellation.setText("0%");
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
         getAssignedCustomer();
     }
 
@@ -794,7 +818,7 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
                                    fare = dataSnapshot.child("fare").getValue().toString();
                                    selectedRoute = dataSnapshot.child("selectedRoute").getValue().toString();
                                    fareType = dataSnapshot.child("fareType").getValue().toString();
-                                   if(dataSnapshot.child("timestamp").getValue().toString().equals("")){
+                                   if(dataSnapshot.child("timestamp").getValue().toString().equals("now")){
                                        timeOfReq = "Now";
                                    } else {
                                        timeOfReq = dataSnapshot.child("timestamp").getValue().toString();
@@ -804,67 +828,14 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
                                    Double destinationLng = Double.parseDouble(dataSnapshot.child("destinationLng").getValue().toString());
                                    destinationLatLng = new LatLng(destinationLat,destinationLng);
 
-                                   //display request info
-                                   /* AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(),AlertDialog.THEME_HOLO_LIGHT);
-
-                                   TextView title = new TextView(getActivity());
-                                   title.setText("Request Found!");
-                                   title.setPadding(10, 10, 10, 10);   // Set Position
-                                   title.setGravity(Gravity.CENTER);
-                                   title.setTextColor(Color.BLACK);
-                                   title.setTextSize(20);
-                                   builder.setCustomTitle(title);
-
-                                   TextView msg = new TextView(getActivity());
-
-                                   msg.setText("Location: " + location + "\n" +
-                                           "Destination: " + destination + "\n" +
-                                           "Fare: " + fare + "\n" +
-                                           "Selected Route: " + selectedRoute);
-                                   msg.setGravity(Gravity.CENTER_HORIZONTAL);
-                                   msg.setTextColor(Color.BLACK);
-                                   builder.setView(msg);
-
-                                   // Set Button
-                                   // you can more buttons
-                                   builder.setPositiveButton("ACCEPT", new DialogInterface.OnClickListener() {
-                                       public void onClick(DialogInterface dialog, int which) {
-                                           reqRef.child("driverFound").setValue("true");
-                                           driverAccepted=true;
-                                           Toast.makeText(getActivity(), "Rider Found!", Toast.LENGTH_SHORT).show();
-                                           getAssignedCustomerPickupLocation();
-                                           changeDriverStatus();
-                                       }
-                                   });
-
-                                   builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
-                                       public void onClick(DialogInterface dialog, int which) {
-                                           // Perform Action on Button
-                                           assignedCustomerRef.removeValue();
-                                           driverAccepted=false;
-
-                                       }
-                                   });
-
-                                   AlertDialog mAlertDialog = builder.create();
-                                   if (!mAlertDialog.isShowing()&&!driverAccepted){
-                                       Log.d(TAG,"Driver Accepted "+driverAccepted);
-                                       mAlertDialog.show();
-                                   } else if(driverAccepted){
-                                        mAlertDialog.dismiss();
-                                   }*/
-                                   flingContainer.bringToFront();
                                    cards item = new cards(location, destination, fare, selectedRoute, fareType, timeOfReq);
                                    if (rowItems.size()==0){
                                        rowItems.add(item);
+                                       arrayAdapter.notifyDataSetChanged();
                                    }
                                    Log.d(TAG,"Row item size: "+ rowItems.size());
-                                   flingContainer.setAdapter(arrayAdapter);
-                                   arrayAdapter.notifyDataSetChanged();
 
                                }
-                           } else{
-                               endTrip();
                            }
                        }
 
@@ -1179,6 +1150,7 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
 
     }
     private void endTrip() {
+        Log.d(TAG,"END TRIP TRIGGERED DAMMIT");
         //String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         onTrip = false;
         driverAccepted = false;
