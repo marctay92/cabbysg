@@ -7,8 +7,10 @@
     tools:context=".nav_driverhistory">
 
     <RelativeLayout
+        android:id="@+id/monthlyHistory"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:visibility="visible">
 
         <TextView
             android:layout_width="wrap_content"
@@ -105,7 +107,9 @@
             android:layout_height="40dp"
             android:layout_alignStart="@+id/month"
             android:layout_below="@+id/month"
-            android:textColor="#FFEE7C" />
+            android:textColor="#FFEE7C"
+            android:textSize="14sp"
+            android:textAlignment="center"/>
 
         <TextView
             android:id="@+id/lastmonth"
@@ -113,7 +117,9 @@
             android:layout_height="40dp"
             android:layout_alignStart="@+id/month"
             android:layout_below="@+id/thismonth"
-            android:textColor="#FFEE7C" />
+            android:textColor="#FFEE7C"
+            android:textSize="14sp"
+            android:textAlignment="center"/>
 
         <TextView
             android:id="@+id/monthbefore"
@@ -121,7 +127,9 @@
             android:layout_height="40dp"
             android:layout_alignStart="@+id/month"
             android:layout_below="@+id/lastmonth"
-            android:textColor="#FFEE7C" />
+            android:textColor="#FFEE7C"
+            android:textSize="14sp"
+            android:textAlignment="center"/>
 
         <TextView
             android:id="@+id/firstvalue"
@@ -129,7 +137,9 @@
             android:layout_height="40dp"
             android:layout_alignEnd="@+id/history2BlackBox"
             android:layout_below="@+id/month"
-            android:textColor="#FFEE7C" />
+            android:textSize="14sp"
+            android:textColor="#FFEE7C"
+            android:textAlignment="center"/>
 
         <TextView
             android:id="@+id/secondvalue"
@@ -137,7 +147,9 @@
             android:layout_height="40dp"
             android:layout_alignEnd="@+id/history2BlackBox"
             android:layout_below="@+id/thismonth"
-            android:textColor="#FFEE7C" />
+            android:textSize="14sp"
+            android:textColor="#FFEE7C"
+            android:textAlignment="center"/>
 
         <TextView
             android:id="@+id/thirdvalue"
@@ -145,8 +157,57 @@
             android:layout_height="40dp"
             android:layout_alignBottom="@+id/history2BlackBox"
             android:layout_alignEnd="@+id/history2BlackBox"
-            android:textColor="#FFEE7C" />
+            android:textSize="14sp"
+            android:textColor="#FFEE7C"
+            android:textAlignment="center"/>
 
     </RelativeLayout>
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/detailedHistory"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorBackground"
+        android:visibility="invisible">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:paddingLeft="14dp"
+            android:paddingRight="14dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="52dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="62dp"
+                android:layout_weight="0"
+                android:gravity="center"
+                android:text="HISTORY"
+                android:textColor="#2C2C2C"
+                android:textSize="30sp"
+                android:textStyle="bold" />
+
+            <RelativeLayout
+                android:id="@+id/relLayout1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="30dp">
+
+
+                <ListView
+                    android:id="@+id/dList"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0" />
+
+            </RelativeLayout>
+
+
+        </LinearLayout>
+
+    </LinearLayout>
 
 </FrameLayout>
