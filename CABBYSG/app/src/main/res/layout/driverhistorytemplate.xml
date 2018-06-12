@@ -17,22 +17,24 @@
             android:layout_gravity="center_horizontal"
             android:src="@drawable/black_rectangle_box" />
 
-        <ImageView
+        <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/history2Profile"
             android:layout_width="70dp"
             android:layout_height="79dp"
             android:layout_alignParentStart="true"
             android:layout_alignTop="@+id/history2Name"
             android:layout_marginStart="20dp"
-            android:src="@drawable/yellowprofile" />
+            android:src="@drawable/yellowprofile"
+            app:civ_border_color="#FF000000"
+            app:civ_border_width="2dp" />
 
-        <ImageView
-            android:id="@+id/star1"
-            android:layout_width="13dp"
-            android:layout_height="18dp"
-            android:layout_alignEnd="@+id/history2CarPlate"
-            android:layout_alignTop="@+id/history2Rating"
-            android:src="@drawable/yellowstar" />
+    <ImageView
+        android:id="@+id/star1"
+        android:layout_width="13dp"
+        android:layout_height="18dp"
+        android:layout_alignBottom="@+id/history2Rating"
+        android:layout_alignEnd="@+id/history2Name"
+        android:src="@drawable/yellowstar" />
 
         <TextView
             android:id="@+id/history2Date"

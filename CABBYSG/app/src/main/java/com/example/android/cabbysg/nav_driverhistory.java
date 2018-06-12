@@ -1,24 +1,20 @@
 package com.example.android.cabbysg;
 
-
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.renderscript.Sampler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.components.YAxis;
-import com.github.mikephil.charting.data.BarData;
-import com.github.mikephil.charting.data.BarDataSet;
-import com.github.mikephil.charting.data.BarEntry;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -27,15 +23,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.lang.reflect.Array;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
 import java.util.Locale;
-import java.util.Random;
 
 public class nav_driverhistory extends Fragment {
 
@@ -49,7 +40,14 @@ public class nav_driverhistory extends Fragment {
     ValueEventListener driverRef2Listener, driverRef3Listener;
     FirebaseUser user;
     String userID,thisMonth;
+    String startLocationStr,riderIdStr,destinationStr,selectedRouteStr,fareStr, historyID;
+    ListView listView;
+    ArrayList<driverhistoryitem>arrayOfDetails=new ArrayList<>();
+    driverhistoryadapter adapter;
     TextView month1, month2, month3, sumfare1, sumfare2, sumfare3;
+    String stoday,spast,spast2;
+    LinearLayout dHistoryList;
+    RelativeLayout monthlyList;
 
 
     @Override
@@ -63,17 +61,23 @@ public class nav_driverhistory extends Fragment {
         reference=database.getReference("History");
         user = FirebaseAuth.getInstance().getCurrentUser();
         userID = user.getUid();
-        month1=(TextView)v.findViewById(R.id.thismonth);
-        month2=(TextView)v.findViewById(R.id.lastmonth);
-        month3=(TextView)v.findViewById(R.id.monthbefore);
-        sumfare1=(TextView)v.findViewById(R.id.firstvalue);
-        sumfare2=(TextView)v.findViewById(R.id.secondvalue);
-        sumfare3=(TextView)v.findViewById(R.id.thirdvalue);
+        month1= v.findViewById(R.id.thismonth);
+        month2= v.findViewById(R.id.lastmonth);
+        month3= v.findViewById(R.id.monthbefore);
+        sumfare1= v.findViewById(R.id.firstvalue);
+        sumfare2= v.findViewById(R.id.secondvalue);
+        sumfare3= v.findViewById(R.id.thirdvalue);
+        monthlyList = v.findViewById(R.id.monthlyHistory);
+        dHistoryList = v.findViewById(R.id.detailedHistory);
+
+        listView = v.findViewById(R.id.dList);
+        adapter = new driverhistoryadapter (getActivity(),getDataSetHistory());
+        listView.setAdapter(adapter);
 
 
         Calendar cal=Calendar.getInstance();
         String today=new SimpleDateFormat("MMM").format(cal.getTime());
-        String stoday=new SimpleDateFormat("MM").format(cal.getTime());
+        stoday =new SimpleDateFormat("MM").format(cal.getTime());
         int x=Integer.parseInt(stoday);
         x--;
         stoday=Integer.toString(x);
@@ -81,7 +85,7 @@ public class nav_driverhistory extends Fragment {
 
         cal.add(Calendar.MONTH,-1);
         String past=new SimpleDateFormat("MMM").format(cal.getTime());
-        String spast=new SimpleDateFormat("MM").format(cal.getTime());
+        spast=new SimpleDateFormat("MM").format(cal.getTime());
         int y=Integer.parseInt(spast);
         y--;
         spast=Integer.toString(y);
@@ -89,13 +93,13 @@ public class nav_driverhistory extends Fragment {
 
         cal.add(Calendar.MONTH,-1);
         String past2=new SimpleDateFormat("MMM").format(cal.getTime());
-        String spast2=new SimpleDateFormat("MM").format(cal.getTime());
+        spast2=new SimpleDateFormat("MM").format(cal.getTime());
         int z=Integer.parseInt(spast2);
         z--;
         spast2=Integer.toString(z);
         month3.setText(past2);
 
-        driverRef = FirebaseDatabase.getInstance().getReference().child("Drivers").child("S7qswgzCNadNN7z3vn8FfKutdTB3").child("History").child(spast2);
+        driverRef = FirebaseDatabase.getInstance().getReference().child("Drivers").child(userID).child("History").child(spast2);
         driverRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -120,7 +124,7 @@ public class nav_driverhistory extends Fragment {
         });
 
 
-        driverRef = FirebaseDatabase.getInstance().getReference().child("Drivers").child("S7qswgzCNadNN7z3vn8FfKutdTB3").child("History").child(spast);
+        driverRef = FirebaseDatabase.getInstance().getReference().child("Drivers").child(userID).child("History").child(spast);
         driverRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -144,7 +148,7 @@ public class nav_driverhistory extends Fragment {
             }
         });
 
-        driverRef = FirebaseDatabase.getInstance().getReference().child("Drivers").child("S7qswgzCNadNN7z3vn8FfKutdTB3").child("History").child(stoday);
+        driverRef = FirebaseDatabase.getInstance().getReference().child("Drivers").child(userID).child("History").child(stoday);
         driverRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -167,6 +171,128 @@ public class nav_driverhistory extends Fragment {
 
             }
         });
+        if(!sumfare1.getText().equals("Nothing")) {
+            month1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    monthlyList.setVisibility(View.INVISIBLE);
+                    dHistoryList.setVisibility(View.VISIBLE);
+                    //arrayOfDetails.clear();
+                    int x=arrayOfDetails.size();
+                    String y= Integer.toString(x);
+                    Log.d("array number", y );
+                    /*listView = v.findViewById(R.id.dList);
+                    adapter = new driverhistoryadapter (getActivity(),getDataSetHistory());
+                    listView.setAdapter(adapter);*/
+                    getUserMonthlyHistoryIds(stoday);
+                }
+            });
+        }
+        if(!sumfare2.getText().equals("Nothing")) {
+            month2.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    monthlyList.setVisibility(View.INVISIBLE);
+                    dHistoryList.setVisibility(View.VISIBLE);
+                    //arrayOfDetails.clear();
+                    getUserMonthlyHistoryIds(spast);
+                }
+            });
+        }
+        if(!sumfare3.getText().equals("Nothing")) {
+            month3.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    monthlyList.setVisibility(View.INVISIBLE);
+                    dHistoryList.setVisibility(View.VISIBLE);
+                    //arrayOfDetails.clear();
+                    getUserMonthlyHistoryIds(spast2);
+                }
+            });
+        }
         return v;
+    }
+    private void getUserMonthlyHistoryIds(String month){
+        DatabaseReference userHistory_db = FirebaseDatabase.getInstance().getReference().child("Drivers").child(user.getUid()).child("History").child(month);
+        userHistory_db.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    for(DataSnapshot history : dataSnapshot.getChildren()){
+                        historyID = history.getKey();
+                        FetchHistoryInfo(historyID);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void FetchHistoryInfo(String rideKey){
+        DatabaseReference historyDatabase = FirebaseDatabase.getInstance().getReference().child("History").child(rideKey);
+        arrayOfDetails.clear();
+        historyDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    Long timestamp = 0L;
+                    for(DataSnapshot child: dataSnapshot.getChildren()){
+                        if(child.getKey().equals("riderID")) {
+                            riderIdStr = child.getValue().toString();
+                        }
+                        if(child.getKey().equals("startLocation")){
+                            startLocationStr = child.getValue().toString();
+                        }
+                        if(child.getKey().equals("destination")){
+                            destinationStr = child.getValue().toString();
+                        }
+
+                        if(child.getKey().equals("selectedRoute")){
+                            selectedRouteStr = child.getValue().toString();
+                        }
+
+                        if(child.getKey().equals("fare")){
+                            fareStr = child.getValue().toString();
+                        }
+
+                        if(child.getKey().equals("timestamp")){
+                            timestamp = Long.valueOf(child.getValue().toString());
+                        }
+
+                    }
+                    driverhistoryitem obj = new driverhistoryitem(historyID,riderIdStr,startLocationStr,destinationStr,getDate(timestamp),getTime(timestamp),selectedRouteStr,fareStr);
+                    arrayOfDetails.add(obj);
+                    adapter.notifyDataSetChanged();
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
+    private ArrayList<driverhistoryitem> getDataSetHistory(){
+        return arrayOfDetails;
+    }
+
+    private String getDate(Long timestamp){
+        Calendar cal = Calendar.getInstance(Locale.getDefault());
+        cal.setTimeInMillis(timestamp*1000);
+        String date = DateFormat.format("dd-MM-yyyy",cal).toString();
+        return date;
+    }
+    private String getTime(Long timestamp){
+        Calendar cal = Calendar.getInstance(Locale.getDefault());
+        cal.setTimeInMillis(timestamp*1000);
+        String time = DateFormat.format("hh:mm",cal).toString();
+        return time;
     }
 }

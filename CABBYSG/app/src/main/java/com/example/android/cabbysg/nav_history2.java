@@ -44,13 +44,13 @@ public class nav_history2 extends Fragment {
         View rootView=inflater.inflate(R.layout.fragment_nav_history2, container, false);
 
         //driverProfilePic=(ImageView)rootView.findViewById(R.id.history2Profile);
-        listView = rootView.findViewById(R.id.dList);
+        /*listView = rootView.findViewById(R.id.dList);
 
         driverhistoryadapter adapter = new driverhistoryadapter (getActivity(),arrayOfDetails);
         listView.setAdapter(adapter);
 
         driverhistoryitem newdhistory = new driverhistoryitem("1234","Driver1","Joshua","Kwek","NLB","SIM","09 June 2018","12:29","Shortest","10.00","5");
-        adapter.add(newdhistory);
+        adapter.add(newdhistory);*/
         return rootView;
     }
 }
