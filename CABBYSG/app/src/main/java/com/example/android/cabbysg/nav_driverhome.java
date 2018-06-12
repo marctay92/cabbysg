@@ -124,7 +124,7 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
     private Marker mCurrent;
     private String customerId = "";
     private String riderPhotoUrl = "";
-    private Boolean onTrip = false, routingToCustomer = false;
+    private Boolean onTrip = false;
     private String destination, location, fare, selectedRoute, phoneNo, fareType, dateTime, endTripDateTime;
     private String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
     private Switch location_switch;
@@ -510,8 +510,8 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
     }
     DatabaseReference historyRef;
     ValueEventListener historyRefListener;
-    double count = 0.0;
-    double noOfTrip = 0.0;
+
+
     private void init() {
         Log.d(TAG,"init: Initialing!");
 
@@ -520,6 +520,7 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists()){
+                    double count = 0.0;
                     Double douRating = Double.parseDouble(dataSnapshot.child("rating").getValue().toString());
                     DecimalFormat df = new DecimalFormat("#.00");
                     String ratingFormatted = df.format(douRating);
@@ -543,6 +544,7 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
              @Override
              public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                  if(dataSnapshot.exists()){
+                     double noOfTrip = 0.0;
                      for (DataSnapshot snap: dataSnapshot.child("History").getChildren()){
                          long child = snap.getChildrenCount();
                          noOfTrip = noOfTrip+ child;
@@ -827,8 +829,7 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
                                    fareType = dataSnapshot.child("fareType").getValue().toString();
 
                                    if (dataSnapshot.child("timestamp").getValue().toString().equals("now")) {
-                                       if (dataSnapshot.child("timestamp").getValue().toString().equals("")) {
-                                           dateTime = "Now";
+                                       dateTime = "Now";
                                        } else {
                                            dateTime = dataSnapshot.child("timestamp").getValue().toString();
                                            scheduledRide = true;
@@ -847,7 +848,6 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
                                    }
                                }
                            }
-                       }
 
 
                        @Override
@@ -1164,7 +1164,7 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
         //String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         onTrip = false;
         driverAccepted = false;
-
+        scheduledRide = false;
         if (customerId!= null){
             DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Drivers").child(userID);
             driverRef.child("customerRiderId").removeValue();

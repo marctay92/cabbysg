@@ -152,7 +152,6 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
 
     private LatLng driverLatLng;
     private Boolean requestBol = false;
-    private int mLastSpinnerPosition = 0;
     private final ArrayList<String> paymentMethods = new ArrayList<String>();
 
     private Boolean routeSpinnerTouched = false, fareSpinnerTouched = false, onTrip = false;
@@ -813,8 +812,11 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
         Log.d(TAG,"customerEnd: "+customerEnd + " hasriderrated "+hasRiderRated);
         getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
 
-        onTrip = false;
+            onTrip = false;
             requestBol = false;
+
+
+
             geoQuery.removeAllListeners();
 
             if (driverLocationRefListener!=null){
@@ -825,7 +827,6 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
                 DatabaseReference ref = FirebaseDatabase.getInstance().getReference("customerRequest");
                 ref.child(userID).removeValue();
             } else if(driverFoundID != null) {
-
                 Log.d(TAG, "Check driverFoundID != null");
                 DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Drivers").child(driverFoundID);
                 driverFoundID = null;
@@ -867,6 +868,7 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
                 getDriversAround(locLatLng.latitude, locLatLng.longitude);
             }
             customerEnd = false;
+            hasRiderRated = false;
             scheduledRide = false;
             mDestination.setText("");
             mDisTextView.setText("");
@@ -982,6 +984,7 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
 
                     msg.setText("Sorry, we couldn't find you a cabby right now!");
                     msg.setGravity(Gravity.CENTER);
+                    msg.setPadding(5,20,5,20);
                     msg.setTextColor(Color.BLACK);
                     builder.setView(msg);
 
