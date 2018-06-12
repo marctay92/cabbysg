@@ -66,10 +66,7 @@ import com.lorentzos.flingswipe.SwipeFlingAdapterView;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.sql.Timestamp;
 import java.text.DecimalFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Calendar;
@@ -125,7 +122,7 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
     private String customerId = "";
     private String riderPhotoUrl = "";
     private Boolean onTrip = false, routingToCustomer = false;
-    private String destination, location, fare, selectedRoute, phoneNo, fareType, timeOfReq = "", endTripDateTime;
+    private String destination, location, fare, selectedRoute, phoneNo, fareType, dateTime, endTripDateTime;
     private String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
     private Switch location_switch;
     private float riderRating;
@@ -242,6 +239,7 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
                     }
                 }else{
                     //do scheduled ride
+<<<<<<< HEAD
                     DatabaseReference scheduledRideRef = FirebaseDatabase.getInstance().getReference().child("scheduledRides");
                     String scheduledRideID = scheduledRideRef.push().getKey();
                     HashMap map = new HashMap();
@@ -271,6 +269,8 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
                     riderScheduledRef.child("scheduledRides").child(scheduledRideID).setValue(true);
                     driverScheduledRef.child("scheduledRides").child(scheduledRideID).setValue(true);
                     endTrip();
+=======
+>>>>>>> parent of 032bb68... working
                 }
             }
 
@@ -526,6 +526,42 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
     private void init() {
         Log.d(TAG,"init: Initialing!");
 
+<<<<<<< HEAD
+=======
+        DatabaseReference initialRef = FirebaseDatabase.getInstance().getReference().child("Drivers").child(userID).child("History");
+        initialRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    for (DataSnapshot snap: dataSnapshot.getChildren()){
+                        Log.d(TAG,"No of Trips: "+count);
+                        long child = snap.getChildrenCount();
+                        count = count + child;
+                        mNoOfTrips.setText(Long.toString(count));
+                    }
+                    Double douRating = Double.parseDouble(dataSnapshot.child("rating").getValue().toString());
+                    DecimalFormat df = new DecimalFormat("#.00");
+                    String ratingFormatted = df.format(douRating);
+                    mRating.setText(ratingFormatted);
+                    if (dataSnapshot.child("cancellation").getValue().toString()!=null){
+                        Double cancellationNum = Double.parseDouble(dataSnapshot.child("cancellation").getValue().toString());
+                        Double cancellationRate = (cancellationNum/(cancellationNum+count))*100;
+                        String cancellationRateFormatted = df.format(cancellationRate);
+                        mCancellation.setText(cancellationRateFormatted+"%");
+                    } else{
+                        mCancellation.setText("0%");
+                    }
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+>>>>>>> parent of 032bb68... working
         location_switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -818,7 +854,12 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
                                    fare = dataSnapshot.child("fare").getValue().toString();
                                    selectedRoute = dataSnapshot.child("selectedRoute").getValue().toString();
                                    fareType = dataSnapshot.child("fareType").getValue().toString();
+<<<<<<< HEAD
                                    if(dataSnapshot.child("timestamp").getValue().toString().equals("now")){
+=======
+                                   String timeOfReq = "";
+                                   if(dataSnapshot.child("timestamp").getValue().toString().equals("")){
+>>>>>>> parent of 032bb68... working
                                        timeOfReq = "Now";
                                    } else {
                                        timeOfReq = dataSnapshot.child("timestamp").getValue().toString();
@@ -1154,7 +1195,6 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
         //String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         onTrip = false;
         driverAccepted = false;
-        scheduledRide = false;
 
         if (customerId!= null){
             DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Drivers").child(userID);
