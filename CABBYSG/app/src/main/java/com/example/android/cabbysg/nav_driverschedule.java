@@ -96,27 +96,33 @@ public class nav_driverschedule extends Fragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 String timestamp = "";
                 if(dataSnapshot.exists()){
-                    for(DataSnapshot child: dataSnapshot.getChildren()) {
-                        if (child.getKey().equals("riderID")) {
-                            riderIdStr = dataSnapshot.child("riderID").getValue().toString();
+                    for(DataSnapshot child1: dataSnapshot.getChildren()) {
+                        scheduleID = child1.getKey();
+                        System.out.println("ScheduleID is: " + scheduleID);
+                        for (DataSnapshot child: child1.getChildren()) {
+                            System.out.println(child);
+                            if (child.getKey().equals("riderID")) {
+                                riderIdStr = child.getValue().toString();
+                                System.out.println("Rider ID: " + riderIdStr);
+                            }
+                            if (child.getKey().equals("currentLocation")) {
+                                startLocationStr = child.getValue().toString();
+                            }
+                            if (child.getKey().equals("destination")) {
+                                destinationStr = child.getValue().toString();
+                            }
+                            if (child.getKey().equals("selectedRoute")) {
+                                selectedRouteStr = child.getValue().toString();
+                            }
+                            if (child.getKey().equals("fare")) {
+                                fareStr = child.getValue().toString();
+                            }
+                            if (child.getKey().equals("timestamp")) {
+                                timestamp = child.getValue().toString();
+                            }
                         }
-                        if (child.getKey().equals("currentLocation")) {
-                            startLocationStr = dataSnapshot.child("currentLocation").getValue().toString();
-                        }
-                        if (child.getKey().equals("destination")) {
-                            destinationStr = dataSnapshot.child("destination").getValue().toString();
-                        }
-                        if (child.getKey().equals("selectedRoute")) {
-                            selectedRouteStr = dataSnapshot.child("selectedRoute").getValue().toString();
-                        }
-
-                        if (child.getKey().equals("fare")) {
-                            fareStr = dataSnapshot.child("fare").getValue().toString();
-                        }
-                        if (child.getKey().equals("timestamp")) {
-                            timestamp = dataSnapshot.child("timestamp").getValue().toString();
-                        }
-                        driverschedule_details obj = new driverschedule_details(scheduleID,timestamp, riderIdStr,destinationStr, startLocationStr,selectedRouteStr,fareStr);
+                        driverschedule_details obj = new driverschedule_details(scheduleID, timestamp, riderIdStr, destinationStr, startLocationStr, selectedRouteStr, fareStr);
+                        System.out.println("Driver Details: " + obj.driverschedule_riderID);
                         arrayOfSchedule.add(obj);
                         adapter.notifyDataSetChanged();
                     }

@@ -37,8 +37,8 @@ public class driverschedule_adaptor extends ArrayAdapter<driverschedule_details>
         final driverschedule_details driverschedule_details = getItem(position);
         final String user_id = FirebaseAuth.getInstance().getCurrentUser().getUid();
         scheduledRidesDatabase = FirebaseDatabase.getInstance().getReference().child("scheduledRides").child(driverschedule_details.driverschedule_id);
-        riderScheduleDatabase = FirebaseDatabase.getInstance().getReference().child("Rider").child(driverschedule_details.driverschedule_riderID).child("scheduledRides").child(driverschedule_details.driverschedule_id);
-        driverScheduleDatabase = FirebaseDatabase.getInstance().getReference().child("Drivers").child(user_id).child("scheduledRides").child(driverschedule_details.driverschedule_id);
+        riderScheduleDatabase = FirebaseDatabase.getInstance().getReference().child("Rider").child(driverschedule_details.driverschedule_riderID);//.child("scheduledRides").child(driverschedule_details.driverschedule_id);
+        //driverScheduleDatabase = FirebaseDatabase.getInstance().getReference().child("Drivers").child(user_id).child("scheduledRides").child(driverschedule_details.driverschedule_id);
 
         if (convertView == null){
             convertView= LayoutInflater.from(getContext()).inflate(R.layout.driverschedule_template,parent,false);
@@ -95,7 +95,7 @@ public class driverschedule_adaptor extends ArrayAdapter<driverschedule_details>
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         scheduledRidesDatabase.removeValue();
-                        driverScheduleDatabase.removeValue();
+                        //driverScheduleDatabase.removeValue();
                         riderScheduleDatabase.removeValue();
                     }
                 });
