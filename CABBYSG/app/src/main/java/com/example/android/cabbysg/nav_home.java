@@ -731,12 +731,12 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
             newRequest.put("fareType", mFareType.getSelectedItem().toString());
 
             if (scheduledRide){
-                DatabaseReference riderScheduledRef = FirebaseDatabase.getInstance().getReference().child("Rider").child(userID);
+                DatabaseReference riderScheduledRef = FirebaseDatabase.getInstance().getReference().child("Rider").child(userID).child("scheduledRides");
                 DatabaseReference scheduledRideRef = FirebaseDatabase.getInstance().getReference().child("scheduledRides");
                 String scheduledRideID = scheduledRideRef.push().getKey();
                 newRequest.put("riderID", userID);
                 scheduledRideRef.child(scheduledRideID).updateChildren(newRequest);
-                riderScheduledRef.child(scheduledRideID).updateChildren(newRequest);
+                riderScheduledRef.child(scheduledRideID).setValue(true);
                 mProgressBar.setVisibility(View.GONE);
                 Toast.makeText(getActivity(), "Finding your driver... Please check the Scheduled for details of your booking request.", Toast.LENGTH_SHORT).show();
             }else{
@@ -778,6 +778,9 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
             if (getHasTripEndedRefListener!=null){
                 getHasTripEndedRef.removeEventListener(getHasTripEndedRefListener);
             }
+            if(getDriverLocationUpdatesRefListener!=null){
+                getDriverLocationUpdatesRef.removeEventListener(getDriverLocationUpdatesRefListener);
+            }
             driverFound = false;
             radius = 1;
             //String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -801,7 +804,7 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
             if(!getDriversAroundStarted) {
                 getDriversAround(locLatLng.latitude, locLatLng.longitude);
             }
-
+            mRatingBar.setRating(0f);
             customerEnd = false;
             hasRiderRated = false;
             mDestination.setText("");
@@ -1085,11 +1088,11 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
         });
     }
 
-    DatabaseReference getHasTripStartedRef;
-    ValueEventListener getHasTripStartedListener;
+    DatabaseReference getHasTripStartedRef, getDriverLocationUpdatesRef;
+    ValueEventListener getHasTripStartedListener, getDriverLocationUpdatesRefListener;
 
     private void getHasTripStarted() {
-        //Toasty.success(getActivity(),"Your driver has arrived!", Toast.LENGTH_LONG, true).show();
+        Toasty.success(getActivity(),"Your driver has arrived!", Toast.LENGTH_LONG, true).show();
         Log.d(TAG,"Getting ongoingtrip variable!");
         getArrivalRef.removeEventListener(getArrivalRefListener);
         getHasTripStartedRef = FirebaseDatabase.getInstance().getReference().child("customerRequest").child(userID).child("Details").child("ongoingTrip");
@@ -1100,8 +1103,8 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
                     Log.d(TAG,"Ongoingtrip variable = "+ dataSnapshot.getValue().toString());
                     if (dataSnapshot.getValue().toString().equals("started")){
                         onTrip = true;
-                        DatabaseReference getDriverLocationUpdatesRef = FirebaseDatabase.getInstance().getReference().child("driversWorking").child(driverFoundID).child("l");
-                        getDriverLocationUpdatesRef.addValueEventListener(new ValueEventListener() {
+                        getDriverLocationUpdatesRef = FirebaseDatabase.getInstance().getReference().child("driversWorking").child(driverFoundID).child("l");
+                        getDriverLocationUpdatesRefListener = getDriverLocationUpdatesRef.addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 if(dataSnapshot.exists()){
@@ -1153,7 +1156,7 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
     DatabaseReference getHasTripEndedRef;
     ValueEventListener getHasTripEndedRefListener;
     private void getHasTripEnded() {
-        //Toasty.success(getActivity(),"Trip has begun!",Toast.LENGTH_LONG,true).show();
+        Toasty.success(getActivity(),"Trip has begun!",Toast.LENGTH_LONG,true).show();
         Log.d(TAG,"Getting hasTripEnded variable!");
         getHasTripEndedRef = FirebaseDatabase.getInstance().getReference().child("customerRequest").child(userID).child("Details").child("ongoingTrip");
         getHasTripEndedRefListener = getHasTripEndedRef.addValueEventListener(new ValueEventListener() {
@@ -1212,7 +1215,6 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
                         mPaymentMethodImage.setImageResource(R.drawable.ic_billing_visa_logo);
                     }
                     //Insert code to authorize payment if paying via Mastercard/VISA
-                    //Insert method to record rating
                 }
             }
 

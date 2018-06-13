@@ -597,7 +597,7 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
             public void onClick(View v) {
                 onTrip = true;
                 if(getActivity()!= null) {
-                    //Toasty.success(getActivity(), "Trip has begun!", Toast.LENGTH_LONG, true).show();
+                    Toasty.success(getActivity(), "Trip has begun!", Toast.LENGTH_LONG, true).show();
                 }
                 DatabaseReference setOngoingTripRef = FirebaseDatabase.getInstance().getReference().child("customerRequest").child(customerId).child("Details").child("ongoingTrip");
                 setOngoingTripRef.setValue("started");
@@ -683,6 +683,7 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
                     mFinalFare.setText(finalFare);
                     timestamp = System.currentTimeMillis()/1000;
                     mEndTripDateTime.setText(getDate(timestamp));
+
                 }
             }
         });
@@ -809,6 +810,7 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
                        }
                    });
                }else if(driverAccepted){
+                   Toasty.error(getActivity(), "The trip has been cancelled!", Toast.LENGTH_SHORT, true).show();
                    endTrip();
                }
             }
@@ -1132,6 +1134,10 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
         GeoFire geoFire = new GeoFire(ref);
         geoFire.removeLocation(customerId);
         customerId = "";
+        mFinalFare.setText("");
+        mTollFees.setText("");
+        mTotalFare.setText("");
+        mFinalFare.setFocusable(true);
         //code if ride is scheduled
         mRatingBar.setRating(0f);
         mMap.clear();
