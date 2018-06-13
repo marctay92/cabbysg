@@ -88,7 +88,7 @@ public class driverEditProfile extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_driver_edit_profile, container, false);
+        final View rootView = inflater.inflate(R.layout.fragment_driver_edit_profile, container, false);
         //Init pd
         pd = new ProgressDialog(getActivity(), STYLE_SPINNER);
         //Set cancelable to not let users click it away
@@ -137,7 +137,7 @@ public class driverEditProfile extends Fragment {
                     }
                     if(map.get("profileImageUrl")!=null){
                         profileUrlStr = map.get("profileImageUrl").toString();
-                        Glide.with(getContext()).load(profileUrlStr).into(editDriverProfileImage);
+                        Glide.with(rootView.getContext()).load(profileUrlStr).into(editDriverProfileImage);
                     }
                     if(map.get("regNum")!=null){
                         carPlateStr = map.get("regNum").toString();
@@ -226,7 +226,9 @@ public class driverEditProfile extends Fragment {
 
                 if (TextUtils.isEmpty(mobileStr)) {
                     mobileEditText.setError("Please enter your mobile number");
-                } else validEditMobile = true;
+                } else if ((mobileStr.length()<8||mobileStr.length()>9)&&(mobileStr.substring(0,1).equals("9")||mobileStr.substring(0,1).equals("8"))){
+                    mobileEditText.setError("Please enter a valid number");
+                }else validEditMobile = true;
 
                 if(validEditFirst&&validEditLast&&validEditEmail&&validEditMobile){
                     pd.show();

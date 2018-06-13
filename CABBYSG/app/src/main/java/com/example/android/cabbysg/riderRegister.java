@@ -158,6 +158,7 @@ public class riderRegister extends AppCompatActivity {
                                 newPost.put("mobileNum",str_mobileNb);
                                 newPost.put("email",mAuth.getCurrentUser().getEmail());
                                 newPost.put("rating",0);
+                                current_user_db.updateChildren(newPost);
 
                                 if(resultUri!=null){
                                     StorageReference filePath = FirebaseStorage.getInstance().getReference().child("profile_images").child(user_id);
