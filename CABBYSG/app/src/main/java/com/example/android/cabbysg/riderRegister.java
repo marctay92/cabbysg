@@ -201,6 +201,7 @@ public class riderRegister extends AppCompatActivity {
                                     public void onComplete(@NonNull Task<Void> task) {
                                         if(task.isSuccessful()){
                                             Toast.makeText(riderRegister.this,"Registration is successful",Toast.LENGTH_SHORT);
+
                                         }else{
                                             Toast.makeText(riderRegister.this,"Registration is unsuccessful",Toast.LENGTH_SHORT);
                                         }

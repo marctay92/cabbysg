@@ -25,6 +25,8 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class driverschedule_adaptor extends ArrayAdapter<driverschedule_details> {
+    DatabaseReference scheduledRidesDatabase,riderScheduleDatabase,driverScheduleDatabase;
+
     public driverschedule_adaptor(Context context, ArrayList<driverschedule_details> users){
         super(context,0,users);
     }
@@ -34,9 +36,9 @@ public class driverschedule_adaptor extends ArrayAdapter<driverschedule_details>
 
         final driverschedule_details driverschedule_details = getItem(position);
         final String user_id = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        final DatabaseReference scheduledRidesDatabase = FirebaseDatabase.getInstance().getReference().child("scheduledRides").child(driverschedule_details.driverschedule_id);
-        final DatabaseReference riderScheduleDatabase = FirebaseDatabase.getInstance().getReference().child("Rider").child(driverschedule_details.driverschedule_riderID).child("scheduledRides").child(driverschedule_details.driverschedule_id);
-        final DatabaseReference driverScheduleDatabase = FirebaseDatabase.getInstance().getReference().child("Drivers").child(user_id).child("scheduledRides").child(driverschedule_details.driverschedule_id);
+        scheduledRidesDatabase = FirebaseDatabase.getInstance().getReference().child("scheduledRides").child(driverschedule_details.driverschedule_id);
+        riderScheduleDatabase = FirebaseDatabase.getInstance().getReference().child("Rider").child(driverschedule_details.driverschedule_riderID).child("scheduledRides").child(driverschedule_details.driverschedule_id);
+        driverScheduleDatabase = FirebaseDatabase.getInstance().getReference().child("Drivers").child(user_id).child("scheduledRides").child(driverschedule_details.driverschedule_id);
 
         if (convertView == null){
             convertView= LayoutInflater.from(getContext()).inflate(R.layout.driverschedule_template,parent,false);

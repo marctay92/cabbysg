@@ -102,11 +102,13 @@ public class driverLogin extends AppCompatActivity {
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (!task.isSuccessful()) {
                                 System.out.println("Driver not Logged in");
-                                Toast.makeText(driverLogin.this, "sign in error", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(driverLogin.this, "Sign In Error", Toast.LENGTH_SHORT).show();
                                 pd.dismiss();
                             }
                         }
                     });
+                }else{
+                    pd.dismiss();
                 }
             }
         });

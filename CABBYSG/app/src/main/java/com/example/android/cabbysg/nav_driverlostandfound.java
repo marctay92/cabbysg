@@ -33,6 +33,10 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -44,13 +48,13 @@ import static android.app.ProgressDialog.STYLE_SPINNER;
  */
 public class nav_driverlostandfound extends Fragment {
 
-    EditText itemDescription;
+    EditText itemDescription,date;
     ImageView photo1,photo2,photo3;
-    String itemDescriptionStr = "",photo1UrlStr,photo2UrlStr,photo3UrlStr;
+    String itemDescriptionStr = "",dateStr;
     private Uri photo1Uri, photo2Uri, photo3Uri;
     Map<String, Object> newPost = new HashMap<String, Object>();
     Button foundItemSubmit;
-    boolean validDescription = false;
+    boolean validDescription = false,validDate = false;
     DatabaseReference current_user_db,found_item_db;
     int index = 1;
     //Create progress dialog
@@ -76,6 +80,7 @@ public class nav_driverlostandfound extends Fragment {
 
         //Init Edit Text
         itemDescription = rootView.findViewById(R.id.foundItemDescription);
+        date = rootView.findViewById(R.id.foundDate);
         //Init Button
         foundItemSubmit = rootView.findViewById(R.id.foundItemSubmit);
         //Init photo view
@@ -122,13 +127,25 @@ public class nav_driverlostandfound extends Fragment {
             public void onClick(View v) {
                 //Extract String from EditText
                 itemDescriptionStr = itemDescription.getText().toString();
+                dateStr = date.getText().toString();
 
                 //Checks
-                if(TextUtils.isEmpty(itemDescriptionStr)) {
+                if (TextUtils.isEmpty(itemDescriptionStr)) {
                     itemDescription.setError("Please enter your item description");
                 } else validDescription = true;
 
-                if (validDescription){
+                if (TextUtils.isEmpty(dateStr)) {
+                    date.setError("Please enter your date found");
+                } else if (!isValidDate(dateStr)) {
+                    date.setError("Please enter your date in dd-MM-yyyy");
+                }else validDate = true;
+
+                if (photo1Uri==null || photo2Uri==null||photo3Uri==null){
+                    Toast.makeText(getActivity(),"Please upload a picture for reference",Toast.LENGTH_SHORT).show();
+                }
+
+                if (validDescription && validDate){
+                    newPost.put("foundDate", dateStr);
                     newPost.put("itemDescription", itemDescriptionStr);
                     newPost.put("driverID",user.getUid());
                     found_item_db.updateChildren(newPost);
@@ -253,6 +270,19 @@ public class nav_driverlostandfound extends Fragment {
         // Inflate the layout for this fragment
         return rootView;
 
+    }
+    public static boolean isValidDate(String inDate) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        dateFormat.setLenient(false);
+        try {
+            dateFormat.parse(inDate.trim());
+            Date today = Calendar.getInstance().getTime();
+            String formattedDate = dateFormat.format(today);
+            return dateFormat.parse(inDate.trim()).before(dateFormat.parse(formattedDate));
+        } catch (ParseException pe) {
+            return false;
+        }
+        //return true;
     }
 
     @Override
