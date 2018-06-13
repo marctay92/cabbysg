@@ -58,7 +58,7 @@ public class nav_driverschedule extends Fragment {
         listView = rootView.findViewById(R.id.driverschedulelist);
         listView.setAdapter(adapter);
 
-        getUserScheduledIds();
+        FetchScheduledInfo();
 
         return rootView;
     }
@@ -70,7 +70,7 @@ public class nav_driverschedule extends Fragment {
         getUserScheduledIds();
     }*/
 
-    private void getUserScheduledIds(){
+    /*private void getUserScheduledIds(){
         DatabaseReference userScheduleDatabase = FirebaseDatabase.getInstance().getReference().child("Drivers").child(userId).child("scheduledRides");
         userScheduleDatabase.addValueEventListener(new ValueEventListener() {
             @Override
@@ -78,8 +78,8 @@ public class nav_driverschedule extends Fragment {
                 if(dataSnapshot.exists()){
                     for(DataSnapshot scheduledRide : dataSnapshot.getChildren()){
                         scheduleID = scheduledRide.getKey();
+                        FetchScheduledInfo(scheduleID);
                     }
-                    FetchScheduledInfo(scheduleID);
                 }
             }
             @Override
@@ -87,9 +87,9 @@ public class nav_driverschedule extends Fragment {
 
             }
         });
-    }
-    private void FetchScheduledInfo(String rideKey){
-        DatabaseReference scheduledRidesDatabase = FirebaseDatabase.getInstance().getReference().child("scheduledRides").child(rideKey);
+    }*/
+    private void FetchScheduledInfo(){
+        DatabaseReference scheduledRidesDatabase = FirebaseDatabase.getInstance().getReference().child("scheduledRides");
         arrayOfSchedule.clear();
         scheduledRidesDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -100,8 +100,8 @@ public class nav_driverschedule extends Fragment {
                         if (child.getKey().equals("riderID")) {
                             riderIdStr = dataSnapshot.child("riderID").getValue().toString();
                         }
-                        if (child.getKey().equals("startLocation")) {
-                            startLocationStr = dataSnapshot.child("startLocation").getValue().toString();
+                        if (child.getKey().equals("currentLocation")) {
+                            startLocationStr = dataSnapshot.child("currentLocation").getValue().toString();
                         }
                         if (child.getKey().equals("destination")) {
                             destinationStr = dataSnapshot.child("destination").getValue().toString();
@@ -116,10 +116,10 @@ public class nav_driverschedule extends Fragment {
                         if (child.getKey().equals("timestamp")) {
                             timestamp = dataSnapshot.child("timestamp").getValue().toString();
                         }
+                        driverschedule_details obj = new driverschedule_details(scheduleID,timestamp, riderIdStr,destinationStr, startLocationStr,selectedRouteStr,fareStr);
+                        arrayOfSchedule.add(obj);
+                        adapter.notifyDataSetChanged();
                     }
-                    driverschedule_details obj = new driverschedule_details(scheduleID,timestamp, riderIdStr,destinationStr, startLocationStr,selectedRouteStr,fareStr);
-                    arrayOfSchedule.add(obj);
-                    adapter.notifyDataSetChanged();
                 }
             }
             @Override

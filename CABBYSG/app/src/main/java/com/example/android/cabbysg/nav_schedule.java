@@ -32,7 +32,7 @@ public class nav_schedule extends Fragment {
 
     FirebaseUser user;
     String userId;
-    String startLocationStr,driverIdStr,destinationStr,selectedRouteStr,fareStr,scheduleID;
+    String startLocationStr,/*driverIdStr,*/destinationStr,selectedRouteStr,fareStr,scheduleID;
     ArrayList<schedule_details>arrayOfSchedule=new ArrayList<schedule_details>();
     ListView listView;
     schedule_adaptor adapter;
@@ -91,10 +91,10 @@ public class nav_schedule extends Fragment {
                 String timestamp = "";
                 if(dataSnapshot.exists()){
                     for(DataSnapshot child: dataSnapshot.getChildren()) {
-                        if (child.getKey().equals("driverID")) {
+                        /*if (child.getKey().equals("driverID")) {
                             driverIdStr = dataSnapshot.child("driverID").getValue().toString();
                             System.out.println("driverID: " + driverIdStr);
-                        }
+                        }*/
                         if (child.getKey().equals("startLocation")) {
                             startLocationStr = dataSnapshot.child("startLocation").getValue().toString();
                         }
@@ -112,7 +112,7 @@ public class nav_schedule extends Fragment {
                             timestamp = dataSnapshot.child("timestamp").getValue().toString();
                         }
                     }
-                    schedule_details obj = new schedule_details(scheduleID,timestamp,driverIdStr,destinationStr, startLocationStr,selectedRouteStr,fareStr);
+                    schedule_details obj = new schedule_details(scheduleID,timestamp,/*driverIdStr,*/destinationStr, startLocationStr,selectedRouteStr,fareStr);
                     arrayOfSchedule.add(obj);
                     adapter.notifyDataSetChanged();
                 }

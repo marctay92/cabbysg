@@ -36,8 +36,8 @@ public class schedule_adaptor extends ArrayAdapter<schedule_details> {
         final String user_id = FirebaseAuth.getInstance().getCurrentUser().getUid();
         final DatabaseReference scheduledRidesDatabase = FirebaseDatabase.getInstance().getReference().child("scheduledRides").child(scheduleDetails.schedule_ID);
         final DatabaseReference riderScheduleDatabase = FirebaseDatabase.getInstance().getReference().child("Rider").child(user_id).child("scheduledRides").child(scheduleDetails.schedule_ID);
-        final DatabaseReference driverScheduleDatabase = FirebaseDatabase.getInstance().getReference().child("Drivers").child(scheduleDetails.schedule_driverID).child("scheduledRides").child(scheduleDetails.schedule_ID);
-        System.out.println("DriverID" + scheduleDetails.schedule_driverID);
+        //final DatabaseReference driverScheduleDatabase = FirebaseDatabase.getInstance().getReference().child("Drivers").child(scheduleDetails.schedule_driverID).child("scheduledRides").child(scheduleDetails.schedule_ID);
+        //System.out.println("DriverID" + scheduleDetails.schedule_driverID);
 
         if (convertView == null){
             convertView= LayoutInflater.from(getContext()).inflate(R.layout.schedule_template,parent,false);
@@ -56,7 +56,7 @@ public class schedule_adaptor extends ArrayAdapter<schedule_details> {
 
         s_date.setText(scheduleDetails.schedule_date);
 
-        DatabaseReference driver_db = FirebaseDatabase.getInstance().getReference().child("Drivers").child(scheduleDetails.schedule_driverID);
+        /*DatabaseReference driver_db = FirebaseDatabase.getInstance().getReference().child("Drivers").child(scheduleDetails.schedule_driverID);
         driver_db.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -74,7 +74,7 @@ public class schedule_adaptor extends ArrayAdapter<schedule_details> {
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
-        });
+        });*/
         s_destination.setText(scheduleDetails.schedule_destination);
         s_location.setText(scheduleDetails.schedule_location);
         s_type.setText(scheduleDetails.schedule_routeType);
@@ -95,7 +95,7 @@ public class schedule_adaptor extends ArrayAdapter<schedule_details> {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         scheduledRidesDatabase.removeValue();
-                        driverScheduleDatabase.removeValue();
+                        //driverScheduleDatabase.removeValue();
                         riderScheduleDatabase.removeValue();
                     }
                 });
