@@ -142,7 +142,7 @@ public class nav_lostandfound extends Fragment {
 
                     current_user_db.child(user.getUid()).child("LostItem").child(lost_item_db.getKey()).setValue(true);
                     lost_item_db.updateChildren(newPost);
-                    Toast.makeText(getContext(),"Lost Item Report submitted.",Toast.LENGTH_SHORT);
+                    Toast.makeText(getContext(),"Lost Item Report submitted.",Toast.LENGTH_SHORT).show();
                     Fragment newFragment=new nav_home();
                     FragmentTransaction transaction = getFragmentManager().beginTransaction();
                     transaction.replace(R.id.riderLostandFound,newFragment);
