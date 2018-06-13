@@ -52,6 +52,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static android.app.ProgressDialog.STYLE_SPINNER;
+import static com.example.android.cabbysg.nav_lostandfound.isEmailValid;
+import static com.example.android.cabbysg.nav_lostandfound.isNameValid;
 
 public class driverEditProfile extends Fragment {
 
@@ -214,15 +216,21 @@ public class driverEditProfile extends Fragment {
                 //Condition to check
                 if(TextUtils.isEmpty(firstNameStr)) {
                     firstNameEditText.setError("Please enter your first name");
-                } else validEditFirst = true;
+                } else if(isNameValid(firstNameStr)){
+                    firstNameEditText.setError("Invalid First Name");
+                }else validEditFirst = true;
 
                 if (TextUtils.isEmpty(lastNameStr)) {
                     lastNameEditText.setError("Please enter your last name");
+                } else if(!isNameValid(lastNameStr)){
+                    lastNameEditText.setError("Invalid Last Name");
                 } else validEditLast = true;
 
                 if (TextUtils.isEmpty(emailStr)) {
                     emailEditText.setError("Please enter your email");
-                } else validEditEmail = true;
+                } else if(!isEmailValid(emailStr)){
+                    emailEditText.setError("Please enter a valid email");
+                }else validEditEmail = true;
 
                 if (TextUtils.isEmpty(mobileStr)) {
                     mobileEditText.setError("Please enter your mobile number");
@@ -238,7 +246,6 @@ public class driverEditProfile extends Fragment {
                             if (task.isSuccessful()) {
                                 String user_id = mAuth.getCurrentUser().getUid();
                                 current_user_db = FirebaseDatabase.getInstance().getReference().child("Drivers").child(user_id);
-
                                 Map newPost = new HashMap();
                                 //newPost.put("email",str_email);
                                 newPost.put("firstName", firstNameStr);
@@ -365,60 +372,72 @@ public class driverEditProfile extends Fragment {
                                         System.out.println("User re-authenticated.");
                                         String user_id = mAuth.getCurrentUser().getUid();
                                         current_user_db = FirebaseDatabase.getInstance().getReference().child("Drivers").child(user_id);
+                                        user.updateEmail(emailStr)
+                                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                     @Override
+                                                     public void onComplete(@NonNull Task<Void> task) {
+                                                         if (task.isSuccessful()) {
+                                                             String user_id = mAuth.getCurrentUser().getUid();
+                                                             current_user_db = FirebaseDatabase.getInstance().getReference().child("Drivers").child(user_id);
+                                                             Map newPost = new HashMap();
+                                                             //newPost.put("email",str_email);
+                                                             newPost.put("firstName", firstNameStr);
+                                                             newPost.put("lastName", lastNameStr);
+                                                             newPost.put("mobileNum", mobileStr);
+                                                             newPost.put("email", emailStr);
+                                                             newPost.put("regNum", carPlateStr);
+                                                             newPost.put("model", carModelStr);
 
-                                        Map newPost = new HashMap();
-                                        newPost.put("firstName", firstNameStr);
-                                        newPost.put("lastName", lastNameStr);
-                                        newPost.put("mobileNum", mobileStr);
-                                        newPost.put("email",emailStr);
-                                        newPost.put("regNum",carPlateStr);
-                                        newPost.put("model",carModelStr);
+                                                             current_user_db.updateChildren(newPost);
 
-                                        current_user_db.setValue(newPost);
+                                                             if (resultUri != null) {
+                                                                 StorageReference filePath = FirebaseStorage.getInstance().getReference().child("profile_images").child(user_id);
+                                                                 Bitmap bitmap = null;
 
-                                        if(resultUri!=null){
-                                            StorageReference filePath = FirebaseStorage.getInstance().getReference().child("profile_images").child(user_id);
-                                            Bitmap bitmap = null;
+                                                                 try {
+                                                                     bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), resultUri);
+                                                                 } catch (IOException e) {
+                                                                     e.printStackTrace();
+                                                                 }
 
-                                            try {
-                                                bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(),resultUri);
-                                            } catch (IOException e) {
-                                                e.printStackTrace();
-                                            }
+                                                                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                                                                 bitmap.compress(Bitmap.CompressFormat.JPEG, 20, baos);
+                                                                 byte[] data = baos.toByteArray();
+                                                                 UploadTask uploadTask = filePath.putBytes(data);
+                                                                 uploadTask.addOnFailureListener(new OnFailureListener() {
+                                                                     @Override
+                                                                     public void onFailure(@NonNull Exception e) {
+                                                                         return;
+                                                                     }
+                                                                 });
+                                                                 uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                                                     @Override
+                                                                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                                                         Task<Uri> downloadUrl = taskSnapshot.getMetadata().getReference().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                                                             @Override
+                                                                             public void onSuccess(Uri uri) {
+                                                                                 Uri profileImageUrl = uri;
+                                                                                 Map newImage = new HashMap();
+                                                                                 newImage.put("profileImageUrl", profileImageUrl.toString());
+                                                                                 System.out.println(newImage.get("profileImageUrl"));
+                                                                                 current_user_db.updateChildren(newImage);
+                                                                             }
+                                                                         });
+                                                                         return;
+                                                                     }
+                                                                 });
+                                                             }
 
-                                            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                                            bitmap.compress(Bitmap.CompressFormat.JPEG,20,baos);
-                                            byte[] data = baos.toByteArray();
-                                            UploadTask uploadTask = filePath.putBytes(data);
-                                            uploadTask.addOnFailureListener(new OnFailureListener() {
-                                                @Override
-                                                public void onFailure(@NonNull Exception e) {
-                                                    return;
-                                                }
-                                            });
-                                            uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                                                @Override
-                                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                                    Task<Uri> downloadUrl = taskSnapshot.getMetadata().getReference().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                                        @Override
-                                                        public void onSuccess(Uri uri) {
-                                                            Uri profileImageUrl = uri;
-                                                            Map newImage = new HashMap();
-                                                            newImage.put("profileImageUrl",profileImageUrl.toString());
-                                                            System.out.println(newImage.get("profileImageUrl"));
-                                                            current_user_db.updateChildren(newImage);
-                                                        }
-                                                    });
-                                                    return;
-                                                }
-                                            });
-                                        }
+                                                             Fragment newFragment = new nav_driverprofile();
+                                                             FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                                                             transaction.replace(R.id.driverEditProfile, newFragment);
+                                                             transaction.addToBackStack(null);
+                                                             transaction.commit();
+                                                             pd.dismiss();
 
-                                        Fragment newFragment = new nav_driverprofile();
-                                        FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                                        transaction.replace(R.id.driverEditProfile, newFragment);
-                                        transaction.addToBackStack(null);
-                                        transaction.commit();
+                                                         }
+                                                     }
+                                                 });
                                     }else{
                                         // User clicked the Continue button
                                         user.delete()

@@ -209,7 +209,7 @@ public class editProfile extends Fragment{
                 if(TextUtils.isEmpty(firstNameStr)) {
                     firstNameEditText.setError("Please enter your first name");
                 } else if(!isNameValid(firstNameStr)){
-                    lastNameEditText.setError("Invalid First Name");
+                    firstNameEditText.setError("Invalid First Name");
                 }else validEditFirst = true;
 
                 if (TextUtils.isEmpty(lastNameStr)) {
@@ -364,61 +364,68 @@ public class editProfile extends Fragment{
                                 if(task.isSuccessful()){
                                     if (saveChanges) {
                                         System.out.println("User re-authenticated.");
-                                        String user_id = mAuth.getCurrentUser().getUid();
+                                        final String user_id = mAuth.getCurrentUser().getUid();
                                         final DatabaseReference current_user_db = FirebaseDatabase.getInstance().getReference().child("Rider").child(user_id);
+                                        user.updateEmail(emailStr).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                if (task.isSuccessful()) {
+                                                    Map newPost = new HashMap();
+                                                    //newPost.put("email",str_email);
+                                                    newPost.put("firstName", firstNameStr);
+                                                    newPost.put("lastName", lastNameStr);
+                                                    newPost.put("mobileNum", mobileStr);
+                                                    newPost.put("email",emailStr);
+                                                    current_user_db.updateChildren(newPost);
 
-                                        Map newPost = new HashMap();
-                                        //newPost.put("email",str_email);
-                                        newPost.put("firstName", firstNameStr);
-                                        newPost.put("lastName", lastNameStr);
-                                        newPost.put("mobileNum", mobileStr);
-                                        newPost.put("email",emailStr);
-                                        current_user_db.updateChildren(newPost);
+                                                    if(resultUri!=null){
+                                                        StorageReference filePath = FirebaseStorage.getInstance().getReference().child("profile_images").child(user_id);
+                                                        Bitmap bitmap = null;
 
-                                        if(resultUri!=null){
-                                            StorageReference filePath = FirebaseStorage.getInstance().getReference().child("profile_images").child(user_id);
-                                            Bitmap bitmap = null;
-
-                                            try {
-                                                bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(),resultUri);
-                                            } catch (IOException e) {
-                                                e.printStackTrace();
-                                            }
-
-                                            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                                            bitmap.compress(Bitmap.CompressFormat.JPEG,20,baos);
-                                            byte[] data = baos.toByteArray();
-                                            UploadTask uploadTask = filePath.putBytes(data);
-                                            uploadTask.addOnFailureListener(new OnFailureListener() {
-                                                @Override
-                                                public void onFailure(@NonNull Exception e) {
-                                                    return;
-                                                }
-                                            });
-                                            uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                                                @Override
-                                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                                    Task<Uri> downloadUrl = taskSnapshot.getMetadata().getReference().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                                        @Override
-                                                        public void onSuccess(Uri uri) {
-                                                            Uri profileImageUrl = uri;
-                                                            Map newImage = new HashMap();
-                                                            newImage.put("profileImageUrl",profileImageUrl.toString());
-                                                            System.out.println(newImage.get("profileImageUrl"));
-                                                            current_user_db.updateChildren(newImage);
+                                                        try {
+                                                            bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(),resultUri);
+                                                        } catch (IOException e) {
+                                                            e.printStackTrace();
                                                         }
-                                                    });
-                                                    return;
-                                                }
-                                            });
-                                        }
 
-                                        Fragment newFragment=new nav_profile();
-                                        FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                                        transaction.replace(R.id.editProfileFragment,newFragment);
-                                        transaction.addToBackStack(null);
-                                        transaction.commit();
-                                        pd.dismiss();
+                                                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                                                        bitmap.compress(Bitmap.CompressFormat.JPEG,20,baos);
+                                                        byte[] data = baos.toByteArray();
+                                                        UploadTask uploadTask = filePath.putBytes(data);
+                                                        uploadTask.addOnFailureListener(new OnFailureListener() {
+                                                            @Override
+                                                            public void onFailure(@NonNull Exception e) {
+                                                                return;
+                                                            }
+                                                        });
+                                                        uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                                            @Override
+                                                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                                                Task<Uri> downloadUrl = taskSnapshot.getMetadata().getReference().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                                                    @Override
+                                                                    public void onSuccess(Uri uri) {
+                                                                        Uri profileImageUrl = uri;
+                                                                        Map newImage = new HashMap();
+                                                                        newImage.put("profileImageUrl",profileImageUrl.toString());
+                                                                        System.out.println(newImage.get("profileImageUrl"));
+                                                                        current_user_db.updateChildren(newImage);
+                                                                    }
+                                                                });
+                                                                return;
+                                                            }
+                                                        });
+                                                    }
+
+                                                    Fragment newFragment=new nav_profile();
+                                                    FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                                                    transaction.replace(R.id.editProfileFragment,newFragment);
+                                                    transaction.addToBackStack(null);
+                                                    transaction.commit();
+                                                    pd.dismiss();
+
+                                                }
+                                            }
+                                        });
                                     }else{
                                         // User clicked the Continue button
                                         user.delete()
