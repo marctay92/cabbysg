@@ -747,6 +747,8 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
                         noOfTrips = noOfTrips + snap;
                         mNoOfTrips.setText(Long.toString(noOfTrips));
                     }
+                } else{
+                    mNoOfTrips.setText("0");
                 }
             }
 
@@ -1142,6 +1144,7 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
         Log.d(TAG,"END TRIP TRIGGERED DAMMIT");
         //String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         onTrip = false;
+        mTotalFare.setText("");
         driverAccepted = false;
         scheduledRide = false;
         if (customerId!= null){
@@ -1189,11 +1192,9 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
                             Double cancelledTrips = Double.parseDouble(dataSnapshot.getValue().toString());
                             Double newCancelledTrips = cancelledTrips+1;
                             historyRef.setValue(newCancelledTrips);
-                            historyRef.removeEventListener(this);
                         }
                     } else{
                         historyRef.setValue("1");
-                        historyRef.removeEventListener(this);
                     }
                 }
 

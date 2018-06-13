@@ -791,31 +791,7 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
         Log.d(TAG,"customerEnd: "+customerEnd + " hasriderrated "+hasRiderRated);
         getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
 
-        if(hasRiderRated){
-            final DatabaseReference driverRatingRef = FirebaseDatabase.getInstance().getReference().child("Drivers").child(driverFoundID);
-            driverRatingRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    if (dataSnapshot.exists()){
-                        long count = 0;
-                        for (DataSnapshot snap: dataSnapshot.getChildren()){
-                            long child = snap.getChildrenCount();
-                            count = count + child;
-                        }
-                        Double previousRating = Double.parseDouble(dataSnapshot.child("rating").getValue().toString());
-                        double finalRating = ((previousRating*count)+driverRating)/(count+1);
-                        DecimalFormat df = new DecimalFormat("#.00");
-                        String ratingFormatted = df.format(finalRating);
-                        driverRatingRef.child("rating").setValue(ratingFormatted);
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                }
-            });
-        }
+        updateRating();
             onTrip = false;
             requestBol = false;
 
@@ -877,6 +853,37 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
             mDuraTextView.setText("");
             mFareTextView.setText("");
             getDeviceLocation();
+    }
+
+    private void updateRating() {
+        if(hasRiderRated){
+            final DatabaseReference driverRatingRef = FirebaseDatabase.getInstance().getReference().child("Drivers").child(driverFoundID);
+            driverRatingRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.exists()){
+                        Double count = 0.0;
+                        for (DataSnapshot snap: dataSnapshot.child("History").getChildren()){
+                            long child = snap.getChildrenCount();
+                            count = count + child;
+                            Log.d(TAG,"count is "+count);
+                        }
+                        Double previousRating = Double.parseDouble(dataSnapshot.child("rating").getValue().toString());
+                        Double finalDriverRating = (double) driverRating;
+                        double finalRating = ((previousRating*count)+finalDriverRating)/(count+1);
+                        Log.d(TAG,"previous rating "+previousRating + " driver rating " + finalDriverRating + "final rating "+finalRating);
+                        DecimalFormat df = new DecimalFormat("#.00");
+                        String ratingFormatted = df.format(finalRating);
+                        driverRatingRef.child("rating").setValue(ratingFormatted);
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+        }
     }
 
     private Long getCurrentTimestamp() {
