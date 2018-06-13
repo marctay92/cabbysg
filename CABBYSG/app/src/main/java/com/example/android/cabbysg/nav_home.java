@@ -557,19 +557,23 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
         mSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mRelativeLayout.setBackgroundColor(getResources().getColor(R.color.grey));
-                mRelativeLayout.bringToFront();
-                mProgressBar.setVisibility(View.VISIBLE);
-                mProgressBar.bringToFront();
-                getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
-                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-                requestBol = true;
-                //String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                submitRequest();
-                getClosestDriver();
-
+                if (locLatLng!=null && desLatLng !=null) {
+                    mRelativeLayout.setBackgroundColor(getResources().getColor(R.color.grey));
+                    mRelativeLayout.bringToFront();
+                    mProgressBar.setVisibility(View.VISIBLE);
+                    mProgressBar.bringToFront();
+                    getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                    requestBol = true;
+                    //String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                    submitRequest();
+                    getClosestDriver();
+                }else {
+                    Toast.makeText(getActivity(), "Please enter a valid location and destination!", Toast.LENGTH_SHORT).show();
+                } 
             }
         });
+        
         mCancelRequest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -665,79 +669,79 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
     }
 
     private void submitRequest() {
-        String currentLocation = null;
-        String destination = null;
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("customerRequest");
-        DatabaseReference reqRef = FirebaseDatabase.getInstance().getReference().child("customerRequest").child(userID).child("Details");
-        GeoFire geoFire = new GeoFire(ref);
-        if (mDestination.getText().length()>0 && mCurrentLocation.getText().length()>0){
-            destination = mDestination.getText().toString();
-            currentLocation = mCurrentLocation.getText().toString();
-        } else{
-            Toast.makeText(getActivity(), "Please enter a valid location/destination!", Toast.LENGTH_SHORT).show();
-        }
+          String currentLocation = null;
+            String destination = null;
+            DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("customerRequest");
+            DatabaseReference reqRef = FirebaseDatabase.getInstance().getReference().child("customerRequest").child(userID).child("Details");
+            GeoFire geoFire = new GeoFire(ref);
+            if (mDestination.getText().length()>0 && mCurrentLocation.getText().length()>0){
+                destination = mDestination.getText().toString();
+                currentLocation = mCurrentLocation.getText().toString();
+            } else{
+                Toast.makeText(getActivity(), "Please enter a valid location/destination!", Toast.LENGTH_SHORT).show();
+            }
 
-        String selectedRoute = mRouteOptions.getSelectedItem().toString();
-        String serviceType = mServiceType.getSelectedItem().toString();
-        String fare = mFareTextView.getText().toString();
+            String selectedRoute = mRouteOptions.getSelectedItem().toString();
+            String serviceType = mServiceType.getSelectedItem().toString();
+            String fare = mFareTextView.getText().toString();
 
-        System.out.println("GeoFire Location LatLng " + locLatLng.toString());
+            if (locLatLng!=null){
+                geoFire.setLocation(userID, new GeoLocation(locLatLng.latitude,locLatLng.longitude));
+            }
 
-        geoFire.setLocation(userID, new GeoLocation(locLatLng.latitude,locLatLng.longitude));
+            Map newRequest = new HashMap();
 
-        Map newRequest = new HashMap();
+            if ((destination!=null) && (currentLocation!=null)) {
+                newRequest.put("currentLocation",currentLocation);
+                newRequest.put("destination",destination);
+            } else {
+                Toast.makeText(getActivity(), "Please enter a valid location and/or destination!", Toast.LENGTH_SHORT).show();
+            }
+            if (selectedRoute.equals("Shortest")) {
+                //save shortest option
+                newRequest.put("selectedRoute",selectedRoute);
+            } else if (selectedRoute.equals("Fastest")) {
+                //save fastest
+                newRequest.put("selectedRoute",selectedRoute);
+            } else {
+                //save avoid tolls
+                newRequest.put("selectedRoute",selectedRoute);
+            }
+            if (serviceType.equals("4-Seater")) {
+                //save 4-seater
+                newRequest.put("serviceType",serviceType);
+            } else {
+                //save 6-seater
+                newRequest.put("serviceType",serviceType);
+            }
+            if (mBookingTime.getText().toString().equals("")){
+                newRequest.put("timestamp","now");
+                scheduledRide = false;
+            } else{
+                newRequest.put("timestamp", mBookingTime.getText().toString());
+                scheduledRide = true;
+            }
 
-        if ((destination!=null) && (currentLocation!=null)) {
-            newRequest.put("currentLocation",currentLocation);
-            newRequest.put("destination",destination);
-        } else {
-            Toast.makeText(getActivity(), "Please enter a valid location and/or destination!", Toast.LENGTH_SHORT).show();
-        }
-        if (selectedRoute.equals("Shortest")) {
-            //save shortest option
-            newRequest.put("selectedRoute",selectedRoute);
-        } else if (selectedRoute.equals("Fastest")) {
-            //save fastest
-            newRequest.put("selectedRoute",selectedRoute);
-        } else {
-            //save avoid tolls
-            newRequest.put("selectedRoute",selectedRoute);
-        }
-        if (serviceType.equals("4-Seater")) {
-            //save 4-seater
-            newRequest.put("serviceType",serviceType);
-        } else {
-            //save 6-seater
-            newRequest.put("serviceType",serviceType);
-        }
-        if (mBookingTime.getText().toString().equals("")){
-            newRequest.put("timestamp","now");
-            scheduledRide = false;
-        } else{
-            newRequest.put("timestamp", mBookingTime.getText().toString());
-            scheduledRide = true;
-        }
+            newRequest.put("fare",fare);
+            newRequest.put("driverFound", "false");
+            newRequest.put("ongoingTrip", "false");
+            newRequest.put("destinationLat", desLatLng.latitude);
+            newRequest.put("destinationLng", desLatLng.longitude);
+            newRequest.put("paymentMethod", mPaymentMethod.getSelectedItem().toString());
+            newRequest.put("fareType", mFareType.getSelectedItem().toString());
 
-        newRequest.put("fare",fare);
-        newRequest.put("driverFound", "false");
-        newRequest.put("ongoingTrip", "false");
-        newRequest.put("destinationLat", desLatLng.latitude);
-        newRequest.put("destinationLng", desLatLng.longitude);
-        newRequest.put("paymentMethod", mPaymentMethod.getSelectedItem().toString());
-        newRequest.put("fareType", mFareType.getSelectedItem().toString());
-
-        if (scheduledRide){
-            DatabaseReference riderScheduledRef = FirebaseDatabase.getInstance().getReference().child("Rider").child(userID);
-            DatabaseReference scheduledRideRef = FirebaseDatabase.getInstance().getReference().child("scheduledRides");
-            String scheduledRideID = scheduledRideRef.push().getKey();
-            newRequest.put("riderID", userID);
-            scheduledRideRef.child(scheduledRideID).updateChildren(newRequest);
-            riderScheduledRef.child(scheduledRideID).updateChildren(newRequest);
-            mProgressBar.setVisibility(View.GONE);
-            Toast.makeText(getActivity(), "Finding your driver... Please check the Scheduled for details of your booking request.", Toast.LENGTH_SHORT).show();
-        }else{
-            reqRef.setValue(newRequest);
-        }
+            if (scheduledRide){
+                DatabaseReference riderScheduledRef = FirebaseDatabase.getInstance().getReference().child("Rider").child(userID);
+                DatabaseReference scheduledRideRef = FirebaseDatabase.getInstance().getReference().child("scheduledRides");
+                String scheduledRideID = scheduledRideRef.push().getKey();
+                newRequest.put("riderID", userID);
+                scheduledRideRef.child(scheduledRideID).updateChildren(newRequest);
+                riderScheduledRef.child(scheduledRideID).updateChildren(newRequest);
+                mProgressBar.setVisibility(View.GONE);
+                Toast.makeText(getActivity(), "Finding your driver... Please check the Scheduled for details of your booking request.", Toast.LENGTH_SHORT).show();
+            }else{
+                reqRef.setValue(newRequest);
+            }
     }
 
     private void endTrip() {
@@ -1596,10 +1600,12 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
         geoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
             @Override
             public void onKeyEntered(String key, GeoLocation location) {
-                for (Marker markerIt : availableMarkerList){
-                        if (markerIt.getTag()==key)
-                            return; 
+                for (Marker markerIt : availableMarkerList) {
+                    if (markerIt.getTag() != null) {
+                        if (markerIt.getTag().toString().equals(key))
+                            return;
                     }
+                }
                 LatLng driverLocation = new LatLng(location.latitude,location.longitude);
                 Marker mDriverMarker = mMap.addMarker(new MarkerOptions().position(driverLocation).title(key).icon(BitmapDescriptorFactory.fromResource(R.mipmap.available_taxi)));
                 mDriverMarker.setTag(key);
@@ -1610,23 +1616,28 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
             public void onKeyExited(String key) {
                 for (Marker markerIt : availableMarkerList){
                     Log.d(TAG,"available marker list size "+availableMarkerList.size());
-                        if (markerIt.getTag()==key) {
+                    if (markerIt.getTag()!=null){
+                        if (markerIt.getTag().toString().equals(key)) {
                             markerIt.remove();
                             availableMarkerList.remove(markerIt);
                             return;
-                            }
                         }
                     }
+
+                }
+            }
 
 
             @Override
             public void onKeyMoved(String key, GeoLocation location) {
                 for (Marker markerIt : availableMarkerList) {
-                        if (markerIt.getTag()==key) {
+                    if (markerIt.getTag() != null) {
+                        if (markerIt.getTag().toString().equals(key)) {
                             markerIt.setPosition(new LatLng(location.latitude, location.longitude));
                         }
                     }
                 }
+            }
 
             @Override
             public void onGeoQueryReady() {
@@ -1646,8 +1657,10 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
                 @Override
                 public void onKeyEntered(String key, GeoLocation location) {
                         for (Marker markerIt : workingMarkerList) {
-                             if (markerIt.getTag()==key)
-                                return;
+                            if (markerIt.getTag() != null) {
+                                if (markerIt.getTag().toString().equals(key))
+                                    return;
+                            }
                         }
                     
                 LatLng workingDriverLocation = new LatLng(location.latitude,location.longitude);
@@ -1659,22 +1672,25 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
             @Override
             public void onKeyExited(String key) {
                 for (Marker markerIt : workingMarkerList) {
-                        if (markerIt.getTag()==key) {
+                    if (markerIt.getTag() != null) {
+                        if (markerIt.getTag().toString().equals(key)) {
                             markerIt.remove();
                             workingMarkerList.remove(markerIt);
                             return;
                         }
                     }
                 }
+            }
             @Override
             public void onKeyMoved(String key, GeoLocation location) {
                 for (Marker markerIt : workingMarkerList) {
-                        if (markerIt.getTag()==key) {
+                    if (markerIt.getTag() != null) {
+                        if (markerIt.getTag().toString().equals(key)) {
                             markerIt.setPosition(new LatLng(location.latitude, location.longitude));
                         }
                     }
                 }
-
+            }
             @Override
             public void onGeoQueryReady() {
 

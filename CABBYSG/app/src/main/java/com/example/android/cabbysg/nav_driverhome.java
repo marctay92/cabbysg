@@ -799,10 +799,8 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
                                    Log.d(TAG, "Row item size: " + rowItems.size());
 
                                    }
-                               } else{
-                               endTrip();
-                                }
-                           }
+                               }
+                       }
 
 
                        @Override
@@ -810,6 +808,8 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
 
                        }
                    });
+               }else if(driverAccepted){
+                   endTrip();
                }
             }
 
