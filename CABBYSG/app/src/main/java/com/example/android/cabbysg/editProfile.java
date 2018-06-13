@@ -92,7 +92,7 @@ public class editProfile extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-       View rootView = inflater.inflate(R.layout.fragment_edit_profile, container, false);
+       final View rootView = inflater.inflate(R.layout.fragment_edit_profile, container, false);
 
         //Init pd
         pd = new ProgressDialog(getActivity(), STYLE_SPINNER);
@@ -139,7 +139,7 @@ public class editProfile extends Fragment{
                     }
                     if(map.get("profileImageUrl")!=null){
                         profileUrlStr = map.get("profileImageUrl").toString();
-                        Glide.with(getActivity()).load(profileUrlStr).into(editProfilePic);
+                        Glide.with(rootView.getContext()).load(profileUrlStr).into(editProfilePic);
                     }
                 }
             }
