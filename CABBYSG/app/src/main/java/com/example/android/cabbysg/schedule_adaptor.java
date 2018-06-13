@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
@@ -97,6 +98,7 @@ public class schedule_adaptor extends ArrayAdapter<schedule_details> {
                         scheduledRidesDatabase.removeValue();
                         //driverScheduleDatabase.removeValue();
                         riderScheduleDatabase.removeValue();
+                        Toast.makeText(getContext(),"Scheduled ride removed", Toast.LENGTH_SHORT).show();
                     }
                 });
                 builder.setNegativeButton("Exit",null);
