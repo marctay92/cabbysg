@@ -757,7 +757,8 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
             if (driverLocationRefListener!=null){
                 driverLocationRef.removeEventListener(driverLocationRefListener);
             }
-            if(driverFoundID != null) {
+
+            if(driverFoundID != null && !hasRiderRated) {
                 Log.d(TAG, "Check driverFoundID != null");
                 DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Drivers").child(driverFoundID);
                 driverFoundID = null;

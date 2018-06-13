@@ -675,7 +675,7 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
             public void onClick(View v) {
                 mLinearLayout3.setVisibility(View.INVISIBLE);
                 mLinearLayout4.setVisibility(View.VISIBLE);
-                if(fareType.equals("Fare")){
+                if(fareType.equals("Flat")){
                     mFinalFare.setFocusable(false);
                     Log.d(TAG,"fare is equal to: "+fare);
                     String finalFare = fare.replaceAll("\\$","");
