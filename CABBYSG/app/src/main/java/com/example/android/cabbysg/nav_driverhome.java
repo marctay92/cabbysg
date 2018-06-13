@@ -124,7 +124,7 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
     private Marker mCurrent;
     private String customerId = "";
     private String riderPhotoUrl = "";
-    private Boolean onTrip = false;
+    private Boolean onTrip = false, tripCancelled = false;
     private String destination, location, fare, selectedRoute, phoneNo, fareType, dateTime, endTripDateTime;
     private String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
     private Switch location_switch;
@@ -465,14 +465,14 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
         mLastLocation = location;
         displayLocation();
 
-        if(driverAccepted){
-            getDirections(customerLatLng);
-            mMap.addMarker(new MarkerOptions().position(customerLatLng));
-        }
         if (driverAccepted&&onTrip){
             getDirections(destinationLatLng);
             mMap.addMarker(new MarkerOptions().position(destinationLatLng));
+        } else if(driverAccepted){
+            getDirections(customerLatLng);
+            mMap.addMarker(new MarkerOptions().position(customerLatLng));
         }
+
 
 
     }
@@ -732,31 +732,8 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
         mCancelRequest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                historyRef = FirebaseDatabase.getInstance().getReference().child("Drivers").child(userID).child("cancellation");
-                historyRefListener = historyRef.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        if(dataSnapshot.exists()){
-                            if (dataSnapshot.getValue().toString()!=null){
-                                Double cancelledTrips = Double.parseDouble(dataSnapshot.getValue().toString());
-                                Double newCancelledTrips = cancelledTrips+1;
-                                historyRef.setValue(newCancelledTrips);
-                                historyRef.removeEventListener(this);
-                                endTrip();
-                            }
-                        } else{
-                            historyRef.setValue("1");
-                            historyRef.removeEventListener(this);
-                            endTrip();
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
+                tripCancelled = true;
+                endTrip();
             }
         });
         DatabaseReference noOfTripsRef = FirebaseDatabase.getInstance().getReference().child("Drivers").child(userID).child("History");
@@ -801,7 +778,7 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
 
 
     private DatabaseReference assignedCustomerRef;
-    private ValueEventListener assignedCustomerRefListener;
+    private ValueEventListener assignedCustomerRefListener, reqRefListener;
     private Boolean driverAccepted = false;
     private DatabaseReference reqRef;
     private void getAssignedCustomer() {
@@ -816,7 +793,7 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
                    customerId = dataSnapshot.getValue().toString();
                    Log.d(TAG,"Customer Rider ID: "+customerId);
                    reqRef = FirebaseDatabase.getInstance().getReference().child("customerRequest").child(customerId).child("Details");
-                   reqRef.addValueEventListener(new ValueEventListener() {
+                   reqRefListener = reqRef.addValueEventListener(new ValueEventListener() {
                        @Override
                        public void onDataChange(@NonNull final DataSnapshot dataSnapshot) {
                            if (dataSnapshot.exists()) {
@@ -846,7 +823,9 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
                                        Log.d(TAG, "Row item size: " + rowItems.size());
 
                                    }
-                               }
+                               } else{
+                               endTrip();
+                           }
                            }
 
 
@@ -1196,6 +1175,33 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
         }
         if(assignedCustomerRefListener!=null){
             assignedCustomerRef.removeEventListener(assignedCustomerRefListener);
+        }
+        if (reqRefListener!=null){
+            reqRef.removeEventListener(reqRefListener);
+        }
+        if(tripCancelled){
+            historyRef = FirebaseDatabase.getInstance().getReference().child("Drivers").child(userID).child("cancellation");
+            historyRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if(dataSnapshot.exists()){
+                        if (dataSnapshot.getValue().toString()!=null){
+                            Double cancelledTrips = Double.parseDouble(dataSnapshot.getValue().toString());
+                            Double newCancelledTrips = cancelledTrips+1;
+                            historyRef.setValue(newCancelledTrips);
+                            historyRef.removeEventListener(this);
+                        }
+                    } else{
+                        historyRef.setValue("1");
+                        historyRef.removeEventListener(this);
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
         }
         getAssignedCustomer();
         displayLocation();
