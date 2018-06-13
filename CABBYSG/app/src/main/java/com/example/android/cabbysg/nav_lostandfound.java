@@ -30,16 +30,17 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static android.app.ProgressDialog.STYLE_SPINNER;
+import static com.example.android.cabbysg.nav_driverlostandfound.isValidDate;
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class nav_lostandfound extends Fragment {
-    EditText itemDescription, lostPhoneNum, lostEmail;
-    String itemDescriptionStr = "", lostPhoneNumStr = "",lostEmailStr ="";
+    EditText itemDescription, lostPhoneNum, lostEmail,lostDate;
+    String itemDescriptionStr = "", lostPhoneNumStr = "",lostEmailStr ="",lostDateStr = "";
     Button lostItemSubmit;
-    boolean validDescription = false, validPhoneNum = false, validEmail = false;
+    boolean validDescription = false, validPhoneNum = false, validEmail = false, validDate = false;
     DatabaseReference current_user_db,lost_item_db;
     //Create progress dialog
     ProgressDialog pd;
@@ -66,6 +67,7 @@ public class nav_lostandfound extends Fragment {
         pd.setMessage("Please Wait...");
 
         //Init Edit Text
+        lostDate = rootView.findViewById(R.id.lostDate);
         itemDescription = rootView.findViewById(R.id.itemDescription);
         lostPhoneNum = rootView.findViewById(R.id.lostPhoneNumber);
         lostEmail = rootView.findViewById(R.id.lostEmail);
@@ -102,11 +104,18 @@ public class nav_lostandfound extends Fragment {
                 itemDescriptionStr = itemDescription.getText().toString();
                 lostPhoneNumStr = lostPhoneNum.getText().toString();
                 lostEmailStr = lostEmail.getText().toString();
+                lostDateStr = lostDate.getText().toString();
 
                 //Checks
                 if(TextUtils.isEmpty(itemDescriptionStr)) {
                     itemDescription.setError("Please enter your item description");
                 } else validDescription = true;
+
+                if (TextUtils.isEmpty(lostDateStr)) {
+                    lostDate.setError("Please enter your date found");
+                } else if (!isValidDate(lostDateStr)) {
+                    lostDate.setError("Please enter your date in dd-MM-yyyy");
+                }else validDate = true;
 
                 if (TextUtils.isEmpty(lostPhoneNumStr)) {
                     lostPhoneNum.setError("Please enter your phone number");
@@ -122,12 +131,13 @@ public class nav_lostandfound extends Fragment {
                     lostEmail.setError("Please enter a valid email");
                 }else validEmail = true;
 
-                if(validDescription&&validPhoneNum&&validEmail){
+                if(validDescription&&validPhoneNum&&validEmail&&validDate){
                     pd.show();
                     Map<String, Object> newPost = new HashMap<>();
                     newPost.put("itemDescription", itemDescriptionStr);
                     newPost.put("PhoneNum", lostPhoneNumStr);
                     newPost.put("Email", lostEmailStr);
+                    newPost.put("lostDate",lostDateStr);
                     newPost.put("riderID",user.getUid());
 
                     current_user_db.child(user.getUid()).child("LostItem").child(lost_item_db.getKey()).setValue(true);
