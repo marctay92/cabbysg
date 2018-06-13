@@ -153,7 +153,7 @@ public class nav_lostandfound extends Fragment {
         return matcher.matches();
     }
     public static boolean isNameValid(String name){
-        String expression = "^[a-zA-Z]{4,}(?: [a-zA-Z]+){0,2}$";
+        String expression = "^[a-zA-Z]{2,}(?: [a-zA-Z]+){0,2}$";
         Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(name);
         return matcher.matches();
