@@ -34,8 +34,6 @@ public class nav_payment extends android.support.v4.app.Fragment {
     public nav_payment() {
         // Required empty public constructor
     }
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -47,7 +45,8 @@ public class nav_payment extends android.support.v4.app.Fragment {
         listView.setAdapter(adapter);
 
         userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        getUserCreditCard();
+
+        //getUserCreditCard();
 
         Button button = view.findViewById(R.id.addpaymentmethod);
         button.setOnClickListener(new View.OnClickListener() {
@@ -61,48 +60,15 @@ public class nav_payment extends android.support.v4.app.Fragment {
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        getUserCreditCard();
+    }
+
     private void getUserCreditCard(){
         DatabaseReference userCreditCard_db = FirebaseDatabase.getInstance().getReference().child("Rider").child(userId).child("creditCard");
-        userCreditCard_db.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                if(dataSnapshot.exists()){
-                    //for(DataSnapshot creditCard : dataSnapshot.getChildren()){
-                        FetchCardInfo(dataSnapshot.getKey());
-                    //}
-                }
-            }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                if(dataSnapshot.exists()){
-                    //for(DataSnapshot creditCard : dataSnapshot.getChildren()){
-                        FetchCardInfo(dataSnapshot.getKey());
-                    //}
-                }
-
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    //arrayOfDetails.clear();
-                    FetchCardInfo(dataSnapshot.getKey());
-                }
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-        /*DatabaseReference userCreditCard_db = FirebaseDatabase.getInstance().getReference().child("Rider").child(userId).child("creditCard");
-        userCreditCard_db.addValueEventListener(new ValueEventListener() {
+        userCreditCard_db.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists()){
@@ -116,13 +82,52 @@ public class nav_payment extends android.support.v4.app.Fragment {
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
-        });*/
+        });
+        /*DatabaseReference userCreditCard_db = FirebaseDatabase.getInstance().getReference().child("Rider").child(userId).child("creditCard");
+        userCreditCard_db.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                if(dataSnapshot.exists()){
+                    FetchCardInfo(dataSnapshot.getKey());
+                    if (s!=null){
+                    //arrayOfDetails.clear();
+                        FetchCardInfo(s);
+                    }
+                }
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                if(dataSnapshot.exists()){
+                    arrayOfDetails.clear();
+                    FetchCardInfo(dataSnapshot.getKey());
+                }
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+                /*if (dataSnapshot.exists()) {
+                    arrayOfDetails.clear();
+                    FetchCardInfo(dataSnapshot.getKey());
+                }
+    }
+
+    @Override
+    public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+        //FetchCardInfo(dataSnapshot.getKey());
+    }
+
+    @Override
+    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+    }*/
     }
 
     private void FetchCardInfo(String cardKey){
         DatabaseReference creditCard_db = FirebaseDatabase.getInstance().getReference().child("creditCard").child(cardKey);
         arrayOfDetails.clear();
-        creditCard_db.addValueEventListener(new ValueEventListener() {
+        creditCard_db.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists()){
@@ -143,7 +148,6 @@ public class nav_payment extends android.support.v4.app.Fragment {
 
             }
         });
-
     }
     private ArrayList<cardDetailsContainer> arrayOfDetails = new ArrayList<cardDetailsContainer>();
     private ArrayList<cardDetailsContainer> getDataSetHistory(){

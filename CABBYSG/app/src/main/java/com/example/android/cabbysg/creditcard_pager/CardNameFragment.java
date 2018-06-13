@@ -32,11 +32,9 @@ public class CardNameFragment extends CreditCardFragment {
         }
 
 
-        if(name == null) {
+        if(name == "") {
             name = "";
             mCardNameView.setError("Please enter name");
-        }else if (!isNameValid(name)){
-            mCardNameView.setError("Please enter valid name");
         }
 
         mCardNameView.setText(name);
@@ -47,6 +45,10 @@ public class CardNameFragment extends CreditCardFragment {
 
     @Override
     public void afterTextChanged(Editable s) {
+        if(!isNameValid(s.toString())){
+            mCardNameView.setError("Please enter a name without number or symbol");
+            return;
+        }
 
         onEdit(s.toString());
         if(s.length() == getResources().getInteger(R.integer.card_name_len)) {

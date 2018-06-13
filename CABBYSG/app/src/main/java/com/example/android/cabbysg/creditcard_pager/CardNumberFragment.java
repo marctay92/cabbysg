@@ -12,6 +12,8 @@ import com.example.android.cabbysg.R;
 
 import static com.example.android.cabbysg.CreditCardUtils.CARD_NUMBER_FORMAT;
 import static com.example.android.cabbysg.CreditCardUtils.CARD_NUMBER_FORMAT_AMEX;
+import static com.example.android.cabbysg.CreditCardUtils.CardType.MASTER_CARD;
+import static com.example.android.cabbysg.CreditCardUtils.CardType.VISA_CARD;
 import static com.example.android.cabbysg.CreditCardUtils.EXTRA_CARD_NUMBER;
 
 public class CardNumberFragment extends CreditCardFragment {
@@ -31,11 +33,8 @@ public class CardNumberFragment extends CreditCardFragment {
             number = getArguments().getString(EXTRA_CARD_NUMBER);
         }
 
-        if (number == null) {
-            number = "";
+        if (number == "") {
             mCardNumberView.setError("Please enter card number");
-        }else if (number.length()<=15 ){
-            mCardNumberView.setError("Please enter valid card number");
         }
 
         mCardNumberView.setText(number);
@@ -55,6 +54,7 @@ public class CardNumberFragment extends CreditCardFragment {
 
         mCardNumberView.removeTextChangedListener(this);
         mCardNumberView.setText(cardNumber);
+
         String rawCardNumber = cardNumber.replace(CreditCardUtils.SPACE_SEPERATOR, "");
         CreditCardUtils.CardType cardType = CreditCardUtils.selectCardType(rawCardNumber);
         int maxLengthWithSpaces = ((cardType == CreditCardUtils.CardType.AMEX_CARD) ? CARD_NUMBER_FORMAT_AMEX : CARD_NUMBER_FORMAT).length();
@@ -67,7 +67,15 @@ public class CardNumberFragment extends CreditCardFragment {
 
         onEdit(cardNumber);
 
-        if (rawCardNumber.length() == CreditCardUtils.selectCardLength(cardType)) {
+        if (CreditCardUtils.selectCardType(cardNumber).toString()!="VISA_CARD" && CreditCardUtils.selectCardType(cardNumber).toString()!="MASTER_CARD"){
+            mCardNumberView.setError("Please enter a Visa or Mastercard");
+            return;
+        }else if (modifiedLength<=18 ) {
+            mCardNumberView.setError("Please enter valid card number");
+            return;
+        }
+
+        if (/*(cardType == VISA_CARD||cardType==MASTER_CARD)&&*/rawCardNumber.length() == CreditCardUtils.selectCardLength(cardType)) {
             onComplete();
         }
     }
