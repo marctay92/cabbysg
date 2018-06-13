@@ -286,9 +286,9 @@ public class driverEditProfile extends Fragment {
                                     });
                                 }
 
-                                Fragment newFragment=new nav_profile();
+                                Fragment newFragment = new nav_driverprofile();
                                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                                transaction.replace(R.id.editProfileFragment,newFragment);
+                                transaction.replace(R.id.driverEditProfile, newFragment);
                                 transaction.addToBackStack(null);
                                 transaction.commit();
                                 pd.dismiss();
