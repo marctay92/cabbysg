@@ -226,7 +226,7 @@ public class driverEditProfile extends Fragment {
 
                 if (TextUtils.isEmpty(mobileStr)) {
                     mobileEditText.setError("Please enter your mobile number");
-                } else if ((mobileStr.length()<8||mobileStr.length()>9)&&(mobileStr.substring(0,1).equals("9")||mobileStr.substring(0,1).equals("8"))){
+                } else if ((mobileStr.length()<8||mobileStr.length()>9)){
                     mobileEditText.setError("Please enter a valid number");
                 }else validEditMobile = true;
 
