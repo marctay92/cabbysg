@@ -683,7 +683,8 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
                     mFinalFare.setText(finalFare);
                     timestamp = System.currentTimeMillis()/1000;
                     mEndTripDateTime.setText(getDate(timestamp));
-
+                } else{
+                    mFinalFare.setFocusable(true);
                 }
             }
         });
@@ -799,7 +800,12 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
                                    }
                                    Log.d(TAG, "Row item size: " + rowItems.size());
 
-                                   }
+                                   } else if (dataSnapshot.child("driverFound").getValue().equals("true")&&!driverAccepted){
+                                       rowItems.clear();
+                                        assignedCustomerRef.removeValue();
+                                       arrayAdapter.notifyDataSetChanged();
+
+                                       }
                                }
                        }
 

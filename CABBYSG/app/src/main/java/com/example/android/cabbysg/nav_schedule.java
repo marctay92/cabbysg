@@ -95,8 +95,8 @@ public class nav_schedule extends Fragment {
                             driverIdStr = dataSnapshot.child("driverID").getValue().toString();
                             System.out.println("driverID: " + driverIdStr);
                         }*/
-                        if (child.getKey().equals("startLocation")) {
-                            startLocationStr = dataSnapshot.child("startLocation").getValue().toString();
+                        if (child.getKey().equals("currentLocation")) {
+                            startLocationStr = dataSnapshot.child("currentLocation").getValue().toString();
                         }
                         if (child.getKey().equals("destination")) {
                             destinationStr = dataSnapshot.child("destination").getValue().toString();

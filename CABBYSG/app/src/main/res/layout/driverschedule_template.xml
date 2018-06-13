@@ -23,8 +23,8 @@
 
         <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/ds_profile"
-            android:layout_width="95dp"
-            android:layout_height="104dp"
+            android:layout_width="86dp"
+            android:layout_height="96dp"
             android:layout_alignParentStart="true"
             android:layout_below="@+id/ds_date"
             android:layout_marginStart="14dp"
@@ -79,8 +79,7 @@
             android:id="@+id/ds_name"
             android:layout_width="wrap_content"
             android:layout_height="17dp"
-            android:layout_marginLeft="10dp"
-            android:layout_centerVertical="true"
+            android:layout_above="@+id/ds_destination"
             android:layout_toEndOf="@+id/ds_profile"
             android:text="John Tan"
             android:textColor="#2C2C2C" />
@@ -196,7 +195,7 @@
             android:id="@+id/dgreyspacebar"
             android:layout_width="2dp"
             android:layout_height="25dp"
-            android:layout_above="@+id/ds_name"
+            android:layout_above="@+id/star1"
             android:layout_alignStart="@+id/noteicon"
             android:layout_gravity="center"
             android:background="#9D9D9D" />

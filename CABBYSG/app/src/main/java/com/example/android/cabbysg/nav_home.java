@@ -657,10 +657,8 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
         mSubmitRating.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 hasRiderRated = true;
                 endTrip();
-
             }
         });
 
@@ -804,7 +802,6 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
             if(!getDriversAroundStarted) {
                 getDriversAround(locLatLng.latitude, locLatLng.longitude);
             }
-            mRatingBar.setRating(0f);
             customerEnd = false;
             hasRiderRated = false;
             mDestination.setText("");
@@ -835,6 +832,7 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
                         DecimalFormat df = new DecimalFormat("#.00");
                         String ratingFormatted = df.format(finalRating);
                         driverRatingRef.child("rating").setValue(ratingFormatted);
+                        mRatingBar.setRating(0f);
                     }
                 }
 
@@ -1893,8 +1891,14 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
         double perMinFare = 0.22;
         String stringDura = duration.replaceAll("[mins]", "");
         String stringDist = distance.replaceAll("[km]", "");
-        double douDist = Double.parseDouble(stringDist);
-        double douDura = Double.parseDouble(stringDura);
+        double douDist = 0.0;
+        double douDura = 0.0;
+        if (stringDist!=null && !stringDist.equals("")){
+            douDist = Double.parseDouble(stringDist);
+        }
+        if (stringDura!=null && !stringDura.equals("")){
+            douDura = Double.parseDouble(stringDura);
+        }
         double finalFare = baseFare + douDist * perKmFare + douDura * perMinFare;
         double meterLower, meterUpper;
 
