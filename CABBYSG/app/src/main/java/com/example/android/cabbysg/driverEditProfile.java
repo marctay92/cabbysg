@@ -139,6 +139,14 @@ public class driverEditProfile extends Fragment {
                         profileUrlStr = map.get("profileImageUrl").toString();
                         Glide.with(getContext()).load(profileUrlStr).into(editDriverProfileImage);
                     }
+                    if(map.get("regNum")!=null){
+                        carPlateStr = map.get("regNum").toString();
+                        carPlateTextView.setText(carPlateStr);
+                    }
+                    if(map.get("model")!=null){
+                        carModelStr = map.get("model").toString();
+                        carModelTextView.setText(carModelStr);
+                    }
                 }
             }
 
@@ -199,9 +207,6 @@ public class driverEditProfile extends Fragment {
                 lastNameStr = lastNameEditText.getText().toString();
                 mobileStr = mobileEditText.getText().toString();
                 emailStr = emailEditText.getText().toString();
-                carModelStr = carModelTextView.getText().toString();
-                carPlateStr = carPlateTextView.getText().toString();
-
 
                 //set condition to run reauthentication with the right function
                 saveChanges = true;
@@ -241,7 +246,7 @@ public class driverEditProfile extends Fragment {
                                 newPost.put("regNum",carPlateStr);
                                 newPost.put("model",carModelStr);
 
-                                current_user_db.setValue(newPost);
+                                current_user_db.updateChildren(newPost);
 
                                 if(resultUri!=null){
                                     StorageReference filePath = FirebaseStorage.getInstance().getReference().child("profile_images").child(user_id);
@@ -281,9 +286,9 @@ public class driverEditProfile extends Fragment {
                                     });
                                 }
 
-                                Fragment newFragment=new nav_profile();
+                                Fragment newFragment = new nav_driverprofile();
                                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                                transaction.replace(R.id.editProfileFragment,newFragment);
+                                transaction.replace(R.id.driverEditProfile, newFragment);
                                 transaction.addToBackStack(null);
                                 transaction.commit();
                                 pd.dismiss();

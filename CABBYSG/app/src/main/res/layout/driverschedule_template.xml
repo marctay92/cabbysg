@@ -7,7 +7,7 @@
 
     <RelativeLayout
         android:id="@+id/relLayout"
-        android:layout_width="364dp"
+        android:layout_width="match_parent"
         android:layout_height="152dp"
         android:layout_gravity="center_horizontal"
         tools:ignore="MissingConstraints"

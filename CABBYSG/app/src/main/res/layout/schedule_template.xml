@@ -7,7 +7,7 @@
 
     <RelativeLayout
         android:id="@+id/relLayout"
-        android:layout_width="360dp"
+        android:layout_width="match_parent"
         android:layout_height="140dp"
         android:layout_gravity="center_horizontal"
         tools:ignore="MissingConstraints"
@@ -16,7 +16,7 @@
 
         <ImageView
             android:id="@+id/yellow_rectangle_box1"
-            android:layout_width="360dp"
+            android:layout_width="match_parent"
             android:layout_height="140dp"
             android:layout_gravity="center_horizontal"
             android:src="@drawable/yellow_rectangle_box" />

@@ -33,13 +33,16 @@
             android:textSize="30sp"
             android:textStyle="bold" />
 
-        <Spinner
-            android:id="@+id/spinner"
+        <EditText
+            android:id="@+id/foundDate"
             android:layout_width="339dp"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="135dp"
+            android:hint="Date Found"
+            android:inputType="date"
+            android:textAlignment="center"
             android:entries="@array/triphistory" />
 
         <!--

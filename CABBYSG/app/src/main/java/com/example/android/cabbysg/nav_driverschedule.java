@@ -62,9 +62,17 @@ public class nav_driverschedule extends Fragment {
 
         return rootView;
     }
+
+    /*@Override
+    public void onResume() {
+        super.onResume();
+        arrayOfSchedule.clear();
+        getUserScheduledIds();
+    }*/
+
     private void getUserScheduledIds(){
         DatabaseReference userScheduleDatabase = FirebaseDatabase.getInstance().getReference().child("Drivers").child(userId).child("scheduledRides");
-        userScheduleDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+        userScheduleDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists()){
