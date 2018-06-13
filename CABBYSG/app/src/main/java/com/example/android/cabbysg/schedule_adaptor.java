@@ -44,14 +44,14 @@ public class schedule_adaptor extends ArrayAdapter<schedule_details> {
         }
 
         TextView s_date = convertView.findViewById(R.id.s_date);
-        final TextView s_name = convertView.findViewById(R.id.s_name);
-        final TextView s_carplatenumber = convertView.findViewById(R.id.s_carplatenumber);
-        final TextView s_rating = convertView.findViewById(R.id.s_rating);
+        //final TextView s_name = convertView.findViewById(R.id.s_name);
+        //final TextView s_carplatenumber = convertView.findViewById(R.id.s_carplatenumber);
+        //final TextView s_rating = convertView.findViewById(R.id.s_rating);
         TextView s_destination = convertView.findViewById(R.id.s_destination);
         TextView s_location = convertView.findViewById(R.id.s_location);
         TextView s_type = convertView.findViewById(R.id.s_type);
         TextView s_price = convertView.findViewById(R.id.s_price);
-        final de.hdodenhof.circleimageview.CircleImageView profilePic = convertView.findViewById(R.id.s_profile);
+        //final de.hdodenhof.circleimageview.CircleImageView profilePic = convertView.findViewById(R.id.s_profile);
         ImageView s_cancel= convertView.findViewById(R.id.s_cancel);
 
         s_date.setText(scheduleDetails.schedule_date);
