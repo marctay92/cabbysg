@@ -1076,8 +1076,9 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
                     Log.d(TAG,"ARRIVAL: DATASNAPSHOT.EXISTS "+dataSnapshot.getValue().toString());
                     if (dataSnapshot.child("ongoingTrip").getValue().toString().equals("true")){
                         Log.d(TAG,"ARRIVAL: DATA SNAPSHOT EXISTS ONGOINGTRIP " +dataSnapshot.child("ongoingTrip").getValue().toString());
-                        getHasTripStarted();
                         getArrivalRef.removeEventListener(getArrivalRefListener);
+                        getHasTripStarted();
+
                     }
                 } else if (driverFound){
                     Toasty.error(getActivity(),"Your driver has cancelled the ride!", Toast.LENGTH_SHORT,true).show();
@@ -1139,7 +1140,7 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
                                     TaskRequestDirections taskRequestDirections = new TaskRequestDirections();
                                     taskRequestDirections.execute(url1);
                                     mCancelRequest.setVisibility(View.INVISIBLE);
-                                    getHasTripStartedRef.removeEventListener(getHasTripStartedListener);
+
 
                                 }
                             }
@@ -1149,6 +1150,7 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
 
                             }
                         });
+
                         getHasTripEnded();
                     }
                 }

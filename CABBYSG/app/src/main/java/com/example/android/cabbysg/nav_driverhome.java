@@ -692,6 +692,7 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
                     mEndTripDateTime.setText(getDate(timestamp));
                 } else{
                     mFinalFare.setFocusable(true);
+                    mFinalFare.setClickable(true);
                 }
             }
         });
@@ -1155,6 +1156,7 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
         Log.d(TAG,"END TRIP TRIGGERED DAMMIT");
         //String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         mMap.getUiSettings().setMapToolbarEnabled(false);
+
         onTrip = false;
         mTotalFare.setText("");
         driverAccepted = false;
@@ -1174,6 +1176,7 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
         mTollFees.setText("");
         mTotalFare.setText("");
         mFinalFare.setFocusable(true);
+        mFinalFare.setFocusableInTouchMode(true);
         //code if ride is scheduled
         mRatingBar.setRating(0f);
         mMap.clear();
