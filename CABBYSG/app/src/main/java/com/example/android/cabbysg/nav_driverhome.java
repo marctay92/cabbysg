@@ -96,7 +96,7 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
     private static final String TAG = "Driver Home Fragment";
     private GoogleMap mMap;
     private Boolean mLocationPermissionsGranted = false;
-    private Boolean scheduledRide = false;
+    private Boolean submit = false;
 
     //PLAY_SERVICES
     private static final int MY_PERMISSION_REQUEST_CODE = 7000;
@@ -236,6 +236,7 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
                     if(getActivity()!= null) {
                         Toast.makeText(getActivity(), "Rider Found!", Toast.LENGTH_SHORT).show();
                     }
+                assignedCustomerRef.removeEventListener(assignedCustomerRefListener);
                     getAssignedCustomerPickupLocation();
                     changeDriverStatus();
 
@@ -710,6 +711,7 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
         mSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                submit = true;
                 recordTrip();
                 endTrip();
             }
@@ -801,8 +803,7 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
                                    if (rowItems.size() == 0) {
                                        rowItems.add(item);
                                        arrayAdapter.notifyDataSetChanged();
-
-                                       mCountdownTimer = new CountDownTimer(5000,1000){
+                                       mCountdownTimer = new CountDownTimer(5000, 1000) {
                                            @Override
                                            public void onTick(long millisUntilFinished) {
 
@@ -825,7 +826,12 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
                                        arrayAdapter.notifyDataSetChanged();
 
                                        }
+                               } else {
+                               if (!submit) {
+                                   Toasty.error(getActivity(), "Ride cancelled!", Toast.LENGTH_SHORT, true).show();
                                }
+                               endTrip();
+                           }
                        }
 
 
@@ -834,9 +840,6 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
 
                        }
                    });
-               }else if(driverAccepted){
-                   Toasty.error(getActivity(), "The trip has been cancelled!", Toast.LENGTH_SHORT, true).show();
-                   endTrip();
                }
             }
 

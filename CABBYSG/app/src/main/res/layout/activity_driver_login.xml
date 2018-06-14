@@ -47,17 +47,6 @@
         android:textSize="16sp"
         />
 
-    <TextView
-        android:id="@+id/driverForgot"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="81dp"
-        android:text="Forgot Password" />
-        <!-- android:textColor="?attr/colorAccent"
-        android:textColorHighlight="?attr/colorAccent" -->
-
     <ImageView
         android:contentDescription="logo"
         android:id="@+id/imageView2"

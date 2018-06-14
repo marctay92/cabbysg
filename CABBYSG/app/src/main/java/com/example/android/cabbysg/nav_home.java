@@ -755,15 +755,18 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
             if (driverLocationRefListener!=null){
                 driverLocationRef.removeEventListener(driverLocationRefListener);
             }
-
+            DatabaseReference driverRef = null;
             if(driverFoundID != null && !hasRiderRated) {
+                driverRef = FirebaseDatabase.getInstance().getReference().child("Drivers").child(driverFoundID);
                 Log.d(TAG, "Check driverFoundID != null");
-                DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Drivers").child(driverFoundID);
                 driverFoundID = null;
                 driverRef.child("customerRiderId").removeValue();
+                DatabaseReference ref = FirebaseDatabase.getInstance().getReference("customerRequest");
+                ref.child(userID).removeValue();
             } else if (customerEnd) {
                 DatabaseReference ref = FirebaseDatabase.getInstance().getReference("customerRequest");
                 ref.child(userID).removeValue();
+                driverRef.child("customerRiderId").removeValue();
             }
 
 
@@ -899,8 +902,6 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
                                                     System.out.println("Final radius is " + radius);
                                                     getDriverLocation();
                                                 }
-                                            } else {
-                                                endTrip();
                                             }
                                         }
                                         @Override
@@ -1073,8 +1074,11 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
                     if (dataSnapshot.child("ongoingTrip").getValue().toString().equals("true")){
                         Log.d(TAG,"ARRIVAL: DATA SNAPSHOT EXISTS ONGOINGTRIP " +dataSnapshot.child("ongoingTrip").getValue().toString());
                         getHasTripStarted();
+                        getArrivalRef.removeEventListener(getArrivalRefListener);
                     }
-                } else{
+                } else if (driverFound){
+                    Toasty.error(getActivity(),"Your driver has cancelled the ride!", Toast.LENGTH_SHORT,true).show();
+                    getArrivalRef.removeEventListener(getArrivalRefListener);
                     endTrip();
                 }
             }
@@ -1132,6 +1136,7 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
                                     TaskRequestDirections taskRequestDirections = new TaskRequestDirections();
                                     taskRequestDirections.execute(url1);
                                     mCancelRequest.setVisibility(View.INVISIBLE);
+                                    getHasTripStartedRef.removeEventListener(getHasTripStartedListener);
                                     getHasTripEnded();
                                 }
                             }
@@ -1162,7 +1167,9 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()){
                     if (dataSnapshot.getValue().toString().equals("ended")){
+                        getHasTripEndedRef.removeEventListener(getHasTripEndedRefListener);
                         displayEndTripDetails();
+
                     }
                 }
             }
