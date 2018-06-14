@@ -625,11 +625,13 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         if (dataSnapshot.exists()){
                             phoneNo = dataSnapshot.getValue().toString();
+                            String sms = "";
                             String smsNumber = String.format("smsto: %s", phoneNo);
-                            Intent dialIntent = new Intent(Intent.ACTION_SENDTO);
-                            dialIntent.setData(Uri.parse(smsNumber));
-                            if (dialIntent.resolveActivity(getActivity().getPackageManager()) != null) {
-                                startActivity(dialIntent);
+                            Intent smsIntent = new Intent(Intent.ACTION_SENDTO);
+                            smsIntent.setData(Uri.parse(smsNumber));
+                            smsIntent.putExtra("sms_body",sms);
+                            if (smsIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+                                startActivity(smsIntent);
                             } else {
                                 Log.e(TAG, "Can't resolve app for ACTION_SENDTO Intent.");
                             }
