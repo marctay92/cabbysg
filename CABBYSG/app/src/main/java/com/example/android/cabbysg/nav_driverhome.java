@@ -11,6 +11,7 @@ import android.location.Location;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -797,6 +798,21 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
                                    if (rowItems.size() == 0) {
                                        rowItems.add(item);
                                        arrayAdapter.notifyDataSetChanged();
+
+                                       new CountDownTimer(5000,1000){
+                                           @Override
+                                           public void onTick(long millisUntilFinished) {
+
+                                           }
+
+                                           @Override
+                                           public void onFinish() {
+                                               rowItems.clear();
+                                               assignedCustomerRef.removeValue();
+                                               driverAccepted=false;
+                                               arrayAdapter.notifyDataSetChanged();
+                                           }
+                                       }.start();
                                    }
                                    Log.d(TAG, "Row item size: " + rowItems.size());
 
