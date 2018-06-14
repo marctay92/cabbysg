@@ -131,6 +131,7 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
     private Switch location_switch;
     private float riderRating;
     private RatingBar mRatingBar;
+    private CountDownTimer mCountdownTimer;
 
     //arrayAdapter
     private cards cards_data[];
@@ -222,12 +223,14 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
 
             @Override
             public void onLeftCardExit(Object dataObject) {
+                mCountdownTimer.cancel();
                 assignedCustomerRef.removeValue();
                 driverAccepted=false;
             }
 
             @Override
             public void onRightCardExit(Object dataObject) {
+                    mCountdownTimer.cancel();
                     reqRef.child("driverFound").setValue("true");
                     driverAccepted = true;
                     if(getActivity()!= null) {
@@ -799,7 +802,7 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
                                        rowItems.add(item);
                                        arrayAdapter.notifyDataSetChanged();
 
-                                       new CountDownTimer(5000,1000){
+                                       mCountdownTimer = new CountDownTimer(5000,1000){
                                            @Override
                                            public void onTick(long millisUntilFinished) {
 
@@ -949,6 +952,8 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
         return data;
     }
     private void getDirections(LatLng custLatLng) {
+
+        mMap.getUiSettings().setMapToolbarEnabled(true);
         LatLng locLatLng = new LatLng(mLastLocation.getLatitude(),mLastLocation.getLongitude());
 
         String url = getRequestUrl(locLatLng, custLatLng);
@@ -1141,6 +1146,7 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
     private void endTrip() {
         Log.d(TAG,"END TRIP TRIGGERED DAMMIT");
         //String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        mMap.getUiSettings().setMapToolbarEnabled(false);
         onTrip = false;
         mTotalFare.setText("");
         driverAccepted = false;
