@@ -22,10 +22,10 @@ public class driverManual extends Fragment {
         // Inflate the layout for this fragment
         View rootView= inflater.inflate(R.layout.fragment_driver_manual, container, false);
 
-        viewPager=(ViewPager)rootView.findViewById(R.id.viewPager);
+        viewPager= rootView.findViewById(R.id.viewPager);
         adapter = new ViewPageAdapter(getActivity());
         viewPager.setAdapter(adapter);
-        viewPager.setCurrentItem(adapter.getCount()-3);
+        viewPager.setCurrentItem(adapter.getCount()-7);
 
         return rootView;
     }

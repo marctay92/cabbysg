@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 
 import java.util.ArrayList;
@@ -20,11 +21,15 @@ public class ViewPageAdapter extends PagerAdapter{
 
     Context context;
     private int[] GalImages = new int[] {
-            R.drawable.helpemail,
-            R.drawable.helpcall,
-            R.drawable.helpfaq
-
+            R.drawable.driver1,
+            R.drawable.driver2,
+            R.drawable.driver4,
+            R.drawable.driver3,
+            R.drawable.driver5,
+            R.drawable.driver6,
+            R.drawable.driver7
     };
+
 
     LayoutInflater mLayoutInflater;
 
@@ -39,14 +44,14 @@ public class ViewPageAdapter extends PagerAdapter{
 
     @Override
     public boolean isViewFromObject(View view, Object object) {
-        return view == ((LinearLayout) object);
+        return view == object;
     }
 
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
         View itemView = mLayoutInflater.inflate(R.layout.viewpager_item, container, false);
 
-        ImageView imageView = (ImageView) itemView.findViewById(R.id.manualimage);
+        ImageView imageView = itemView.findViewById(R.id.manualimage);
         imageView.setImageResource(GalImages[position]);
 
         container.addView(itemView);

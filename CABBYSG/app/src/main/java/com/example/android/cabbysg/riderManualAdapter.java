@@ -14,9 +14,11 @@ public class riderManualAdapter extends PagerAdapter {
 
     Context context;
     private int[] GalImages = new int[] {
-            R.drawable.helpfaq,
-            R.drawable.helpemail,
-            R.drawable.helpcall
+            R.drawable.rider1,
+            R.drawable.rider2,
+            R.drawable.rider3,
+            R.drawable.rider4,
+            R.drawable.rider5
     };
 
     LayoutInflater mLayoutInflater;
@@ -32,14 +34,14 @@ public class riderManualAdapter extends PagerAdapter {
 
     @Override
     public boolean isViewFromObject(View view, Object object) {
-        return view == ((LinearLayout) object);
+        return view == object;
     }
 
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
         View itemView = mLayoutInflater.inflate(R.layout.viewpager_item, container, false);
 
-        ImageView imageView = (ImageView) itemView.findViewById(R.id.manualimage);
+        ImageView imageView = itemView.findViewById(R.id.manualimage);
         imageView.setImageResource(GalImages[position]);
 
         container.addView(itemView);

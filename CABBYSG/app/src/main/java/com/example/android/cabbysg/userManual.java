@@ -22,10 +22,10 @@ public class userManual extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView= inflater.inflate(R.layout.fragment_user_manual, container, false);
-        viewPager=(ViewPager)rootView.findViewById(R.id.viewPager);
+        viewPager= rootView.findViewById(R.id.riderPager);
         adapter = new riderManualAdapter(getActivity());
         viewPager.setAdapter(adapter);
-        viewPager.setCurrentItem(adapter.getCount()-3);
+        viewPager.setCurrentItem(adapter.getCount()-5);
         return rootView;
     }
 }
