@@ -736,6 +736,7 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
                 scheduledRideRef.child(scheduledRideID).updateChildren(newRequest);
                 riderScheduledRef.child(scheduledRideID).setValue(true);
                 mProgressBar.setVisibility(View.GONE);
+                getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                 Toast.makeText(getActivity(), "Finding your driver... Please check the Scheduled for details of your booking request.", Toast.LENGTH_SHORT).show();
             }else{
                 reqRef.setValue(newRequest);
@@ -934,7 +935,7 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
                     System.out.println("Radius is " + radius);
                     radius = radius+0.5;
                     getClosestDriver();
-                    } else {
+                    } else if (!scheduledRide) {
                     getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                     mProgressBar.setVisibility(View.GONE);
 
@@ -1137,7 +1138,7 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
                                     taskRequestDirections.execute(url1);
                                     mCancelRequest.setVisibility(View.INVISIBLE);
                                     getHasTripStartedRef.removeEventListener(getHasTripStartedListener);
-                                    getHasTripEnded();
+
                                 }
                             }
 
@@ -1146,6 +1147,7 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
 
                             }
                         });
+                        getHasTripEnded();
                     }
                 }
             }
@@ -1159,7 +1161,7 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
     DatabaseReference getHasTripEndedRef;
     ValueEventListener getHasTripEndedRefListener;
     private void getHasTripEnded() {
-        Toasty.success(getActivity(),"Trip has begun!",Toast.LENGTH_LONG,true).show();
+        //Toasty.success(getActivity(),"Trip has begun!",Toast.LENGTH_LONG,true).show();
         Log.d(TAG,"Getting hasTripEnded variable!");
         getHasTripEndedRef = FirebaseDatabase.getInstance().getReference().child("customerRequest").child(userID).child("Details").child("ongoingTrip");
         getHasTripEndedRefListener = getHasTripEndedRef.addValueEventListener(new ValueEventListener() {
@@ -1777,9 +1779,11 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
             JSONObject jsonObject;
             List<List<HashMap<String, String>>> routes = null;
             try {
-                jsonObject = new JSONObject(strings[0]);
-                DirectionsJSONParser directionsJSONParser = new DirectionsJSONParser();
-                routes = directionsJSONParser.parse(jsonObject);
+                if (strings[0]!=null){
+                    jsonObject = new JSONObject(strings[0]);
+                    DirectionsJSONParser directionsJSONParser = new DirectionsJSONParser();
+                    routes = directionsJSONParser.parse(jsonObject);
+                }
 
             } catch (JSONException e) {
                 e.printStackTrace();

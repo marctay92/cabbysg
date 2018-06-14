@@ -298,7 +298,7 @@ public class CardEditActivity extends AppCompatActivity {
                 rider_db.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull final DataSnapshot dataSnapshot) {
-                        if (dataSnapshot.exists()) {
+                        if (dataSnapshot.getChildrenCount()==2 && dataSnapshot.exists()) {
                             for (DataSnapshot creditCard : dataSnapshot.getChildren()) {
                                 final String cardNum = creditCard.getKey();
                                 if (CreditCardUtils.selectCardType(cardNum).toString() == "VISA_CARD" && mCreditCardView.getCardType().toString().equals("VISA_CARD")) {
@@ -308,27 +308,6 @@ public class CardEditActivity extends AppCompatActivity {
                                     rider_db.child(mCardNumber).setValue(true);
                                     setResult(RESULT_OK, intent);
                                     finish();
-                                /*builder.setTitle("VISA card Replacement");
-                                builder.setMessage("You have a VISA card in our system. Would you like to replace it?");
-                                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        creditCard_db.child(mCardNumber).updateChildren(newPost);
-                                        creditCard_db.child(cardNum).removeValue();
-                                        rider_db.child(cardNum).removeValue();
-                                        rider_db.child(mCardNumber).setValue(true);
-                                        setResult(RESULT_OK, intent);
-                                        finish();
-                                    }
-                                }).setNegativeButton("No", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        finish();
-                                        return;
-                                    }
-                                });
-                                AlertDialog dialog=builder.create();
-                                dialog.show();*/
                                 } else if (CreditCardUtils.selectCardType(cardNum).toString() == "MASTER_CARD" && mCreditCardView.getCardType().toString().equals("MASTER_CARD")) {
                                     creditCard_db.child(mCardNumber).updateChildren(newPost);
                                     creditCard_db.child(cardNum).removeValue();
@@ -336,27 +315,36 @@ public class CardEditActivity extends AppCompatActivity {
                                     rider_db.child(mCardNumber).setValue(true);
                                     setResult(RESULT_OK, intent);
                                     finish();
-                                /*builder.setTitle("Mastercard Replacement");
-                                builder.setMessage("You have a Mastercard in our system. Would you like to replace it?");
-                                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        creditCard_db.child(mCardNumber).updateChildren(newPost);
-                                        creditCard_db.child(cardNum).removeValue();
-                                        rider_db.child(cardNum).removeValue();
-                                        rider_db.child(mCardNumber).setValue(true);
-                                        setResult(RESULT_OK, intent);
-                                        finish();
-                                    }
-                                }).setNegativeButton("No", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        finish();
-                                        return;
-                                    }
-                                });
-                                AlertDialog dialog=builder.create();
-                                dialog.show();*/
+                                }
+                            }
+                        }else if (dataSnapshot.getChildrenCount()==1){
+                            for (DataSnapshot creditCard : dataSnapshot.getChildren()) {
+                                final String cardNum = creditCard.getKey();
+                                if (CreditCardUtils.selectCardType(cardNum).toString() == "VISA_CARD" && mCreditCardView.getCardType().toString().equals("VISA_CARD")) {
+                                    creditCard_db.child(mCardNumber).updateChildren(newPost);
+                                    creditCard_db.child(cardNum).removeValue();
+                                    rider_db.child(cardNum).removeValue();
+                                    rider_db.child(mCardNumber).setValue(true);
+                                    setResult(RESULT_OK, intent);
+                                    finish();
+                                } else {
+                                    creditCard_db.child(mCardNumber).updateChildren(newPost);
+                                    rider_db.child(mCardNumber).setValue(true);
+                                    setResult(RESULT_OK, intent);
+                                    finish();
+                                }
+                                if (CreditCardUtils.selectCardType(cardNum).toString() == "MASTER_CARD" && mCreditCardView.getCardType().toString().equals("MASTER_CARD")) {
+                                    creditCard_db.child(mCardNumber).updateChildren(newPost);
+                                    creditCard_db.child(cardNum).removeValue();
+                                    rider_db.child(cardNum).removeValue();
+                                    rider_db.child(mCardNumber).setValue(true);
+                                    setResult(RESULT_OK, intent);
+                                    finish();
+                                } else {
+                                    creditCard_db.child(mCardNumber).updateChildren(newPost);
+                                    rider_db.child(mCardNumber).setValue(true);
+                                    setResult(RESULT_OK, intent);
+                                    finish();
                                 }
                             }
                         }else {

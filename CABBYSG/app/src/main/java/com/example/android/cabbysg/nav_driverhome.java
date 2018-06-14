@@ -828,7 +828,10 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
                                        }
                                } else {
                                if (!submit) {
-                                   Toasty.error(getActivity(), "Ride cancelled!", Toast.LENGTH_SHORT, true).show();
+                                   if (getActivity()!=null){
+                                       Toast.makeText(getActivity(), "Ride cancelled!", Toast.LENGTH_SHORT).show();
+
+                                   }
                                }
                                endTrip();
                            }
