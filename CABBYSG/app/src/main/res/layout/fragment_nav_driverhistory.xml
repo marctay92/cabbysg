@@ -194,8 +194,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
-                android:paddingLeft="14dp"
-                android:paddingRight="14dp">
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp">
 
                 <RelativeLayout
                     android:id="@+id/relLayout1"
