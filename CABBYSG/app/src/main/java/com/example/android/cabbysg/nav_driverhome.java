@@ -806,7 +806,7 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
                                    if (rowItems.size() == 0) {
                                        rowItems.add(item);
                                        arrayAdapter.notifyDataSetChanged();
-                                       mCountdownTimer = new CountDownTimer(5000, 1000) {
+                                       mCountdownTimer = new CountDownTimer(10000, 1000) {
                                            @Override
                                            public void onTick(long millisUntilFinished) {
 
@@ -824,8 +824,9 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
                                    Log.d(TAG, "Row item size: " + rowItems.size());
 
                                    } else if (dataSnapshot.child("driverFound").getValue().equals("true")&&!driverAccepted){
+                                       mCountdownTimer.cancel();
                                        rowItems.clear();
-                                        assignedCustomerRef.removeValue();
+                                       assignedCustomerRef.removeValue();
                                        arrayAdapter.notifyDataSetChanged();
 
                                        }
