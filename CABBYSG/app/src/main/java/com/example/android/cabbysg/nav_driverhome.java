@@ -1173,6 +1173,7 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
         GeoFire geoFire = new GeoFire(ref);
         geoFire.removeLocation(customerId);
         customerId = "";
+        tripCancelled = false;
         mFinalFare.setText("");
         mTollFees.setText("");
         mTotalFare.setText("");
