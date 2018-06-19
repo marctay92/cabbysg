@@ -1180,7 +1180,7 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
         mFinalFare.setFocusable(true);
         mFinalFare.setFocusableInTouchMode(true);
         //code if ride is scheduled
-        mRatingBar.setRating(0f);
+
         mMap.clear();
         if(mLinearLayout4.isShown()){
             mLinearLayout4.setVisibility(View.INVISIBLE);
@@ -1266,6 +1266,7 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
                     float previousRating = Float.parseFloat(dataSnapshot.child("rating").getValue().toString());
                     float finalRating = ((previousRating*count)+riderRating)/count;
                     riderRatingRef.child("rating").setValue(Float.toString(finalRating));
+                    mRatingBar.setRating(0f);
                 }
             }
             @Override

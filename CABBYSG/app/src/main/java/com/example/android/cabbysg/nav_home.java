@@ -1076,7 +1076,6 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
                     Log.d(TAG,"ARRIVAL: DATASNAPSHOT.EXISTS "+dataSnapshot.getValue().toString());
                     if (dataSnapshot.child("ongoingTrip").getValue().toString().equals("true")){
                         Log.d(TAG,"ARRIVAL: DATA SNAPSHOT EXISTS ONGOINGTRIP " +dataSnapshot.child("ongoingTrip").getValue().toString());
-                        getArrivalRef.removeEventListener(getArrivalRefListener);
                         getHasTripStarted();
 
                     }
