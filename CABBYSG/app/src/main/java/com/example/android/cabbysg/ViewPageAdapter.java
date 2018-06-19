@@ -23,8 +23,8 @@ public class ViewPageAdapter extends PagerAdapter{
     private int[] GalImages = new int[] {
             R.drawable.driver1,
             R.drawable.driver2,
-            R.drawable.driver4,
             R.drawable.driver3,
+            R.drawable.driver4,
             R.drawable.driver5,
             R.drawable.driver6,
             R.drawable.driver7
