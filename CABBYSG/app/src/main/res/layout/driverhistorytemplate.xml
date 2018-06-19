@@ -56,7 +56,7 @@
 
         <TextView
             android:id="@+id/history2Name"
-            android:layout_width="wrap_content"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/history2Profile"
             android:layout_alignParentTop="true"
@@ -79,7 +79,7 @@
         android:id="@+id/sgd1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/history2Profile"
+        android:layout_below="@+id/line1"
         android:layout_toEndOf="@+id/history2Fare"
         android:layout_marginLeft="10dp"
         android:text="SGD"
@@ -152,8 +152,8 @@
         android:layout_width="5dp"
         android:layout_height="23dp"
         android:layout_above="@+id/history2Profile"
-        android:layout_toEndOf="@+id/history2Rating"
-        android:layout_marginLeft="40dp"
+        android:layout_toEndOf="@+id/history2Name"
+        android:layout_marginLeft="20dp"
         android:src="@drawable/emptyyellowcircle" />
 
         <ImageView
@@ -175,7 +175,9 @@
             android:id="@+id/history2From"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/history2Profile"
+            android:layout_below="@+id/history2Date"
+            android:layout_marginTop="-8dp"
+            android:layout_centerVertical="true"
             android:layout_marginRight="20dp"
             android:layout_alignStart="@id/emptyyellowcircle"
             android:paddingLeft="10dp"
