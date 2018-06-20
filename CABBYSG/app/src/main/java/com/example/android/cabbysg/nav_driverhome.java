@@ -1173,7 +1173,7 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
         GeoFire geoFire = new GeoFire(ref);
         geoFire.removeLocation(customerId);
         customerId = "";
-        tripCancelled = false;
+
         mFinalFare.setText("");
         mTollFees.setText("");
         mTotalFare.setText("");
@@ -1212,6 +1212,7 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
                             Double cancelledTrips = Double.parseDouble(dataSnapshot.getValue().toString());
                             Double newCancelledTrips = cancelledTrips+1;
                             historyRef.setValue(newCancelledTrips);
+                            tripCancelled = false;
                         }
                     } else{
                         historyRef.setValue("1");
@@ -1263,9 +1264,9 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()){
                     long count = dataSnapshot.child("History").getChildrenCount();
-                    float previousRating = Float.parseFloat(dataSnapshot.child("rating").getValue().toString());
-                    float finalRating = ((previousRating*count)+riderRating)/count;
-                    riderRatingRef.child("rating").setValue(Float.toString(finalRating));
+                    Double previousRating = Double.parseDouble(dataSnapshot.child("rating").getValue().toString());
+                    Double finalRating = ((previousRating*count)+riderRating)/count;
+                    riderRatingRef.child("rating").setValue(Double.toString(finalRating));
                     mRatingBar.setRating(0f);
                 }
             }

@@ -1140,7 +1140,6 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
                                     taskRequestDirections.execute(url1);
                                     mCancelRequest.setVisibility(View.INVISIBLE);
 
-
                                 }
                             }
 
@@ -1381,60 +1380,66 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
         String locSearchString = mCurrentLocation.getText().toString();
         String desSearchString = mDestination.getText().toString();
         //geocoding location to latlng
-        Geocoder geocoder = new Geocoder(getActivity());
-        List<Address> list = new ArrayList<>();
-        try {
-            list = geocoder.getFromLocationName(locSearchString, 1);
-        } catch (IOException e) {
-            Log.e(TAG, "geoLocate: IOException: " + e.getMessage());
+
+        if (getActivity()!=null){
+            Geocoder geocoder = new Geocoder(getActivity());
+
+            List<Address> list = new ArrayList<>();
+            try {
+
+                list = geocoder.getFromLocationName(locSearchString, 1);
+            } catch (IOException e) {
+                Log.e(TAG, "geoLocate: IOException: " + e.getMessage());
+            }
+
+            if (list.size() > 0) {
+                Address loc = list.get(0);
+
+                Log.d(TAG, "geoLocate: found a location: " + loc.toString());
+
+                locLatLng = new LatLng(loc.getLatitude(), loc.getLongitude());
+
+                Log.d(TAG, "Your location latlng is " + locLatLng);
+            }
+            Geocoder geocoder1 = new Geocoder(getActivity());
+            List<Address> list1 = new ArrayList<>();
+            try {
+                //Log.d(TAG,"des search string is "+desSearchString );
+                list1 = geocoder1.getFromLocationName(desSearchString, 1);
+            } catch (IOException e) {
+                Log.e(TAG, "geoLocate: IOException: " + e.getMessage());
+            }
+
+            if (list1.size() > 0) {
+                Address des = list1.get(0);
+
+                Log.d(TAG, "geoLocate: found a destination: " + des.toString());
+
+                desLatLng = new LatLng(des.getLatitude(), des.getLongitude());
+
+                Log.d(TAG, "Your destination latlng is " + desLatLng);
+            } else {
+                Log.e(TAG, "Error: Destination not found");
+            }
+            MarkerOptions locMarker = new MarkerOptions()
+                    .position(locLatLng);
+            MarkerOptions desMarker = new MarkerOptions()
+                    .position(desLatLng);
+
+            if (mLinearLayout2.isShown() && !onTrip){
+                mMap.addMarker(locMarker);
+                mMap.addMarker(new MarkerOptions().position(driverLatLng).title("Your Driver").snippet("Distance: "+distance
+                        + " Time: "+duration).icon(BitmapDescriptorFactory.fromResource(R.mipmap.working_taxi)));
+            }else if (onTrip){
+                mMap.addMarker(new MarkerOptions().position(driverLatLng).title("Your Driver").snippet("Distance: "+distance
+                        + " Time: "+duration).icon(BitmapDescriptorFactory.fromResource(R.mipmap.working_taxi)));
+                mMap.addMarker(desMarker);
+            } else{
+                mMap.addMarker(locMarker);
+                mMap.addMarker(desMarker);
+            }
         }
 
-        if (list.size() > 0) {
-            Address loc = list.get(0);
-
-            Log.d(TAG, "geoLocate: found a location: " + loc.toString());
-
-            locLatLng = new LatLng(loc.getLatitude(), loc.getLongitude());
-
-            Log.d(TAG, "Your location latlng is " + locLatLng);
-        }
-        Geocoder geocoder1 = new Geocoder(getActivity());
-        List<Address> list1 = new ArrayList<>();
-        try {
-            //Log.d(TAG,"des search string is "+desSearchString );
-            list1 = geocoder1.getFromLocationName(desSearchString, 1);
-        } catch (IOException e) {
-            Log.e(TAG, "geoLocate: IOException: " + e.getMessage());
-        }
-
-        if (list1.size() > 0) {
-            Address des = list1.get(0);
-
-            Log.d(TAG, "geoLocate: found a destination: " + des.toString());
-
-            desLatLng = new LatLng(des.getLatitude(), des.getLongitude());
-
-            Log.d(TAG, "Your destination latlng is " + desLatLng);
-        } else {
-            Log.e(TAG, "Error: Destination not found");
-        }
-        MarkerOptions locMarker = new MarkerOptions()
-                .position(locLatLng);
-        MarkerOptions desMarker = new MarkerOptions()
-                .position(desLatLng);
-
-        if (mLinearLayout2.isShown() && !onTrip){
-            mMap.addMarker(locMarker);
-            mMap.addMarker(new MarkerOptions().position(driverLatLng).title("Your Driver").snippet("Distance: "+distance
-            + " Time: "+duration).icon(BitmapDescriptorFactory.fromResource(R.mipmap.working_taxi)));
-        }else if (onTrip){
-            mMap.addMarker(new MarkerOptions().position(driverLatLng).title("Your Driver").snippet("Distance: "+distance
-                    + " Time: "+duration).icon(BitmapDescriptorFactory.fromResource(R.mipmap.working_taxi)));
-            mMap.addMarker(desMarker);
-        } else{
-            mMap.addMarker(locMarker);
-            mMap.addMarker(desMarker);
-        }
     }
 
     private void getDirections(String locSearchString, String desSearchString) {

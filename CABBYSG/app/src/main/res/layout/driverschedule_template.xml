@@ -226,7 +226,8 @@
             android:layout_height="20dp"
             android:layout_alignParentEnd="true"
             android:layout_alignParentTop="true"
-            android:src="@drawable/cancelbutton" />
+            android:src="@drawable/cancelbutton"
+            android:visibility="gone"/>
 
     </RelativeLayout>
 

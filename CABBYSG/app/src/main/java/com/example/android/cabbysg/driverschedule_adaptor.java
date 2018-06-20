@@ -86,24 +86,6 @@ public class driverschedule_adaptor extends ArrayAdapter<driverschedule_details>
             public void onClick(View view) {
                 //   int position = (Integer) view.getTag();
                 //  schedule_details user = getItem(position);
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
-                builder.setTitle("Confirm Cancel Booking?");
-                builder.setMessage("Booking will be cancelled");
-
-                builder.setPositiveButton("Continue", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        scheduledRidesDatabase.removeValue();
-                        //driverScheduleDatabase.removeValue();
-                        riderScheduleDatabase.removeValue();
-                    }
-                });
-                builder.setNegativeButton("Exit",null);
-
-                AlertDialog dialog=builder.create();
-                dialog.show();
-
             }
         });
 
