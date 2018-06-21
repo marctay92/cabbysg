@@ -54,7 +54,7 @@ public class nav_driverlostandfound extends Fragment {
     private Uri photo1Uri, photo2Uri, photo3Uri;
     Map<String, Object> newPost = new HashMap<String, Object>();
     Button foundItemSubmit;
-    boolean validDescription = false,validDate = false;
+    boolean validDescription = false,validDate = false, validPhoto = false;
     DatabaseReference current_user_db,found_item_db;
     int index = 1;
     //Create progress dialog
@@ -140,11 +140,11 @@ public class nav_driverlostandfound extends Fragment {
                     date.setError("Please enter your date in dd-MM-yyyy");
                 }else validDate = true;
 
-                if (photo1Uri==null || photo2Uri==null||photo3Uri==null){
-                    Toast.makeText(getActivity(),"Please upload a picture for reference",Toast.LENGTH_SHORT).show();
-                }
+                if (photo1Uri==null && photo2Uri==null&&photo3Uri==null){
+                    Toast.makeText(getActivity(),"Please upload a picture for reference",Toast.LENGTH_LONG).show();
+                }else validPhoto = true;
 
-                if (validDescription && validDate){
+                if (validDescription && validDate && validPhoto){
                     newPost.put("foundDate", dateStr);
                     newPost.put("itemDescription", itemDescriptionStr);
                     newPost.put("driverID",user.getUid());
