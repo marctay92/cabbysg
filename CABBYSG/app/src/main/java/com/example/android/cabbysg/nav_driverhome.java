@@ -824,11 +824,12 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
                                    Log.d(TAG, "Row item size: " + rowItems.size());
 
                                    } else if (dataSnapshot.child("driverFound").getValue().equals("true")&&!driverAccepted){
-                                       mCountdownTimer.cancel();
-                                       rowItems.clear();
-                                       assignedCustomerRef.removeValue();
-                                       arrayAdapter.notifyDataSetChanged();
-
+                                        if (mCountdownTimer!=null){
+                                            mCountdownTimer.cancel();
+                                        }
+                                   rowItems.clear();
+                                   assignedCustomerRef.removeValue();
+                                   arrayAdapter.notifyDataSetChanged();
                                        }
                                } else {
                                if (!submit) {

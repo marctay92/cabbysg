@@ -257,7 +257,7 @@ public class nav_driverlostandfound extends Fragment {
                     }
                     current_user_db.child(user.getUid()).child("FoundItem").child(foundItemID).setValue(true);
                     Toast.makeText(getActivity(),"Found Item Report submitted.",Toast.LENGTH_SHORT).show();
-                    Fragment newFragment=new nav_home();
+                    Fragment newFragment=new nav_driverhome();
                     FragmentTransaction transaction = getFragmentManager().beginTransaction();
                     transaction.replace(R.id.driverLostandFound,newFragment);
                     transaction.addToBackStack(null);
