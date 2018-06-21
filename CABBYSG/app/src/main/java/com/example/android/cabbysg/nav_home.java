@@ -619,7 +619,7 @@ public class nav_home extends Fragment implements OnMapReadyCallback, GoogleApiC
         mTextDriver.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Rider").child(driverFoundID).child("mobileNum");
+                DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Drivers").child(driverFoundID).child("mobileNum");
                 ref.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
