@@ -683,13 +683,13 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
                 mLinearLayout3.setVisibility(View.INVISIBLE);
                 mLinearLayout4.setVisibility(View.VISIBLE);
                 timestamp = System.currentTimeMillis()/1000;
+                mEndTripDateTime.setText(getDate(timestamp));
                 if(fareType.equals("Flat")){
                     mFinalFare.setFocusable(false);
                     Log.d(TAG,"fare is equal to: "+fare);
                     String finalFare = fare.replaceAll("\\$","");
                     Log.d(TAG,"fare is equal to: after regex "+finalFare);
                     mFinalFare.setText(finalFare);
-                    mEndTripDateTime.setText(getDate(timestamp));
                 } else{
                     mFinalFare.setFocusable(true);
                     mFinalFare.setClickable(true);
