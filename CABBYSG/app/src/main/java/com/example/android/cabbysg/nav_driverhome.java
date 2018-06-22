@@ -209,7 +209,7 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
         rowItems = new ArrayList<cards>();
 
         arrayAdapter = new arrayAdapter(getActivity(), R.layout.items, rowItems);
-        flingContainer = (SwipeFlingAdapterView) v.findViewById(R.id.frame);
+        flingContainer = v.findViewById(R.id.frame);
         flingContainer.setAdapter(arrayAdapter);
         flingContainer.bringToFront();
         flingContainer.setFlingListener(new SwipeFlingAdapterView.onFlingListener() {
@@ -682,13 +682,13 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
             public void onClick(View v) {
                 mLinearLayout3.setVisibility(View.INVISIBLE);
                 mLinearLayout4.setVisibility(View.VISIBLE);
+                timestamp = System.currentTimeMillis()/1000;
                 if(fareType.equals("Flat")){
                     mFinalFare.setFocusable(false);
                     Log.d(TAG,"fare is equal to: "+fare);
                     String finalFare = fare.replaceAll("\\$","");
                     Log.d(TAG,"fare is equal to: after regex "+finalFare);
                     mFinalFare.setText(finalFare);
-                    timestamp = System.currentTimeMillis()/1000;
                     mEndTripDateTime.setText(getDate(timestamp));
                 } else{
                     mFinalFare.setFocusable(true);
