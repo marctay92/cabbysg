@@ -1266,7 +1266,7 @@ public class nav_driverhome extends Fragment implements OnMapReadyCallback, Goog
                 if (dataSnapshot.exists()){
                     long count = dataSnapshot.child("History").getChildrenCount();
                     Double previousRating = Double.parseDouble(dataSnapshot.child("rating").getValue().toString());
-                    Double finalRating = ((previousRating*count-1)+riderRating)/count;
+                    Double finalRating = ((previousRating*(count-1))+riderRating)/count;
                     riderRatingRef.child("rating").setValue(Double.toString(finalRating));
                     mRatingBar.setRating(0f);
                 }
